@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrrr}
+\toprule
+Dataset & Model & screen & signals & flip incr. & $\phi/c$ L & $\phi/c$ flip & $\phi/c$ se & $\phi/c$ chal & $\phi/c$ verb \\
+\midrule
+triviaqa & sim & +0.008 & +0.188 & +0.146 & -0.0005 & +0.0185 & +0.0852 & +0.0176 & +0.0325 \\
+strategyqa & sim & +0.034 & +0.200 & +0.079 & +0.0039 & +0.0112 & +0.0757 & +0.0163 & +0.0515 \\
+mmlu & sim & +0.034 & +0.190 & +0.096 & +0.0006 & +0.0081 & +0.0711 & +0.0188 & +0.0720 \\
+\bottomrule
+\end{tabular}
+\caption{Gain decomposition (random $\to$ screen $\to$ signals), the flip increment $V(\{L,\mathrm{flip}\})-V(\{L\})$, and value per API call.}
+\label{tab:shapley_cost}
+\end{table}

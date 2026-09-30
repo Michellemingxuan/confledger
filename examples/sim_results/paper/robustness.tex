@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+Dataset & Model & Jaccard & floor & tie-aware & top group & held-out sel. & held-out ctl. & $p$ & judge $\rho$ & judge J \\
+\midrule
+triviaqa & sim & 0.303 & 0.116 & 0.450 & 10.0 & 0.940 & 0.705 & 0.000 & -- & -- \\
+strategyqa & sim & 0.538 & 0.116 & 0.700 & 10.0 & 0.910 & 0.795 & 0.007 & -- & -- \\
+mmlu & sim & 0.339 & 0.116 & 0.550 & 10.5 & 0.950 & 0.860 & 0.012 & -- & -- \\
+\bottomrule
+\end{tabular}
+\caption{Robustness. Selection stability under fully re-drawn stage 2 (Jaccard vs.\ the chance floor; tie-aware = share of re-drawn selections inside the original top tie-group); held-out probe survival for selected (ranks 1--10) vs.\ matched controls (11--30); judge-swap sensitivity where available.}
+\label{tab:robust}
+\end{table}

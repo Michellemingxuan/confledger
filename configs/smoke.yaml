@@ -1,0 +1,44 @@
+# First real smoke run: ONE pair (TriviaQA x gpt-4.1), reduced split.
+# A pipeline check on real APIs, NOT evidence: a single eval batch cannot power the
+# confirmatory test (1 batch). Do not report these numbers.
+#   python experiments/scripts/collect.py  -c configs/smoke.yaml --reseed-batches 0 -v
+#   python experiments/scripts/evaluate.py -c configs/smoke.yaml
+# Cost: python experiments/scripts/estimate.py -c configs/smoke.yaml --reseed-batches 0
+# NOTE: evaluate.py needs n_paraphrases >= 12 and n_same >= 12 (the protocol's budget curve,
+# evidence arms and matched budget); with fewer draws the smoke run tests collection only.
+# Keep in sync with default.yaml (models, generator, judge, collect settings).
+seed: 0
+k: 10
+budget: null
+budget_matched_k: [2, 3, 4, 5, 6, 8]   # CEL-k (expected calls <= k) vs self-consistency with k draws
+linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
+deployment_sc_draws: 3   # self-consistency at this many draws = the cheap deployment baseline
+# SPRT certification (Sec. 3.2, Cor. 1); these are the paper's values. The stage-2 depth is
+# derived: unanimous draws to certify = max(SPRT boundary, Cor. 1: eps <= eps0 at p0_star).
+# Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
+# p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
+sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
+split: {n_dev: 10, n_eval: 50, batch_size: 50}   # 60 of 9,960 questions; 1 batch
+
+datasets: [triviaqa]
+
+# Transport by env var: LLM_BACKEND=safechain (private env) or unset (direct API).
+models:                          # models under test, identified by model id
+  - {provider: openai_compat, model: "gpt-4.1"}
+
+generator: {provider: openai_compat, model: "gpt-4.1-mini"}   # must differ from gpt-4.1
+
+# Same-provider judge: documented deviation (decisions.md #6).
+judge: {provider: openai_compat, model: "<judge-model-id>"}
+
+collect:
+  n_paraphrases: 3
+  n_same: 3
+  n_reuse_paras: 3
+  n_reuse_samples: 3
+  temperature: 0.7
+  verbal_per_draw: true    # true: confidence line on every draw, no separate verbal call (-1 call/question)
+  workers: 8
+
+# Outputs go to experiments/results/<config name>/; the response cache is shared by all configs.
+paths: {cache: experiments/results/cache, collections: experiments/results/smoke/collections, results: experiments/results/smoke/results}

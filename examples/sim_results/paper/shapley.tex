@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrr}
+\toprule
+Dataset & Model & $L$ & flip & SE & chal & verb & total \\
+\midrule
+triviaqa & sim & -0.003 & +0.055 & +0.085 & +0.018 & +0.032 & +0.188 \\
+strategyqa & sim & +0.023 & +0.034 & +0.076 & +0.016 & +0.052 & +0.200 \\
+mmlu & sim & +0.004 & +0.024 & +0.071 & +0.019 & +0.072 & +0.190 \\
+\bottomrule
+\end{tabular}
+\caption{Exact Shapley values of the five signals (precision@10 gain over random-among-survivors); efficiency makes each row sum to the total.}
+\label{tab:shapley}
+\end{table}

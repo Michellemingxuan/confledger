@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)https://0eb520c2-5676-4504-8323-59bd74464102.frame.claudeusercontent.com/_f/1790667453-2b0a/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"v":1,"cred":"cookie","capabilities":{"artifact":"artifact.BHD03YiG.js","assets":"assets.DOAjpBS9.js","comments":"comments.DrhK3r8W.js","db":"db.zFlAA4qL.js","downloads":"downloads.axDW2QAi.js","embed":"embed.DcZf-TSv.js","endpoints":"endpoints.BPfoKaE1.js","files":"files.IkpCjcgM.js","mcp":"mcp.kl0G36TA.js","network":"network.B5UA9Su4.js","permissions":"permissions.CEAme3h0.js","room":"room.Dy3vHyq9.js","sample":"sample.DLMoX3Ob.js","self":"artifact.BHD03YiG.js","user":"user.CB0zJsP2.js"},"transforms":"_transforms.DqV5HAj2.js","comments":"_comments.DUaNQZcg.js","translate":"_translate.DqxC5ek1.js","ldx":"_ldx.B4FSryPi.js"}                                                                                                                                                                                                                                                                                          </script><script>(function(){"use strict";function fr(t){return t==="cookie"||t==="query"?t:void 0}function dr(t){return typeof t=="number"&&Number.isSafeInteger(t)&&t>0?t:void 0}var $n=3e5;function hr(t,e){try{const r=t("navigation")[0],n=[r.responseStart,r.redirectEnd-r.redirectStart,r.domContentLoadedEventStart,e(),r.connectEnd-r.domainLookupStart,r.responseStart-r.requestStart];r.requestStart>0||(n.length=4);for(let a=0;a<n.length;a++)if(n[a]>=0&&n[a]<=3e5)n[a]=n[a]|0;else{if(a<4)return;n.length=4}return n}catch{return}}var pr=["light","dark","system"],mr=/^[A-Za-z0-9_-]{1,64}$/,Mt=/^[a-zA-Z_:][a-zA-Z0-9_:.-]{0,127}$/,vr=new Set(["class","hidden","value","checked","style","title","alt","placeholder","lang","dir","role","tabindex","disabled","readonly","contenteditable","open","colspan","rowspan"]);function _r(t){const e=t.toLowerCase();return e.startsWith("data-")||e.startsWith("aria-")||vr.has(e)}var Nt="data-ldx-props";function yr(t,e){if(e.toLowerCase()===Nt)return!0;const r=t.getAttribute(Nt);if(r===null)return!1;try{const n=JSON.parse(r);if(n===null||typeof n!="object"||Array.isArray(n))return!0;const a=e.toLowerCase();return Object.keys(n).some(s=>s.toLowerCase()===a)}catch{return!0}}var Vn="http://www.w3.org/1999/xhtml",gr="http://www.w3.org/2000/svg",wr=new Set(["script","style","iframe","noscript","noframes","noembed","xmp","plaintext","template","title","textarea","object","embed"]),br=new Set(["script","style"]);function Er(t){const e=t.localName.toLowerCase();return t.namespaceURI==="http://www.w3.org/1999/xhtml"?!wr.has(e):t.namespaceURI===gr?!br.has(e):!1}function ot(t,e){return t===e||(t===160||t===32)&&(e===160||e===32)}function Sr(t,e){const r=t.length,n=e.length;let a=0;for(;a<r&&a<n&&ot(t.charCodeAt(a),e.charCodeAt(a));)a++;let s=0;for(;s<r-a&&s<n-a&&ot(t.charCodeAt(r-1-s),e.charCodeAt(n-1-s));)s++;return{p:a,s}}function Ar(t,e){const r=t.firstChild;if(t.childNodes.length!==1||r===null||r.nodeType!==Node.TEXT_NODE){t.textContent=e;return}const n=r.data,a=n.length,s=e.length,{p:l,s:u}=Sr(n,e);l===a&&u===0&&a===s||r.replaceData(l,a-l-u,e.slice(l,s-u));const R=r.data,b=t.ownerDocument.getSelection?.()??null,E=b!==null&&b.rangeCount>0&&(b.anchorNode===r||b.focusNode===r)?{anchor:b.anchorNode,anchorOffset:b.anchorOffset,focus:b.focusNode,focusOffset:b.focusOffset}:null;let m=-1,S=-1;for(let y=0;y<R.length&&y<e.length;y++){const L=R.charCodeAt(y),H=e.charCodeAt(y);L!==H&&ot(L,H)&&(m<0&&(m=y),S=y)}const T=m>=0;if(T&&r.replaceData(m,S-m+1,e.slice(m,S+1)),T&&E!==null&&E.anchor!==null&&E.focus!==null)try{b.setBaseAndExtent(E.anchor,E.anchorOffset,E.focus,E.focusOffset)}catch{}}var kr=new Set(["html","head","body","frameset"]);function Rr(t){return t.namespaceURI==="http://www.w3.org/1999/xhtml"&&kr.has(t.localName)}function Tr(t){if(t===null||typeof t!="object")return!1;const e=t;if(typeof e.target!="string"||!mr.test(e.target)||e.text!==void 0&&typeof e.text!="string")return!1;if(e.attrsSet!==void 0){if(e.attrsSet===null||typeof e.attrsSet!="object")return!1;for(const[r,n]of Object.entries(e.attrsSet))if(!Mt.test(r)||typeof n!="string")return!1}if(e.attrsRemoved!==void 0){if(!Array.isArray(e.attrsRemoved))return!1;for(const r of e.attrsRemoved)if(typeof r!="string"||!Mt.test(r))return!1}return!0}function Lr(t,e){if(t===null||typeof t!="object")return!1;const{seq:r,elements:n}=t;if(typeof r!="number"||!Number.isSafeInteger(r)||!Array.isArray(n)||n.length===0||n.length>64)return!1;for(let a=0;a<n.length;a++)if(!e(n[a]))return!1;return!0}function Or(t){return t===null||typeof t!="object"?!1:Lr(t.__frame_patch,Tr)}function Pr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_init;return e!==null&&typeof e=="object"}function Mr(t){return t!==null&&typeof t=="object"&&t.__frame_size_poke===!0}function Nr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_host_visible;return e!==null&&typeof e=="object"&&typeof e.visible=="boolean"}function Cr(t){if(t===null||typeof t!="object")return!1;const e=t.__frame_theme;if(e===null||typeof e!="object")return!1;const r=e.theme;return typeof r=="string"&&pr.includes(r)}var jr=["ok","empty","snapshot_error","snapshot_timeout","unclonable","oversize","unavailable","restore_error","withheld"],Fr=["TypeError","RangeError","ReferenceError","SyntaxError","DataCloneError","QuotaExceededError","AbortError","TimeoutError","SecurityError","Error","other"];function Ir(t){return typeof t=="string"&&Fr.includes(t)?t:"other"}var xr=Object.freeze({until:null,now:!1}),Dr="__claude_hot",Hr="__claude_hot_in",qr=/^__claude_hot(?:_in)?(?::|$)/,Ct=/^[0-9a-z]{1,32}$/,at=t=>t===void 0?Dr:"__claude_hot:"+t,Le=t=>t===void 0?Hr:"__claude_hot_in:"+t;function Br(t,e){const r=[];for(let n=0;n<t.length;n++){const a=t.key(n);a!==null&&a!==e&&qr.test(a)&&r.push(a)}for(const n of r)t.removeItem(n)}function Ur(t){let e=null;try{e=D(JSON.parse(t)?.hot)}catch{return null}return e===null||typeof e.k!="string"||!Ct.test(e.k)?null:ue(e.g)?{k:e.k,g:e.g}:{k:e.k}}var Wn=262144,Kr=3e3,Gr=5e3,jt=/^[a-z0-9._:-]{1,64}$/,zr=["none","hot-restart","hard-reload"],$r=["asset","doc","added","removed"],Vr=1500,Wr=/^[0-9a-f]{64}$/;function D(t){return t!==null&&typeof t=="object"?t:null}function ue(t){return typeof t=="number"&&Number.isInteger(t)&&t>=0&&t<2**31}function Ft(t){return t===void 0||typeof t=="number"&&Number.isFinite(t)}function Xr(t){return t===void 0||typeof t=="string"&&jt.test(t)}function It(t){const e=D(t);return e!==null&&(e.until===null||typeof e.until=="number"&&Number.isFinite(e.until))&&typeof e.now=="boolean"}function st(t){const e=D(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Ft(e.seq)&&typeof e.handoff=="string"&&jr.includes(e.handoff)&&Xr(e.note)}function xt(t){const e=D(t);return e!==null&&ue(e.gen)&&(e.phase==="final"||e.phase==="pending")&&(e.from===null||st(e.from))}function Yr(t){const e=D(t);return e!==null&&e.kv===1&&ue(e.gen)&&st(e.from)&&Object.hasOwn(e,"data")}function Jr(t){const e=D(t);return e!==null&&e.__frame_hot_snapshot===!0&&ue(e.gen)&&typeof e.timeoutMs=="number"&&e.timeoutMs>=0&&e.timeoutMs<=6e4&&(e.handoff===void 0||typeof e.handoff=="boolean")&&(e.deadline===void 0||It(e.deadline))&&Ft(e.seq)&&(e.note===void 0||typeof e.note=="string")&&(e.key===void 0||typeof e.key=="string")}function Zr(t){const e=D(t);return e!==null&&e.__frame_hot_start===!0&&ue(e.gen)&&st(e.from)}function Qr(t){return typeof t=="string"&&t.length>=1&&t.length<=128}function Dt(t){return D(t)!==null&&!Array.isArray(t)}function en(t){const e=D(t);return e!==null&&e.__frame_cap_grant===!0&&typeof e.cap=="string"&&Qr(e.ver)&&(e.grant===void 0||Dt(e.grant))&&(e.budgets===void 0||Dt(e.budgets)&&Object.values(e.budgets).every(Number.isFinite))&&(e.brokerGen===void 0||ue(e.brokerGen))}function tn(t){const e=D(t);return e!==null&&e.__frame_cap_rewired===!0&&(e.caps===void 0||Array.isArray(e.caps)&&e.caps.every(r=>typeof r=="string"))&&(e.brokerGen===void 0||ue(e.brokerGen))}function Ht(t){const e=D(t);return e!==null&&typeof e.ver=="string"&&e.ver.length<=128&&Number.isFinite(e.seq)}function qt(t){if(t==null||typeof t=="string")return!0;const e=D(t);return e!==null&&typeof e.doc=="string"&&typeof e.profile=="string"}function rn(t){const e=D(t);return e!==null&&typeof e.path=="string"&&$r.includes(e.kind)&&qt(e.from)&&qt(e.to)}function nn(t){return t===null?null:Object.freeze(t.filter(rn))}function on(t){const e=D(t);return e!==null&&e.__frame_hot_update===!0&&Number.isFinite(e.id)&&Ht(e.from)&&Ht(e.to)&&(e.changed===null||Array.isArray(e.changed))&&zr.includes(e.required)&&It(e.deadline)&&typeof e.verdictTimeoutMs=="number"&&e.verdictTimeoutMs>=0&&e.verdictTimeoutMs<=6e4&&(e.preflight===void 0||typeof e.preflight=="string"&&Wr.test(e.preflight))}var fe=/^[\w.-]+\.js$/;function an(t,e,r){return r?"inert":typeof e=="string"&&fe.test(e)?t?[e]:"inert":t?"inert":"framed"}var Bt=Object.freeze({[Symbol("claude.hot.restart")]:!0});function Ut(t,e){let r;try{r=t??sessionStorage}catch{return null}const n=at(e?.k),a=Le(e?.k);let s=null;try{s=r.getItem(n)}catch{}try{r.removeItem(n)}catch{}try{Br(r,a)}catch{}let l=null;if(s!==null&&!(e!==null&&e.g===void 0))try{const u=JSON.parse(s);Yr(u)&&(e===null||u.gen===e.g)&&(l=u)}catch{}if(l===null)try{r.removeItem(a)}catch{}return l}function Kt(){const t=/^\/_f\/([^/]{1,128})\//.exec(location.pathname);return t?t[1]:""}var sn=/^[^/\\?#]{1,128}$/,Gt=t=>sn.test(t)&&t!=="."&&t!=="..";function zt(t,e,r){const n=new URL(t),a="/_f/"+e+"/";if(!e||!n.pathname.startsWith(a)||!Gt(r))return null;const s=n.search.slice(1).split("&").filter(l=>!/^__frame_t(?:=|$)/.test(l)).join("&");return n.origin+"/_f/"+r+"/"+n.pathname.slice(a.length)+(s?"?"+s:"")+n.hash}var $e="{}";function Oe(t){if(!t)return null;const e={ver:t.ver,handoff:t.handoff};return t.seq!==void 0&&(e.seq=t.seq),t.note!==void 0&&(e.note=t.note),e}function $t(t,e){return t!==null&&t.note===void 0&&e?.note!==void 0?{...t,note:e.note}:t}function Vt(t){const e=t?.k;return e!==null&&typeof e=="object"?e:void 0}function ln(t,e,r,n=null){const a=setTimeout,s=clearTimeout,l=queueMicrotask,u=performance.now.bind(performance),R=new TextEncoder;let b=null,E=null;try{b=history,E=b.replaceState.bind(b)}catch{}const m=(...o)=>{try{console.warn(...o)}catch{}};let S=Kt(),T=null;try{T=sessionStorage}catch{}const y={storage:T,fetch:typeof fetch=="function"?fetch.bind(globalThis):null,entry:location.origin+location.pathname+location.search,ver:S,key:n?.k};let L=n?.k;const H=typeof requestAnimationFrame=="function"?requestAnimationFrame:o=>a(()=>o(u()),16);let h=e?.data??{},v=Oe(e?.from),M=e?.gen??0,q=e!==null,ee=!1,ne=!1,K=null,he=!1;const we=new AbortController;let je=null,I=null,be=null,Fe=!1,ce=()=>{};const oe=new Promise(o=>{ce=o});let pe=!1,Ie=!1,c=!1,_,p=null,C=!1,j=!1,B=!1,$=!1,V=!1,te=!1;const xe=o=>{for(const f of[at(o),Le(o)])try{T?.removeItem(f)}catch{}},x=(o,f)=>{try{f!==null&&r.post(o,f)}catch{}},Ze=()=>V||=B&&(I===null||$),X=()=>{const o={__frame_hot:!0,ready:I!==null,accept:be!==null,demand:!0};te=!V,te&&(o.booting=!0),pe&&(o.readData=!0),c&&(o.threw=!0),p?.assess&&(o.preflight=!0),x(o,K)};let De=!1,He=!1,G=!1,qe=!1;const Be=()=>{De||!he||G||(De=!0,x({__frame_reveal_hold:!0},"*"))},Ue=()=>new Promise(o=>{let f,d=0;const A=F=>{if(f===void 0)f=F;else if(F!==f||++d>=8){o();return}try{H(A)}catch{o()}};try{H(A)}catch{o()}}),Ke=()=>{G=!0,x({__frame_reveal_ready:!0},"*")},Ee=o=>{He||(He=!0,o.then(f=>{if(f===!1)return;let d=null;try{d=p?.settle?.()??null}catch{}return(d===null?Ue():new Promise(A=>{a(A,50),Promise.resolve(d).then(A,A)}).then(Ue)).then(Ke)}))},wt=()=>{if(qe||!G)return;qe=!0;const o=()=>{try{p?.afterReveal?.()}catch{}};o(),Ue().then(()=>{o(),Ke()})},Se=(o=!1)=>{if(Fe||I===null||!q||!ne)return;Fe=!0;const f=I,d=h;l(()=>{let A;try{A=f(d)}catch(U){throw ce(!1),U}let F=!1;try{F=typeof A?.then=="function"}catch{}if(!F){ce(!0);return}Promise.resolve(A).then(()=>ce(!0),U=>{ce(!1),l(()=>{throw U})})}),Ee(o?oe:r.dcl.then(()=>oe))},Y=o=>typeof o=="string"&&jt.test(o)?o:void 0,me=o=>{const f={__frame_hot_restart:!0},d=Y(o?.note);d!==void 0&&(f.note=d),o?.required==="hard-reload"&&(f.required="hard-reload"),x(f,K)},Ge=Object.freeze({get data(){return ne||(Ie=!0),!q&&!pe&&(pe=!0,ne&&X()),h},get from(){return v},get gen(){return M},signal:we.signal,snapshot(o){typeof o=="function"&&(je=o)},ready(o){typeof o!="function"||I!==null||(I=o,Be(),X(),ee&&x({__frame_hot_ready:!0,gen:M},K),Se())},accept(o){typeof o=="function"&&(be=o,X())},restart(o){const f={note:o?.note,required:o?.required};if(ne){me(f);return}const d=_;_={note:Y(d?.note)??f.note,required:d?.required==="hard-reload"||f.required==="hard-reload"?"hard-reload":void 0}}});let ve=null,i=()=>{};const w=new Promise(o=>{i=o});let g=null;const O=()=>g??=r.dcl.then(()=>{let o=!1;try{o=ve!==null&&ve.expect()}catch{}if(!o)return;const f=ve.maxMs;return new Promise(d=>{w.then(d),a(d,f)})}),J=()=>{if(!C||j||p===null)return;j=!0;const o=p;O().then(()=>{try{G||o.afterStart(Vt(e),!1)}catch{}})},Z=o=>{e!==null&&Ie&&(pe=!0),h={},v=null,M=0;try{T?.removeItem(Le(n?.k))}catch{}e!==null&&!o&&Ee(r.dcl.then(()=>I!==null?oe:void 0))},_e=()=>{C=!0,Ee(O().then(()=>I!==null?oe:void 0)),J()};try{addEventListener("error",()=>{c||I!==null||(c=!0,X())})}catch{}const lr=()=>{a(()=>{!V&&Ze()&&te&&X()},0)};try{B=document.readyState==="complete",B||addEventListener("load",()=>{B=!0,lr()},{once:!0})}catch{B=!0}Ze(),oe.then(()=>{$=!0,lr()});let ye=-1,bt,Et,ze=!0,St=!1,At,Qe=null;const kt=o=>{const f=Qe===null;Qe=ze&&o[0]!=="withheld"?o:["withheld",o[1],$e];let d=o[0];if(ze&&d!=="withheld"){const F={ver:S,handoff:d};bt!==void 0&&(F.seq=bt),Et!==void 0&&(F.note=Et);try{if(T===null)throw new Error("no storage");T.setItem(at(L),'{"kv":1,"gen":'+ye+',"from":'+JSON.stringify(F)+(At!==void 0?',"k":'+JSON.stringify(At):"")+',"data":'+(d==="ok"?o[2]:$e)+"}")}catch{d="unavailable"}}else{d="withheld",xe(L);try{p?.release?.()}catch{}}const A={__frame_hot_snapshotted:!0,gen:ye,handoff:d,bytes:o[1]};o[3]!==void 0&&(A.errName=o[3]),x(A,K),f&&(d==="snapshot_error"||d==="unclonable"||d==="oversize")&&m("claude.hot: snapshot",d,o[3])},Ae=o=>{try{return Ir(o?.name)}catch{return"other"}},ke=(o,f,d=0)=>kt(f===void 0?[o,d,$e]:[o,d,$e,Ae(f)]),Bn=o=>{if(o.gen<=ye)return;const f=ye>=0;if(ye=o.gen,bt=o.seq,Et=Y(o.note),typeof o.key=="string"&&Ct.test(o.key)&&o.key!==L&&(xe(L),L=o.key),ze&&=o.handoff!==!1,f){Qe!==null?kt(Qe):St&&x({__frame_hot_held:!0,gen:ye},K);return}we.abort();const d=Object.freeze({handoff:ze,timeoutMs:o.timeoutMs,deadline:o.deadline??xr}),A=je,F=()=>{if(ze)try{At=p?.capture()}catch{}if(A===null){ke("empty");return}let P=!1;const z=a(()=>{P||(P=!0,ke("snapshot_timeout"))},Math.max(0,d.timeoutMs));Promise.resolve().then(()=>A(d)).then(Re=>{if(P)return;P=!0,s(z);let ae;try{ae=JSON.stringify(Re)}catch(Rt){ke("unclonable",Rt);return}if(typeof ae!="string"){ke("unclonable");return}let se=ae.length;try{se=R.encode(ae).length}catch{}if(se>262144){ke("oversize",void 0,se);return}kt(["ok",se,ae])},Re=>{P||(P=!0,s(z),ke("snapshot_error",Re))})};let U=null;try{U=p?.holdForIme()??null}catch{}if(U===null)F();else{St=!0,x({__frame_hot_held:!0,gen:ye},K);const P=()=>{St=!1,F()};U.then(P,P)}},Un=o=>{if(!ee||q||I===null||o.gen!==M)return;let f=null;try{f=Ut(T,n&&{k:n.k,g:o.gen})}catch{}if(f!==null&&f.gen!==o.gen){f=null;try{T?.removeItem(Le(n?.k))}catch{}}h=f?.data??{},v=$t(Oe(f?.from??o.from),Oe(o.from)),f!==null&&(M=f.gen),q=!0,ee=!1;const d=Vt(f);oe.then(A=>{try{A&&p?.afterStart(d,!0)}catch{}}),Se(!0)};let et=0;const Kn=o=>{const f=be;if(f===null||o.id<=et)return;et=o.id;const d=p?.assess;if(o.preflight===void 0||d===void 0){cr(o,f);return}let A=!1;const F=z=>{A||(A=!0,s(P),o.id===et&&cr(o,f,z))},U=()=>F(d.timeout(o)),P=a(U,Vr+100);d.run(o,window).then(F,U)},cr=(o,f,d)=>{let A,F=!1,U=!1,P,z,Re=null;const ae=k=>{if(U)return!1;if(P!==void 0&&P!==k)return m(`claude.hot: u.${k}() ignored - u.${P}() was called first`),!1;const re=P===void 0;return P=k,re},se=k=>{P="restart",m(`claude.hot: ${k} - restarting`)},Rt=()=>{if(!ae("adopt")||o.id!==et)return;const k=o.to.ver;if(tt.required!=="none"){se(`u.adopt() needs required 'none', it is '${tt.required}'`);return}if(!Gt(k)){se("u.adopt() cannot address this version");return}if(!S||k===S)return;const re=S,Q=y.entry;let rt="",Lt,Te=null,nt;try{rt=location.href,Lt=b.state,Te=zt(rt,re,k),Te!==null&&(E(Lt,"",Te),location.pathname.startsWith("/_f/"+k+"/")?Te=location.href:nt="navigate event canceled")}catch(Pt){nt=Ae(Pt)}if(nt!==void 0){z="adopt_failed",se(`adopt_failed ${nt}; URL not changed`);return}Te===null?(z="adopt_skipped",m(`claude.hot: adopt_skipped - page already left /_f/${re}/; URL not changed, update still applied`)):z="adopted",S=y.ver=k;try{y.entry=zt(Q,re,k)??Q}catch{}const Ot=Te;Re=()=>{if(S===k){if(Ot!==null)try{if(location.href!==Ot)m("claude.hot: adopt_revert_skipped - update not applied; URL left where the page navigated");else{if(E(Lt,"",rt),location.href!==rt){m("claude.hot: adopt_revert_failed navigate event canceled - URL still at the new version");return}z="adopt_reverted",m("claude.hot: adopt_reverted - adopt() was called but the handler threw; URL restored")}}catch(Pt){m(`claude.hot: adopt_revert_failed ${Ae(Pt)} - URL still at the new version`);return}S=y.ver=re,y.entry=Q,Ot===null&&(z=void 0)}}},tt=Object.freeze({from:{ver:o.from.ver,seq:o.from.seq},to:{ver:o.to.ver,seq:o.to.seq},changed:nn(o.changed),required:o.required,deadline:o.deadline,adopt:Rt,defer(){return ae("defer")&&tt.deadline.now&&se("u.defer() past the deadline"),Bt},restart(k){return ae("restart"),P==="restart"&&!U&&(A??=Y(k?.note),F||=k?.required==="hard-reload"),Bt},...d?.update}),Gn=(k,re)=>{U=!0,k==="threw"?(Re?.(),A??=Ae(re).toLowerCase()):P===void 0&&m(k==="timeout"?"claude.hot: accept handler did not answer in time - restarting":"claude.hot: accept handler settled without defer/restart/adopt - restarting");const Q={__frame_hot_verdict:!0,id:o.id};Q.verdict=k==="threw"||P===void 0||P==="restart"?"restart":P==="adopt"?"applied":"deferred",Q.verdict==="restart"&&(F&&(Q.required="hard-reload"),A!==void 0&&(Q.note=A)),z!==void 0&&(Q.verdict==="applied"||z!=="adopted")&&(Q.adopt=z),x(Object.assign(Q,d?.verdict),K)};let ur=!1;const Tt=(k,re)=>ur?!1:(ur=!0,s(zn),Gn(k,re),!0),zn=a(()=>Tt("timeout"),o.verdictTimeoutMs);Promise.resolve().then(()=>f(tt)).then(()=>Tt("settled"),k=>{!Tt("threw",k)&&P==="adopt"&&me({note:Ae(k).toLowerCase()}),m("claude.hot: accept",Ae(k))})};try{t.hot===void 0&&Object.defineProperty(t,"hot",{value:Ge,writable:!1,configurable:!1,enumerable:!1})}catch{}return{hot:Ge,boot:y,afterConnect(){he=!0,(e!==null||I!==null)&&Be()},onInit(o,f){K=f,ne=!0;const d=xt(o)?o:null;d?.phase==="final"&&e!==null&&e.gen===d.gen?(q=!0,v=$t(v,Oe(d.from)),_e()):(ee=d?.phase==="pending",Z(ee),q=!ee,M=d?.gen??0,v=Oe(d?.from)),X(),te&&a(()=>{V||(V=!0,X())},Gr),ee&&I!==null&&x({__frame_hot_ready:!0,gen:M},f),_!==void 0&&(me(_),_=void 0),Se()},onNoInit(){ne=!0,Z(!1),q=!0,Se()},onShell(o){return o?.__frame_revealed===!0?(wt(),!1):Jr(o)?(Bn(o),!0):Zr(o)?(Un(o),!0):on(o)?(Kn(o),!0):!1},attachExtras(o){p=o,J(),o.assess&&X()},inSlot:()=>Le(L),hydration(o,f){ve??={expect:o,maxMs:f}},hydrated(){i()},carried(){return q?h:{}},presented:()=>G}}var Xn="frame_ldx_runtime",cn="frame_ldx_build",Yn="script#an-form",un=256;function Wt(t,e,r){for(const n of t)r(n)&&t.delete(n);t.size>=un&&!t.has(e)&&t.delete(t.values().next().value),t.add(e)}function Pe(t,e,r,n){try{const a=t[e];if(typeof a!="function")return;t[e]=function(...s){if(n){let u;try{u=n(this)}catch{}if(u!==void 0)return u}const l=a.apply(this,s);try{r?.(this)}catch{}return l}}catch{}}var it;function fn(){if(it)return it;const t={media:new Set,contexts:new Set,gate:null,onStart:null,onStop:null};it=t;const e=l=>t.gate?.(l),r=l=>{t.onStop?.(l)},n=window.HTMLMediaElement?.prototype;n&&(Pe(n,"play",l=>{Wt(t.media,l,u=>u.paused),t.onStart?.(l)},e),Pe(n,"pause",r));const a=window.AudioContext,s=window.AudioNode?.prototype;return a&&s&&(Pe(s,"connect",l=>{const u=l.context;u instanceof a&&(Wt(t.contexts,u,R=>R.state==="closed"),t.onStart?.(u))}),Pe(a.prototype,"resume",void 0,e),Pe(a.prototype,"suspend",r)),t}function dn(t){let e=window;for(let r=0;e.parent&&e.parent!==e&&r<8;r++)if(e=e.parent,t(e))return!0;return!1}function hn(){let t=null;const e=()=>t??parent,r=n=>t?n===t:dn(a=>a===n);return{post(n,a){if(t){e().postMessage(n,a);return}let s=parent;for(let l=0;l<8&&(s.postMessage(n,a),!(!s.parent||s.parent===s));l++)s=s.parent},on(n){const a=s=>{const l=s.source;r(l)&&n(s.data,s.origin,s.isTrusted,()=>{t??=l})};return addEventListener("message",a),()=>removeEventListener("message",a)},port:n=>({post(a,s){if(s?.activation){e().postMessage(a,{targetOrigin:n,includeUserActivation:!0});return}if(s?.transfer){e().postMessage(a,n,s.transfer);return}e().postMessage(a,n)},on(a,s){const l=u=>{r(u.source)&&u.origin===n&&a(u.data,u)};return addEventListener("message",l,s),()=>removeEventListener("message",l,s)}})}}function pn(){const t={post:()=>{},on:()=>()=>{}};return{...t,port:()=>t}}var mn=500,vn=2e4,_n="data-token-reads",yn="data-frame-refused-watch",gn="data-frame-unsupported",wn=/(?:^|\s)stylesheet(?:\s|$)/i;function bn(t,e){let r="";if(t instanceof HTMLScriptElement?r=t.src:t instanceof HTMLLinkElement&&wn.test(t.rel)&&(r=t.href),!r)return null;try{const n=new URL(r);return n.origin===location.origin&&n.pathname.startsWith(e)?n.origin+n.pathname:null}catch{return null}}function En(t,e,r){if(!t||e!=="query")return;const n="/_f/"+t+"/";document.documentElement.setAttribute(yn,"");const a=location.href,s=fetch,l=setTimeout,u={method:"HEAD",cache:"no-store",credentials:"same-origin"},R=y=>y.ok||y.status===304;let b=!1,E=!1;const m=()=>removeEventListener("error",T,!0),S=async y=>{const L=await s(y,u);if(R(L))E=!0;else if(L.status===403){const H=await s(a,u);if(R(H)){const h=(await s(y,u)).status;h===403?(E=!0,document.documentElement.setAttribute(gn,""),r()):h<500&&(E=!0)}else H.status>=400&&H.status<500&&(E=!0)}},T=y=>{if(E||b)return;if(document.documentElement.hasAttribute(_n)){E=!0,m();return}const L=bn(y.target,n);L&&(b=!0,l(()=>{S(L).catch(()=>{}).finally(()=>{b=!1,E&&m()})},mn))};addEventListener("error",T,!0),addEventListener("load",m,{once:!0}),l(m,vn)}var lt="__frame_scroll",Sn=150,An=310,kn=160,Rn=3e4;function Tn(){let t=0,e=!1,r=!1,n=!1,a=0,s=null;const l=h=>{try{sessionStorage.setItem(lt,JSON.stringify({y:h}))}catch{}},u=()=>{if(clearTimeout(t),s===null)return;const h=s;s=null,l(h)},R=()=>{if(e){e=!1;return}r=!0,s=scrollY,clearTimeout(t),t=setTimeout(u,Sn)};try{addEventListener("scroll",R,{passive:!0}),addEventListener("pagehide",u)}catch{}const b=()=>{let h;try{h=sessionStorage.getItem(lt)}catch{return null}if(h===null)return null;let v;try{v=JSON.parse(h)}catch{v=null}const M=v?.y;if(!(typeof M=="number"&&Number.isFinite(M)&&M>=0)){try{sessionStorage.removeItem(lt)}catch{}return null}return M};let E=!1;const m=h=>{try{const v=scrollY;scrollTo({top:h,left:0,behavior:"instant"}),a=h,n=!0,clearTimeout(t),s=null,l(h);const M=scrollY;M!==v&&(e=!0),M!==h&&!E&&(E=!0,addEventListener("load",()=>{try{if(scrollY===M){const q=b();m(q!==null?q:a)}}catch{}},{once:!0}))}catch{}},S=()=>{try{return!!location.hash}catch{return!0}};let T=!1;const y=()=>{try{if(T||innerWidth>An||innerHeight>kn)return;T=!0;const h=Date.now(),v=()=>{try{removeEventListener("resize",v)}catch{}if(Date.now()-h>Rn||r||S())return;const M=b();m(M!==null?M:a)};addEventListener("resize",v)}catch{}};let L=!1,H=!1;return{restore(){if(L||(L=!0,S()))return;const h=b();h!==null&&(m(h),y())},promoted(){if(H||(H=!0,S()))return;const h=b();h!==null?(m(h),y()):n&&m(a)}}}function Ln(t,e,r,n){let a=null;try{a=window.trustedTypes?.createPolicy("frame-runtime",{createScriptURL:R=>R})??null}catch{}const s=window.Worker,l=s?.prototype,u=Object.freeze({Worker:s,workerOn:l?.addEventListener,workerPost:l?.postMessage,workerTerminate:l?.terminate,fetch:window.fetch.bind(window),preventDefault:Event.prototype.preventDefault,now:Date.now,policy:a,origins:e});r(t).then(R=>R?.bootTopLevel?R.bootTopLevel(u,n):n.settle()).catch(()=>n.settle())}var Jn="modulepreload",Zn=function(t){return"/"+t},Qn={},On=function(e,r,n){let a=Promise.resolve();function s(l){const u=new Event("vite:preloadError",{cancelable:!0});if(u.payload=l,window.dispatchEvent(u),!u.defaultPrevented)throw l}return a.then(l=>{for(const u of l||[])u.status==="rejected"&&s(u.reason);return e().catch(s)})},Pn=window===top,Xt=Object.getOwnPropertyDescriptor(window,"claude"),Ve=an(Pn,window.__FRAME_PREAMBLE?.topLevel,Xt?.writable===!1),ct=typeof Ve=="object"&&Ve[0],N=ct?pn():hn();(function(){const t=Object.defineProperty,e=globalThis,r=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let n=0;for(let a=0;a<r.length;a++){const s=r[a];try{t(e,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete e[s]}catch{}try{t(e,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof e[s]=="function"&&n++}if(n&&Ve==="framed")try{N.post({__frame_rtc_lockdown_failed:n},"*")}catch{}})();var Yt=1e4,Mn=2e3,ut=2e3,ft=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function Jt(t){for(const e of ft)if(e.endsWith(":*"))try{const r=new URL(t);if(`${r.protocol}//${r.hostname}:*`===e)return!0}catch{}else if(t===e)return!0;return!1}var Me=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),Ne=window.__FRAME_PREAMBLE?.transforms,dt=window.__FRAME_PREAMBLE?.comments,ht=window.__FRAME_PREAMBLE?.translate,de=window.__FRAME_PREAMBLE?.ldx,We=fr(window.__FRAME_PREAMBLE?.cred),Zt=(()=>{try{const[t]=performance.getEntriesByType("navigation"),e=t?.serverTiming?.find(r=>r.name==="frame-cred-exp");return e!==void 0&&/^\d{1,15}$/.test(e.description)?dr(Number(e.description)):void 0}catch{return}})();function Qt(t){return On(()=>import("/_runtime/"+t),void 0)}var Ce=new Set,er=setTimeout,Nn=fetch,Cn=AbortController,jn=800+800*Math.random(),Fn=3e3,Xe=null,tr=new Map;function In(t,e){let r=tr.get(t);return r||tr.set(t,r=xn(t,e)),r}function xn(t,e){if(Xe?.has(t))return Promise.resolve("csp");if(navigator.onLine===!1)return Promise.resolve("offline");const r=new Cn;let n=!1;return er(()=>{n=!0,r.abort()},Fn),Nn("/_runtime/"+t,{signal:r.signal}).then(a=>(r.abort(),a.ok?/javascript/i.test(a.headers.get("content-type")??"")?e instanceof Error&&/:\d+:\d+\)?$/m.test(e.stack??"")?"eval":"served":"mime":"http"),()=>n?"timeout":Xe?.has(t)?"csp":"net")}function ie(t){if(!Xe){const e=Xe=new Set;try{document.addEventListener("securitypolicyviolation",r=>{const n=/\/_runtime\/([^/?#]+)/.exec(r.blockedURI);n&&r.disposition!=="report"&&e.add(n[1])})}catch{}}return Qt(t).catch(()=>new Promise(e=>er(e,jn)).then(()=>Qt(t+"?r=1")).then(e=>(e!==void 0&&Ce.add(t),e)))}function rr(t,e,r){return{contract:t.contract,changes:new Set(t.changes??[]),flags:new Set(t.flags??[]),capabilities:t.capabilities??{},capBudgets:t.capBudgets??{},brokerGen:t.brokerGen,transforms:new Map,shellOrigin:e,shell:r,mount:gt,hooks:Ye,pipe:()=>({wrap:(n,a)=>(...s)=>{try{return a(...s)}catch(l){return Promise.reject(l)}}})}}var ge=null,W=null;function nr(t,e,r){try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(t,e,{value:r,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var pt=!1,Ye={editBefore:null,edit:null};function Dn(t,e,r=!1){const n=[];let a;if(r)try{Ye.editBefore?.(t)}catch{}for(const s of t.elements){const l=document.querySelector(`[data-id="${s.target}"]`);if(!l){a=s.target;break}if([...Object.keys(s.attrsSet??{}),...s.attrsRemoved??[]].some(u=>!_r(u)||yr(l,u))){a=s.target;break}if(s.text!==void 0&&(!Er(l)||Rr(l))){a=s.target;break}for(const[u,R]of Object.entries(s.attrsSet??{}))if(!ar(l,u)){try{l.setAttribute(u,R)}catch{}or(l,u,R)}for(const u of s.attrsRemoved??[])ar(l,u)||(l.removeAttribute(u),or(l,u,null));typeof s.text=="string"&&Ar(l,s.text),n.push(s.target)}if(r)try{Ye.edit?.(t.seq,n,a)}catch{}if(a!==void 0){N.post({__frame_patch_miss:{seq:t.seq}},e);return}try{document.dispatchEvent(new CustomEvent("claude:edit",{detail:{seq:t.seq,targets:n}}))}catch{}}function or(t,e,r){if(!(t instanceof HTMLInputElement))return;const n=e.toLowerCase();n==="checked"?t.checked=r!==null:n==="value"&&t.type!=="file"&&(t.value=r??"")}function ar(t,e){const r=e.toLowerCase(),n=t;return r==="data-id"||(r==="value"||r==="checked")&&(n.__artifactSecret===!0||/^(password|hidden|file)$/.test(n.type??"")||/(^|\s)(cc-|one-time-code|current-password|new-password)/i.test(`${t.getAttribute("autocomplete")??""} ${n.autocomplete??""}`))}function sr(t){const e=document.documentElement;t==="light"||t==="dark"?(e.dataset.theme=t,e.style.colorScheme=t,pt=!0):pt&&(delete e.dataset.theme,e.style.colorScheme="",pt=!1)}var le=new Map,mt=null;function vt(){let t;const e={u:new Promise(r=>{t=r}),r:r=>{e.done=!0,t(r)},done:!1,nulled:!1};return e}function Je(t,e){t.nulled=!0,t.ver=e,t.r(null)}function _t(t,e){for(const[r,n]of le)n.done||(e&&n.asked?e(r,n):Je(n,t))}function Hn(){for(const t of le.values())if(t.asked&&!t.done)return!0;return!1}var qn=Object.freeze(Object.assign(Object.create(null),{call:Function.prototype.call,apply:Function.prototype.apply,bind:Function.prototype.bind})),yt=!1,gt=(t,e)=>{let r=le.get(t);if(r?.nulled&&yt)r=vt(),le.set(t,r);else if(!r||r.done){r?.nulled&&W&&N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:t,phase:"install"}},W);return}const n=typeof e=="function"?Object.setPrototypeOf(e,qn):Object.assign(Object.create(null),e);typeof n.then=="function"&&delete n.then,r.want=void 0,r.r(Object.freeze(n))};function ir(){const t=Xt?.value??{};nr(window,"claude",t);for(const e of Object.keys(Me)){if(t[e]!==void 0){nr(t,e,t[e]);continue}le.set(e,vt())}if(t.use===void 0){const e=r=>{if(typeof r!="string"||!Object.hasOwn(Me,r))return Promise.resolve(null);let n=le.get(r);return n?(mt&&(n.nulled||n.want!==void 0)&&(n=mt(r,n)),n.asked=!0,n.u):Promise.resolve(t[r]??null)};try{Object.defineProperty(t,"use",{value:e,writable:!0,configurable:!0,enumerable:!1})}catch{}}return t}if(Ve==="framed"){let t;const e=Ne&&fe.test(Ne)?ie(Ne).catch(c=>{t={f:Ne,e:c}}):Promise.resolve(void 0),r=c=>{if(c.type==="auxclick"&&c.button!==1)return;const _=c.target,p=_&&_.closest?_.closest("a[href],area[href]"):null;if(!p)return;const C=p.getAttribute("href");if(!C)return;let j;try{j=new URL(C,document.baseURI)}catch{return}if((j.protocol==="http:"||j.protocol==="https:")&&j.origin!==location.origin){c.preventDefault();const B=(p.getAttribute("target")??"").toLowerCase(),$=c.type==="auxclick"||c.metaKey||c.ctrlKey||c.shiftKey||c.altKey||!["","_self","_top","_parent"].includes(B);N.post({__frame_nav:!0,url:j.href,newTab:$},"*")}};addEventListener("click",r,!0),addEventListener("auxclick",r,!0);const n={},a=c=>{c.isTrusted&&(n.pointer=!0)},s=c=>{c.isTrusted&&(n.click=!0)};addEventListener("pointermove",a,{capture:!0,passive:!0}),addEventListener("click",s,{capture:!0,passive:!0});const l={cb:null};addEventListener("keydown",c=>l.cb?.(c),!0);const u={cb:null};addEventListener("keydown",c=>u.cb?.(c));const R=fn();e.then(c=>c?.installEscapeForward?.(l,_=>{W&&N.post(_,W)})),e.then(c=>{try{c?.installFocusKeep?.()}catch{}}),e.then(c=>{if(!c?.wireNav)return;const _=N.port("*");c.wireNav(_),removeEventListener("click",r,!0),removeEventListener("auxclick",r,!0),removeEventListener("pointermove",a,!0),removeEventListener("click",s,!0),c.wireEngagement?.(n,_,R)});let b=null,E=!1;try{b=Tn()}catch{}const m=document.readyState==="loading"?new Promise(c=>document.addEventListener("DOMContentLoaded",()=>c(),{once:!0})):Promise.resolve();let S="dcl",T=!1;m.then(()=>{T=!0});let y=null,L=null;try{L=Ur(window.name),y=Ut(null,L)}catch{}const H=ir();let h=null;try{h=ln(H,y,{post:(c,_)=>N.post(c,_),dcl:m},L)}catch{}e.then(c=>{try{h&&c?.installHotExtras?.(h)}catch{}});let v=null;const M=()=>Array.isArray(v?.flags)&&v.flags.includes("frame_ldx_runtime")&&!!de&&fe.test(de)&&document.querySelector("script#an-form")!==null;try{h?.hydration(M,Kr)}catch{}let q=null,ee=0;const ne=N.on((c,_,p,C)=>{Jt(_)&&Pr(c)&&(C(),v=c.__frame_init,W=_,ne(),clearTimeout(ee),q?.())});if(We){const c=Zt===void 0?{__frame_cred:We}:{__frame_cred:We,exp:Zt};for(const _ of ft)try{_.endsWith(":*")||N.post(c,_)}catch{}}N.post({__frame_connect:!0},"*");try{h?.afterConnect()}catch{}const K=setTimeout,he=clearTimeout;let we=()=>NaN,je=()=>[];try{we=performance.now.bind(performance),je=performance.getEntriesByType.bind(performance)}catch{}let I=0;const be=()=>{try{N.post({__frame_alive:!0},"*")}catch{}I=K(be,Mn)},Fe=()=>he(I);be(),addEventListener("load",Fe,{once:!0});const ce=new Promise(c=>{q=c,ee=setTimeout(()=>{ne(),c()},Yt)}),oe=new WeakSet;addEventListener("error",c=>{c.target&&oe.add(c.target)},!0);try{En(Kt(),We,()=>{e.then(c=>{try{c?.drawRefusedNotice?.()}catch{}})})}catch{}const pe=()=>{let c=[];try{c=[...document.querySelectorAll("link[rel~=stylesheet]:not([rel~=alternate])")].filter(p=>!p.sheet&&!p.disabled&&!oe.has(p)&&p.getAttribute("href")&&URL.canParse(p.href)&&(!p.media||matchMedia(p.media).matches))}catch{}let _=c.length;return _===0?Promise.resolve():new Promise(p=>{try{const C=ut-we();C>0&&T&&(S="sheets");const j=K(p,C>0?C<ut?C:ut:0),B=()=>{--_===0&&(he(j),p())};for(const $ of c)$.addEventListener("load",B,{once:!0}),$.addEventListener("error",B,{once:!0})}catch{p()}})};m.then(()=>{try{E||b?.restore()}catch{}}),Promise.all([ce,m,e]).then(([,,c])=>{if(v?.hostOverlays!==!0||!W)return;let _=!1;try{_=c?.declaresCover?.()===!0}catch{}N.post({__frame_layout:{cover:_}},W)});const Ie={cb:null};N.on((c,_)=>{if(Jt(_)&&Mr(c)){try{b?.promoted()}catch{}Ie.cb?.()}}),ce.then(async()=>{if(!v||!W){_t();try{h?.onNoInit()}catch{}return}if(sr(v.theme),v.hostVisible===!1&&e.then(i=>i?.applyHostVisible?.(!1,R)),v.hostKeys!==void 0){const i=W,w=v.hostKeys;e.then(g=>g?.installHostKeyForward?.(u,w,O=>N.post(O,i)))}try{h?.onInit(v.hot,W)}catch{}let c;const _=()=>{try{!c&&de&&M()&&(c=ie(de),c.then(i=>i?.prefetch?.()).catch(()=>{}))}catch{}};_(),m.then(_);const p=W,C=N.port(p),j=(i,w)=>N.post({__frame_cap_telemetry:{kind:"cap-load-error",cap:i,phase:w}},p),B=(i,w,g)=>{new Promise(O=>O(In(w,g))).then(O=>j(i,O),()=>j(i))},$=i=>N.post({__frame_cap_recovered:{cap:i}},p);let V=v.brokerGen;const te=()=>h?.boot.ver??"",xe=te(),x=(i,w)=>{const g=te();he(w.t),w.want=g,w.t=K(()=>{w.done||Je(w,g)},Yt),N.post({__frame_cap_want:!0,cap:i,ver:g},p)},Ze=(i,w)=>{const g=le.get(i.cap),O=Me[i.cap];if(!w||!g||g.done||g.want!==i.ver||!fe.test(O))return;if(he(g.t),g.want=void 0,V=i.brokerGen??V,i.ver!==te()){x(i.cap,g);return}if(!i.grant||i.cap==="network"){Je(g,i.ver);return}const J=ge,Z=ge={...J,capabilities:{...J.capabilities,[i.cap]:i.grant},capBudgets:{...J.capBudgets,[i.cap]:{...J.capBudgets[i.cap],...i.budgets}}};ie(O).then(_e=>{Ce.has(O)&&$(i.cap),Z.brokerGen=V,yt=!0;try{_e?.install?.(Z)}catch{j(i.cap,"install")}finally{yt=!1}},_e=>B(i.cap,O,_e)).then(()=>{g.done||Je(g,i.ver)})};let X=!1,De=!1;N.on((i,w,g)=>{if(w!==p)return;try{if(h?.onShell(i))return}catch{}if(Cr(i)&&sr(i.__frame_theme.theme),en(i)&&Ze(i,g),g&&tn(i)&&(V=i.brokerGen??V),Nr(i)){const Z=i.__frame_host_visible.visible;e.then(_e=>_e?.applyHostVisible?.(Z,R))}Or(i)&&Dn(i.__frame_patch,p,g);const O=i?.__fc_mode;O&&typeof O=="object"&&!X&&dt&&fe.test(dt)&&(X=!0,ie(dt).then(Z=>Z.install?.(p,O.on===!0,C)).catch(()=>{}));const J=i?.__ft_cmd;J&&typeof J=="object"&&!De&&ht&&fe.test(ht)&&(De=!0,ie(ht).then(Z=>Z.install?.(p,J,C)).catch(()=>{}))});const He=Object.keys(v.capabilities??{}).filter(i=>Object.hasOwn(Me,i)).map(i=>[i,Me[i]]).filter(i=>typeof i[1]=="string"&&fe.test(i[1])),G=p;let qe=!1,Be=()=>{};const Ue=new Promise(i=>{Be=()=>{qe=!0,i()}}),Ke=()=>(qe||(S="caps"),Ue),Ee=y!==null||xt(v.hot)||v.hostVisible===!1||v.hostOverlays===!0;T&&(S="init");const wt=m.then(()=>Ee?Ke():new Promise(i=>K(i,0))).then(pe).then(()=>{let i=!0;try{i=Ee||Hn()}catch{}return i?Ke():void 0}).then(()=>{Fe();const i=hr(je,we);N.post(i?{__frame_ready:!0,nav:i,gate:S}:{__frame_ready:!0,gate:S},G),e.then(w=>{w?.installSizeReporter?.(G,Ie,C),w?.installPaintReporter?.(C)})}),Se=await Promise.allSettled(He.map(([,i])=>ie(i))),Y=await e;if(Y?.buildBoot||(t?B("_transforms",t.f,t.e):j("_transforms")),Y?.buildBoot)try{ge=Y.buildBoot(v,Y.TRANSFORMS??{},{shellOrigin:G,mount:gt,hooks:Ye,shell:C},i=>N.post({__frame_cap_telemetry:i},G))}catch{j("_transforms","install"),ge=rr(v,G,C)}else ge=rr(v,G,C);Y?.buildBoot&&Ce.has(Ne??"")&&$("_transforms");const me=ge;me.brokerGen=V,Se.forEach((i,w)=>{const[g,O]=He[w];if(i.status!=="fulfilled"){B(g,O,i.reason);return}Ce.has(O)&&$(g);try{i.value?.install?.(me)}catch{j(g,"install")}});const Ge=v.capWants===!0;Ge&&(mt=(i,w)=>{const g=te();if(!g)return w;if(!w.nulled)return w.want!==g&&x(i,w),w;if(g===w.ver)return w;const O=vt();return le.set(i,O),x(i,O),O}),_t(xe,Ge&&te()!==xe?x:void 0);try{Y?.watchFirstScreen?.(v,pe,()=>{E=!0,N.post({__frame_first_screen:!0},G)})}catch{}Be(),await wt;let ve=!1;try{ve=M()}catch{}de&&ve?(c??ie(de)).then(i=>i?.boot?.({shellOrigin:p,build:me.flags.has(cn),hot:h?.hot??null,carried:h?.carried(),presented:()=>h?.presented()??!0})).catch(()=>!1).then(i=>{h?.hydrated(),i!==!0?j("_ldx"):Ce.has(de)&&$("_ldx")}):h?.hydrated()})}else ct&&(ir(),Ln(ct,ft,ie,{settle:_t,mount:gt}))})();</script><!-- /frame-runtime --><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body data-new-gr-c-s-check-loaded="14.1332.0" data-gr-ext-installed="">
+<title>CEL Run Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="stylesheet" href="./css2">
+<style>
+  :root {
+    --ground: #f5f6f8;
+    --panel: #ffffff;
+    --ink: #1a2230;
+    --muted: #5a6475;
+    --rule: #d3d9e2;
+    --soft: #e8ecf1;
+    --accent: #b45309;
+    --accent-soft: #fbead6;
+    --probe: #5a6475;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #11151c; --panel: #171c25; --ink: #e5e9ef; --muted: #9aa4b3;
+      --rule: #2c3442; --soft: #1f2631; --accent: #f0a042; --accent-soft: #3a2a17; --probe: #9aa4b3;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #11151c; --panel: #171c25; --ink: #e5e9ef; --muted: #9aa4b3;
+    --rule: #2c3442; --soft: #1f2631; --accent: #f0a042; --accent-soft: #3a2a17; --probe: #9aa4b3;
+    color-scheme: dark;
+  }
+
+  body { background: var(--ground); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 64px; display: grid; gap: 44px; }
+
+  header { display: grid; gap: 10px; max-width: 70ch; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(28px, 4vw, 38px); line-height: 1.15; margin: 0; text-wrap: balance; }
+  header p { margin: 0; color: var(--muted); }
+  code, .mono { font-family: var(--font-mono); font-size: .92em; }
+
+  section { display: grid; gap: 14px; }
+  h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; margin: 0; text-wrap: balance; }
+  section > p { margin: 0; max-width: 70ch; }
+
+  figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; }
+  .scroll { overflow-x: auto; padding: 18px 16px 8px; }
+  figure svg { display: block; width: 100%; min-width: 760px; height: auto; color: var(--ink); font-family: var(--font-body); }
+  figcaption { padding: 4px 18px 16px; color: var(--muted); font-size: 13.5px; max-width: 80ch; }
+
+  /* SVG roles (styled from the page so both themes resolve) */
+  .box { fill: var(--panel); stroke: var(--ink); stroke-width: 1.2; }
+  .box-soft { fill: var(--soft); stroke: var(--rule); stroke-width: 1; }
+  .box-spend { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+  .edge { stroke: var(--ink); stroke-width: 1.3; fill: none; }
+  .edge-dash { stroke: var(--muted); stroke-width: 1.2; fill: none; stroke-dasharray: 5 4; }
+  .boundary { stroke: var(--accent); stroke-width: 1.3; fill: none; stroke-dasharray: 6 4; }
+  .t { fill: var(--ink); font-size: 13px; }
+  .t-strong { fill: var(--ink); font-size: 14px; font-weight: 600; }
+  .t-muted { fill: var(--muted); font-size: 12px; }
+  .t-mono { fill: var(--ink); font-family: var(--font-mono); font-size: 12px; }
+  .t-mono-muted { fill: var(--muted); font-family: var(--font-mono); font-size: 11.5px; }
+  .t-accent { fill: var(--accent); font-size: 12px; font-weight: 600; }
+  .t-accent-mono { fill: var(--accent); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+  .arrowhead { fill: var(--ink); }
+  .arrowhead-muted { fill: var(--muted); }
+
+  /* call squares */
+  .c-para { fill: var(--accent); }
+  .c-draw { fill: var(--ink); }
+  .c-draw2 { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+  .c-probe { fill: var(--probe); opacity: .55; }
+  .c-other { fill: none; stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 3 2; }
+  .c-same { fill: var(--muted); opacity: .35; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0 18px 14px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend svg { width: 14px; height: 14px; min-width: 0; display: inline-block; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--rule); }
+  th { font-weight: 600; font-size: 12.5px; letter-spacing: .03em; color: var(--muted); }
+  td.num, th.num { text-align: right; font-family: var(--font-mono); }
+  tr:last-child td { border-bottom: 0; }
+  tr.total td { font-weight: 600; }
+  .note { font-size: 13.5px; color: var(--muted); max-width: 80ch; margin: 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">confledger · CEL</div>
+    <h1>CEL Run Pipeline</h1>
+    <p>How one run moves from a config to the paper's tables, where the API calls happen, and how each call is counted when methods are compared at a matched budget.</p>
+  </header>
+
+  <!-- 1. The run -->
+  <section>
+    <h2>The run: one step spends, everything after it replays</h2>
+    <p>Every step is <code>python experiments/scripts/&lt;step&gt;.py -c configs/smoke.yaml</code>. Only <code>collect.py</code> reaches a model; every later step reads what it cached.</p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1000 270" role="img" aria-label="Run pipeline: config, data preparation, estimate, collect (the only step that calls models, writing a response cache and collections), evaluate (replays every method), then paper scripts and the notebook.">
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"></path></marker>
+            <marker id="a1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead-muted"></path></marker>
+          </defs>
+
+          <!-- API boundary around collect -->
+          <rect x="506" y="18" width="158" height="118" rx="8" class="boundary"></rect>
+          <text x="585" y="36" text-anchor="middle" class="t-accent">API boundary</text>
+
+          <!-- nodes: x = 10,180,350,520,690,860 ; w = 130 ; y = 50 ; h = 72 -->
+          <rect x="10" y="50" width="130" height="72" rx="5" class="box"></rect>
+          <text x="75" y="80" text-anchor="middle" class="t-mono">configs/</text>
+          <text x="75" y="98" text-anchor="middle" class="t-mono">smoke.yaml</text>
+
+          <rect x="180" y="50" width="130" height="72" rx="5" class="box"></rect>
+          <text x="245" y="80" text-anchor="middle" class="t-mono">data.prepare</text>
+          <text x="245" y="98" text-anchor="middle" class="t-muted">download · dedup</text>
+
+          <rect x="350" y="50" width="130" height="72" rx="5" class="box"></rect>
+          <text x="415" y="80" text-anchor="middle" class="t-mono">estimate.py</text>
+          <text x="415" y="98" text-anchor="middle" class="t-muted">calls by role</text>
+
+          <rect x="520" y="50" width="130" height="72" rx="5" class="box-spend"></rect>
+          <text x="585" y="80" text-anchor="middle" class="t-mono">collect.py</text>
+          <text x="585" y="98" text-anchor="middle" class="t-accent-mono">2,310 calls</text>
+
+          <rect x="690" y="50" width="130" height="72" rx="5" class="box"></rect>
+          <text x="755" y="80" text-anchor="middle" class="t-mono">evaluate.py</text>
+          <text x="755" y="98" text-anchor="middle" class="t-muted">replay methods</text>
+
+          <rect x="860" y="50" width="130" height="72" rx="5" class="box"></rect>
+          <text x="925" y="80" text-anchor="middle" class="t-mono">paper scripts</text>
+          <text x="925" y="98" text-anchor="middle" class="t-muted">+ notebook</text>
+
+          <!-- flow arrows -->
+          <line x1="140" y1="86" x2="178" y2="86" class="edge" marker-end="url(#a1)"></line>
+          <line x1="310" y1="86" x2="348" y2="86" class="edge" marker-end="url(#a1)"></line>
+          <line x1="480" y1="86" x2="518" y2="86" class="edge" marker-end="url(#a1)"></line>
+          <line x1="820" y1="86" x2="858" y2="86" class="edge" marker-end="url(#a1)"></line>
+
+          <!-- stores -->
+          <rect x="520" y="178" width="130" height="62" rx="5" class="box-soft"></rect>
+          <text x="585" y="203" text-anchor="middle" class="t-mono">cache/*.sqlite</text>
+          <text x="585" y="222" text-anchor="middle" class="t-mono">collections/*.jsonl</text>
+          <line x1="585" y1="122" x2="585" y2="176" class="edge" marker-end="url(#a1)"></line>
+          <text x="594" y="154" class="t-muted">writes</text>
+
+          <rect x="690" y="178" width="130" height="62" rx="5" class="box-soft"></rect>
+          <text x="755" y="203" text-anchor="middle" class="t-mono">results/</text>
+          <text x="755" y="222" text-anchor="middle" class="t-mono">&lt;cell&gt;.json</text>
+          <path d="M650,209 L688,209" class="edge-dash" marker-end="url(#a1m)"></path>
+          <text x="669" y="200" text-anchor="middle" class="t-muted">reads</text>
+          <line x1="755" y1="122" x2="755" y2="176" class="edge" marker-end="url(#a1)"></line>
+          <path d="M820,209 L925,209 L925,124" class="edge-dash" marker-end="url(#a1m)"></path>
+          <text x="872" y="200" text-anchor="middle" class="t-muted">reads</text>
+
+          <!-- zero-call markers -->
+          <text x="75" y="142" text-anchor="middle" class="t-mono-muted">0 calls</text>
+          <text x="245" y="142" text-anchor="middle" class="t-mono-muted">0 calls</text>
+          <text x="415" y="142" text-anchor="middle" class="t-mono-muted">0 calls</text>
+          <text x="755" y="142" text-anchor="middle" class="t-mono-muted">0 calls</text>
+          <text x="925" y="142" text-anchor="middle" class="t-mono-muted">0 calls</text>
+        </svg>
+      </div>
+      <figcaption>The dashed amber line is the only place the run talks to a model. Collection is resumable and every raw response is cached, so re-running evaluation, the paper scripts or the notebook costs nothing.</figcaption>
+    </figure>
+  </section>
+
+  <!-- 2. One item's collection -->
+  <section>
+    <h2>What collection spends on one question</h2>
+    <p>Collection records a superset: everything any method could ask for. The paraphrases and every flip (probe) are real calls, split across three model roles.</p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1000 350" role="img" aria-label="One question's collection: the generator writes 12 paraphrases in 1 call; the model under test answers 36 times (12 fresh-paraphrase draws, 12 same-prompt draws, 6 reuse draws, 4 probes, challenge, verbal); the judge clusters 30 explanations in 1 call; everything lands in one record.">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"></path></marker>
+          </defs>
+
+          <!-- item -->
+          <rect x="10" y="150" width="130" height="64" rx="5" class="box"></rect>
+          <text x="75" y="177" text-anchor="middle" class="t-strong">question</text>
+          <text x="75" y="196" text-anchor="middle" class="t-muted">+ candidate answer</text>
+
+          <!-- generator -->
+          <rect x="230" y="20" width="250" height="84" rx="5" class="box-spend"></rect>
+          <text x="246" y="45" class="t-strong">Generator</text>
+          <text x="464" y="45" text-anchor="end" class="t-accent-mono">1 call</text>
+          <text x="246" y="68" class="t">12 paraphrases of the question</text>
+          <text x="246" y="88" class="t-muted">TriviaQA: +1 distractor call for ~½ of items</text>
+
+          <!-- target -->
+          <rect x="230" y="130" width="250" height="204" rx="5" class="box-spend"></rect>
+          <text x="246" y="155" class="t-strong">Model under test (gpt-4.1)</text>
+          <text x="464" y="155" text-anchor="end" class="t-accent-mono">36 calls</text>
+          <line x1="246" y1="166" x2="464" y2="166" stroke="currentColor" stroke-opacity=".2"></line>
+          <text x="246" y="186" class="t">fresh-paraphrase draws, T=0.7</text><text x="464" y="186" text-anchor="end" class="t-mono">12</text>
+          <text x="246" y="208" class="t">same-prompt draws, T=0.7</text><text x="464" y="208" text-anchor="end" class="t-mono">12</text>
+          <text x="246" y="230" class="t">extra reuse draws (3 phrasings)</text><text x="464" y="230" text-anchor="end" class="t-mono">6</text>
+          <text x="246" y="252" class="t">probes (flips), T=0</text><text x="464" y="252" text-anchor="end" class="t-mono">4</text>
+          <text x="258" y="270" class="t-muted">negation · relabel · distractor · held-out</text>
+          <text x="246" y="292" class="t">challenge (“are you sure?”)</text><text x="464" y="292" text-anchor="end" class="t-mono">1</text>
+          <text x="246" y="314" class="t">verbal confidence</text><text x="464" y="314" text-anchor="end" class="t-mono">1</text>
+
+          <!-- judge -->
+          <rect x="580" y="150" width="190" height="64" rx="5" class="box-spend"></rect>
+          <text x="596" y="176" class="t-strong">Judge</text>
+          <text x="754" y="176" text-anchor="end" class="t-accent-mono">1 call</text>
+          <text x="596" y="198" class="t-muted">clusters explanations</text>
+
+          <!-- record -->
+          <rect x="850" y="150" width="140" height="64" rx="5" class="box-soft"></rect>
+          <text x="920" y="177" text-anchor="middle" class="t-strong">CaseData</text>
+          <text x="920" y="196" text-anchor="middle" class="t-mono-muted">one JSONL line</text>
+
+          <!-- edges -->
+          <path d="M140,170 L185,170 L185,62 L228,62" class="edge" marker-end="url(#a2)"></path>
+          <text x="192" y="118" class="t-muted" transform="rotate(-90 192 118)" text-anchor="middle">asks</text>
+          <line x1="140" y1="196" x2="228" y2="196" class="edge" marker-end="url(#a2)"></line>
+          <text x="184" y="214" text-anchor="middle" class="t-muted">original wording</text>
+          <line x1="355" y1="104" x2="355" y2="128" class="edge" marker-end="url(#a2)"></line>
+          <text x="364" y="121" class="t-muted">12 paraphrases</text>
+          <line x1="480" y1="182" x2="578" y2="182" class="edge" marker-end="url(#a2)"></line>
+          <text x="529" y="173" text-anchor="middle" class="t-muted">30 explanations</text>
+          <line x1="770" y1="182" x2="848" y2="182" class="edge" marker-end="url(#a2)"></line>
+          <text x="809" y="173" text-anchor="middle" class="t-muted">cluster ids</text>
+          <path d="M480,300 L920,300 L920,216" class="edge" marker-end="url(#a2)"></path>
+          <text x="700" y="292" text-anchor="middle" class="t-muted">answers, probe results, confidence</text>
+        </svg>
+      </div>
+      <figcaption>38 calls per question: 1 generator + 36 model-under-test + 1 judge. Paraphrases depend only on the question, so the cache shares them across models and re-drawn batches.</figcaption>
+    </figure>
+  </section>
+
+  <!-- 3. Replay accounting -->
+  <section>
+    <h2>How one case is counted when methods are compared</h2>
+    <p>At evaluation, each method replays the recorded calls it would have made and counts them. CEL pays for its paraphrases and its flips; baselines are then given CEL's mean spend per case (the matched budget).</p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 1000 250" role="img" aria-label="Per-case call counts: a CEL case that survives the screen costs 16 calls (1 paraphrase generation, 3 screen draws, 6 more draws, 3 probes, judge, challenge, verbal); an eliminated case costs 4; self-consistency spends the matched budget on same-prompt draws.">
+          <!-- row labels -->
+          <text x="10" y="52" class="t-strong">CEL, survives screen</text>
+          <text x="10" y="70" class="t-mono-muted">16 calls</text>
+          <text x="10" y="122" class="t-strong">CEL, eliminated</text>
+          <text x="10" y="140" class="t-mono-muted">4 calls</text>
+          <text x="10" y="192" class="t-strong">Self-consistency</text>
+          <text x="10" y="210" class="t-mono-muted">matched budget</text>
+
+          <!-- squares: size 24, step 32, start x=220 -->
+          <!-- row A (y=38) -->
+          <rect x="220" y="38" width="24" height="24" rx="3" class="c-para"></rect>
+          <rect x="252" y="38" width="24" height="24" rx="3" class="c-draw"></rect>
+          <rect x="284" y="38" width="24" height="24" rx="3" class="c-draw"></rect>
+          <rect x="316" y="38" width="24" height="24" rx="3" class="c-draw"></rect>
+          <rect x="349" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="381" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="413" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="445" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="477" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="509" y="39" width="22" height="22" rx="3" class="c-draw2"></rect>
+          <rect x="540" y="38" width="24" height="24" rx="3" class="c-probe"></rect>
+          <rect x="572" y="38" width="24" height="24" rx="3" class="c-probe"></rect>
+          <rect x="604" y="38" width="24" height="24" rx="3" class="c-probe"></rect>
+          <rect x="637" y="39" width="22" height="22" rx="3" class="c-other"></rect>
+          <rect x="669" y="39" width="22" height="22" rx="3" class="c-other"></rect>
+          <rect x="701" y="39" width="22" height="22" rx="3" class="c-other"></rect>
+          <!-- group labels under row A -->
+          <text x="232" y="80" text-anchor="middle" class="t-accent">para</text>
+          <text x="284" y="80" text-anchor="middle" class="t-muted">screen</text>
+          <text x="440" y="80" text-anchor="middle" class="t-muted">stage 2 draws</text>
+          <text x="584" y="80" text-anchor="middle" class="t-muted">flips</text>
+          <text x="680" y="80" text-anchor="middle" class="t-muted">judge · chal · verbal</text>
+
+          <!-- row B (y=108) -->
+          <rect x="220" y="108" width="24" height="24" rx="3" class="c-para"></rect>
+          <rect x="252" y="108" width="24" height="24" rx="3" class="c-draw"></rect>
+          <rect x="284" y="108" width="24" height="24" rx="3" class="c-draw"></rect>
+          <rect x="316" y="108" width="24" height="24" rx="3" class="c-draw"></rect>
+          <line x1="352" y1="120" x2="400" y2="120" class="edge-dash"></line>
+          <text x="410" y="125" class="t">a disagreement in the 3 draws ends the case</text>
+
+          <!-- row C (y=178): matched budget of 12 same-prompt draws (simulated value) -->
+          <rect x="220" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="252" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="284" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="316" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="348" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="380" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="412" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="444" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="476" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="508" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="540" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <rect x="572" y="178" width="24" height="24" rx="3" class="c-same"></rect>
+          <text x="612" y="195" class="t">no paraphrases, no flips: same wording each time</text>
+          <text x="220" y="228" class="t-muted">shown at 12 (the simulator's value); the real matched budget is CEL's mean over the first real run</text>
+        </svg>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" class="c-para"></rect></svg>paraphrase generation</span>
+        <span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" class="c-draw"></rect></svg>screen draw</span>
+        <span><svg viewBox="0 0 14 14"><rect x="1.5" y="1.5" width="11" height="11" rx="2" class="c-draw2"></rect></svg>stage-2 draw</span>
+        <span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" class="c-probe"></rect></svg>probe (flip)</span>
+        <span><svg viewBox="0 0 14 14"><rect x="1.5" y="1.5" width="11" height="11" rx="2" class="c-other"></rect></svg>judge / challenge / verbal</span>
+        <span><svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="12" rx="2" class="c-same"></rect></svg>same-prompt draw</span>
+      </div>
+      <figcaption>The amber square is the paraphrase-generation call now counted for every paraphrase-based method (decisions.md #8). The held-out probe is collected but never used for selection; it only audits the result.</figcaption>
+    </figure>
+  </section>
+
+  <!-- 4. Smoke budget -->
+  <section>
+    <h2>The smoke run's budget</h2>
+    <p>TriviaQA × gpt-4.1, 60 questions (10 dev + 50 eval, one batch of 50), no re-drawn batches. From <code>estimate.py -c configs/smoke.yaml --reseed-batches 0</code>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model role</th><th>What it does</th><th class="num">Calls</th></tr></thead>
+        <tbody>
+          <tr><td>Model under test (gpt-4.1)</td><td>60 questions × 36 draws, probes, challenge, verbal</td><td class="num">2,160</td></tr>
+          <tr><td>Generator</td><td>60 paraphrase sets + ~30 TriviaQA distractors</td><td class="num">90</td></tr>
+          <tr><td>Judge</td><td>1 clustering call per question</td><td class="num">60</td></tr>
+          <tr class="total"><td>Total</td><td></td><td class="num">2,310</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Excludes retries after malformed paraphrase output. The generator and judge model ids are still placeholders in the config; <code>collect.py</code> refuses to start until they are filled.</p>
+  </section>
+</div>
+
+</body></html>

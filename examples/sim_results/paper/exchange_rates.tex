@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllrrr}
+\toprule
+Dataset & Model & Probe & $\kappa$ (derived) & $\hat\kappa$ & 95\% CI \\
+\midrule
+triviaqa & sim & neg & 2.10 & 2.95 & [1.32, 5.87] \\
+triviaqa & sim & relabel & 2.10 & 1.76 & [0.23, 4.59] \\
+triviaqa & sim & distractor & 0.56 & 0.93 & [-1.41, 4.08] \\
+strategyqa & sim & neg & 2.10 & 5.18 & [0.27, 21.66] \\
+strategyqa & sim & relabel & 2.10 & 2.81 & [-1.83, 12.15] \\
+strategyqa & sim & distractor & 0.56 & 2.90 & [-1.46, 13.69] \\
+mmlu & sim & neg & 2.10 & 2.78 & [0.29, 9.94] \\
+mmlu & sim & relabel & 2.10 & 4.16 & [1.62, 12.98] \\
+mmlu & sim & distractor & 0.56 & 0.48 & [-2.60, 5.50] \\
+\bottomrule
+\end{tabular}
+\caption{Exchange rates: derived from the evidence model vs.\ fitted by logistic regression.}
+\label{tab:kappa}
+\end{table}

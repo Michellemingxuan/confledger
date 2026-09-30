@@ -1,0 +1,17 @@
+# Offline dry run: synthetic items + simulated backend. No API keys, no network.
+seed: 0
+k: 10
+budget: null
+budget_matched_k: [2, 3, 4, 5, 6, 8]
+linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]
+deployment_sc_draws: 3
+sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
+split: {n_dev: 100, n_eval: 500, batch_size: 50}
+datasets: [triviaqa, strategyqa, mmlu]
+synthetic: true
+models:
+  - {provider: simulated, model: sim, seed: 1}
+generator: {provider: simulated, seed: 1}
+judge: {provider: simulated, seed: 1, name: judge}
+collect: {n_paraphrases: 12, n_same: 16, n_reuse_paras: 3, n_reuse_samples: 3, temperature: 0.7, verbal_per_draw: true, workers: 8}
+paths: {cache: experiments/results/simulation/cache, collections: experiments/results/simulation/collections, results: experiments/results/simulation/results}

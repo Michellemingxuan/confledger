@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Dataset & Model & CEL calls & SC calls to match \\
+\midrule
+triviaqa & sim & 11.7 & $>$max \\
+strategyqa & sim & 10.5 & $>$max \\
+mmlu & sim & 10.9 & $>$max \\
+\bottomrule
+\end{tabular}
+\caption{Horizontal gap: calls self-consistency needs to match CEL's precision@10, as a multiple of CEL's spend.}
+\label{tab:hgap}
+\end{table}

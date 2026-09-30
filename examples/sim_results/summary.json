@@ -1,0 +1,20 @@
+{
+  "triviaqa__sim": {
+    "ours": 1.0,
+    "self_consistency": 0.8800000000000001,
+    "confirmatory_p": 0.015625,
+    "confirmatory_p_holm": 0.03125
+  },
+  "strategyqa__sim": {
+    "ours": 0.9800000000000001,
+    "self_consistency": 0.74,
+    "confirmatory_p": 0.0078125,
+    "confirmatory_p_holm": 0.0234375
+  },
+  "mmlu__sim": {
+    "ours": 0.96,
+    "self_consistency": 0.8600000000000001,
+    "confirmatory_p": 0.02734375,
+    "confirmatory_p_holm": 0.03125
+  }
+}

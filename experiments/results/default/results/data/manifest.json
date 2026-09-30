@@ -1,0 +1,44 @@
+{
+  "triviaqa": {
+    "hf_id": "mandarjoshi/trivia_qa",
+    "config": "rc.nocontext",
+    "split": "validation",
+    "fingerprint": "b024cd028213e383",
+    "rows": 17944,
+    "unique_question_ids": 9960
+  },
+  "strategyqa": {
+    "hf_id": "ChilleD/StrategyQA",
+    "config": null,
+    "split": "train",
+    "fingerprint": "4a14c01ebd9f0d7e",
+    "rows": 1603,
+    "answer_balance": {
+      "False": 865,
+      "True": 738
+    },
+    "dev_labels": {
+      "no": 50,
+      "yes": 50
+    },
+    "eval_labels": {
+      "no": 288,
+      "yes": 212
+    }
+  },
+  "mmlu": {
+    "hf_id": "cais/mmlu",
+    "config": "all",
+    "split": "test",
+    "fingerprint": "436299c1c09696bb",
+    "rows": 14042,
+    "dev_labels": {
+      "no": 52,
+      "yes": 48
+    },
+    "eval_labels": {
+      "no": 248,
+      "yes": 252
+    }
+  }
+}

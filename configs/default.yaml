@@ -1,0 +1,48 @@
+# confledger experiment configuration. Freeze on the dev slice before evaluation.
+seed: 0
+k: 10                     # top-k per batch
+budget: null              # null = match baselines to the pipeline's realised calls/case
+budget_matched_k: [2, 3, 4, 5, 6, 8]   # CEL-k (expected calls <= k) vs self-consistency with k draws
+linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
+deployment_sc_draws: 3    # self-consistency at this many draws = the cheap deployment baseline
+# SPRT certification (Sec. 3.2, Cor. 1); these are the paper's values. The stage-2 depth is
+# derived: unanimous draws to certify = max(SPRT boundary, Cor. 1: eps <= eps0 at p0_star).
+# Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
+# p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
+sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
+split: {n_dev: 100, n_eval: 500, batch_size: 50}
+
+datasets: [triviaqa, strategyqa, mmlu]
+
+# Models. All OpenAI-family: in the private environment everything goes through
+# SafeChain, which serves only OpenAI models. Transport is chosen by env var, not
+# here: LLM_BACKEND=safechain (private env) or unset (dev: direct API, OPENAI_API_KEY).
+# Every model must accept temperature (no o-series / reasoning models).
+# Models under test, identified by their model id (file names, `-m <id>`).
+models:
+  - {provider: openai_compat, model: "<frontier-model-id>"}        # frontier tier
+  - {provider: openai_compat, model: "gpt-4.1"}                    # mid tier
+  - {provider: openai_compat, model: "<open-weights-model-id>",    # open weights
+     base_url: "https://<hosted-endpoint>/v1", api_key_env: OPEN_API_KEY}
+
+# Paraphrase / distractor generator (fixed across runs). Must differ from every
+# model under test: it sees the gold answer when writing distractors.
+generator: {provider: openai_compat, model: "<generator-model-id>"}
+
+# Rationale judge. DEVIATION (decisions.md #6): the design wants a different
+# provider from the model under test; SafeChain offers only OpenAI models, so the
+# judge is a different OpenAI model instead. One judge serves every model.
+judge: {provider: openai_compat, model: "<judge-model-id>"}
+alt_judge: {provider: openai_compat, model: "<cheaper-judge-id>"}   # judge-sensitivity check
+judge_sensitivity_dataset: strategyqa   # alt_judge also run here
+
+collect:
+  n_paraphrases: 12
+  n_same: 16               # >= CEL's max cost per case (16), so the matched budget always fits
+  n_reuse_paras: 3
+  n_reuse_samples: 3
+  temperature: 0.7
+  verbal_per_draw: true    # true: confidence line on every draw, no separate verbal call (-1 call/question)
+  workers: 8
+
+paths: {cache: experiments/results/cache, collections: experiments/results/default/collections, results: experiments/results/default/results}

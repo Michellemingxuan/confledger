@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrr}
+\toprule
+Dataset & Model & Iso.\ gap & Acc 1--10 & Acc 11--30 & Acc 31--50 & $p_{1\text{--}10>11\text{--}30}$ & $p_{11\text{--}30>31\text{--}50}$ \\
+\midrule
+triviaqa & sim & 0.0067 & 1.000 & 0.730 & 0.730 & 0.000 & 0.500 \\
+strategyqa & sim & 0.0029 & 0.980 & 0.715 & 0.610 & 0.000 & 0.013 \\
+mmlu & sim & 0.0068 & 0.960 & 0.765 & 0.595 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Monotonicity checks. Isotonic gap = Brier cost of imposing monotonicity on stratum accuracies; strata are per-batch ranks pooled over batches.}
+\label{tab:mono}
+\end{table}

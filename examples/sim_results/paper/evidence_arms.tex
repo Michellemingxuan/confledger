@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrl}
+\toprule
+Dataset & Model & A (12d) & B (6d+probes) & B ($\kappa/2$) & C (9d) & B$-$A & B$-$C & Verdict \\
+\midrule
+triviaqa & sim & 0.760 & 0.970 & 0.970 & 0.780 & +0.210 & +0.190 & B$>$A \\
+strategyqa & sim & 0.870 & 0.920 & 0.920 & 0.840 & +0.050 & +0.080 & B$\approx$A$>$C \\
+mmlu & sim & 0.800 & 0.880 & 0.880 & 0.790 & +0.080 & +0.090 & B$>$A \\
+\bottomrule
+\end{tabular}
+\caption{Evidence-equivalence arms. Prediction (Prop.~3): B buys A's quality at C's price.}
+\label{tab:arms}
+\end{table}
