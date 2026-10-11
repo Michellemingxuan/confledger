@@ -20,7 +20,7 @@ from data import load_split
 from . import metrics as M
 from .utility.cell_report import write_report
 from .collection import collection_path, load_collection
-from .utility.config import cells, record_run
+from .utility.config import cells, record_run, results_dir
 from .ranking import borda_scores, key_scores, ranks_within, select_top_k
 from .methods import (ARMS, SIGNAL_ABLATIONS, CELConfig, CaseScore, allocation_space, budget_configs,
                       cel, cel_alloc, cel_as_allocation, cel_from_settings, evidence_depth, registry,
@@ -430,8 +430,8 @@ def run_protocol(coll: dict[str, CaseData], batches: list[list[str]], k: int = 1
 
 def cell_results(cfg: dict, ds: str, mk: str, force: bool = False) -> dict:
     """Protocol result for one (dataset, model) cell of a config, cached as
-    <results>/<ds>__<mk>.json and recomputed if missing or forced."""
-    path = Path(cfg["paths"]["results"]) / f"{ds}__{mk}.json"
+    <results>/<ds>/<config>/<ds>__<mk>.json and recomputed if missing or forced."""
+    path = results_dir(cfg, ds) / f"{ds}__{mk}.json"
     if path.exists() and not force:
         return json.loads(path.read_text())
     coll_path = collection_path(cfg, ds, mk)
@@ -454,13 +454,13 @@ def cell_results(cfg: dict, ds: str, mk: str, force: bool = False) -> dict:
                            linkage_ks=tuple(cfg.get("linkage_k", ())))
     except ValueError as e:                        # e.g. collection too small for the protocol
         raise SystemExit(f"{ds}/{mk}: {e}") from None
-    write_report(res, cfg["paths"]["results"], f"{ds}__{mk}")
+    write_report(res, results_dir(cfg, ds), f"{ds}__{mk}")
     return json.loads(path.read_text())
 
 
 def evaluate_config(cfg: dict) -> dict:
     """Evaluate every selected cell (recomputed), then Holm-correct the confirmatory
-    p-values across cells; writes <results>/summary.json and returns it."""
+    p-values across cells; writes <results>/all/<config>/summary.json and returns it."""
     summary = {}
     for ds, mk in cells(cfg):
         res = cell_results(cfg, ds, mk, force=True)
@@ -470,7 +470,7 @@ def evaluate_config(cfg: dict) -> dict:
     adj = M.holm({k: v["confirmatory_p"] for k, v in summary.items()})
     for k in summary:
         summary[k]["confirmatory_p_holm"] = adj[k]
-    out = Path(cfg["paths"]["results"])
+    out = results_dir(cfg)
     out.mkdir(parents=True, exist_ok=True)
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
     return summary

@@ -1,0 +1,4144 @@
+{
+  "theory": {
+    "sprt": {
+      "up": 0.3053816495511819,
+      "down": -1.7917594692280543,
+      "A": 2.1972245773362196,
+      "B": -2.197224577336219,
+      "expected_n": {
+        "H0": 5.429256044449381,
+        "H1": 8.76590561887994
+      }
+    },
+    "screen_pass": {
+      "p=0.7": 0.3429999999999999,
+      "p=0.95": 0.8573749999999999
+    },
+    "certification_depth": {
+      "eps0=0.05": 9,
+      "eps0=0.02": 12
+    },
+    "tail_mass": {
+      "9/9": 0.04208628671050174,
+      "12/12": 0.01934312756994271,
+      "8/9": 0.2724345687969734
+    },
+    "kappa": {
+      "neg": 2.10180895648355,
+      "relabel": 2.10180895648355,
+      "distractor": 0.5627393040126236,
+      "heldout": 2.10180895648355
+    }
+  },
+  "certification": {
+    "depth": 9,
+    "s2": 6,
+    "sprt_depth": 8,
+    "cor1_depth": 9,
+    "binding": "Cor. 1",
+    "eps_at_depth": 0.04208628671050174,
+    "settings": {
+      "p0": 0.7,
+      "p1": 0.95,
+      "alpha": 0.1,
+      "beta": 0.1,
+      "eps0": 0.05,
+      "p0_star": 0.8
+    }
+  },
+  "k": 10,
+  "n_batches": 10,
+  "deploy_sc_draws": 3,
+  "matched_budget": 11,
+  "methods": {
+    "random": {
+      "per_batch": [
+        0.84,
+        0.56,
+        0.64,
+        0.72,
+        0.68,
+        0.66,
+        0.58,
+        0.74,
+        0.68,
+        0.74
+      ],
+      "mean_prec": 0.6839999999999999,
+      "K_b": [
+        42,
+        28,
+        32,
+        36,
+        34,
+        33,
+        29,
+        37,
+        34,
+        37
+      ],
+      "base_acc": 0.684,
+      "mean_calls": 1.0,
+      "survival": 1.0,
+      "auroc": 0.5,
+      "prr": -4.2788824084196915e-16,
+      "selected": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "verbalized": {
+      "per_batch": [
+        0.8,
+        0.7,
+        0.9,
+        0.9,
+        0.7,
+        0.8,
+        0.7,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "mean_prec": 0.7899999999999999,
+      "K_b": [
+        42,
+        28,
+        32,
+        36,
+        34,
+        33,
+        29,
+        37,
+        34,
+        37
+      ],
+      "base_acc": 0.684,
+      "mean_calls": 1.0,
+      "survival": 1.0,
+      "auroc": 0.6629931897253682,
+      "prr": 0.3620823467267387,
+      "selected": [
+        [
+          "strategyqa-sim-415",
+          "strategyqa-sim-389",
+          "strategyqa-sim-28",
+          "strategyqa-sim-306",
+          "strategyqa-sim-119",
+          "strategyqa-sim-5",
+          "strategyqa-sim-130",
+          "strategyqa-sim-553",
+          "strategyqa-sim-206",
+          "strategyqa-sim-274"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-110",
+          "strategyqa-sim-30",
+          "strategyqa-sim-531",
+          "strategyqa-sim-356",
+          "strategyqa-sim-509",
+          "strategyqa-sim-395",
+          "strategyqa-sim-49",
+          "strategyqa-sim-371",
+          "strategyqa-sim-194"
+        ],
+        [
+          "strategyqa-sim-123",
+          "strategyqa-sim-301",
+          "strategyqa-sim-551",
+          "strategyqa-sim-292",
+          "strategyqa-sim-207",
+          "strategyqa-sim-215",
+          "strategyqa-sim-269",
+          "strategyqa-sim-359",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527"
+        ],
+        [
+          "strategyqa-sim-21",
+          "strategyqa-sim-587",
+          "strategyqa-sim-251",
+          "strategyqa-sim-4",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-472",
+          "strategyqa-sim-79",
+          "strategyqa-sim-203",
+          "strategyqa-sim-187"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-345",
+          "strategyqa-sim-378",
+          "strategyqa-sim-421",
+          "strategyqa-sim-559",
+          "strategyqa-sim-66",
+          "strategyqa-sim-290",
+          "strategyqa-sim-352",
+          "strategyqa-sim-544",
+          "strategyqa-sim-84"
+        ],
+        [
+          "strategyqa-sim-312",
+          "strategyqa-sim-287",
+          "strategyqa-sim-407",
+          "strategyqa-sim-353",
+          "strategyqa-sim-496",
+          "strategyqa-sim-555",
+          "strategyqa-sim-382",
+          "strategyqa-sim-435",
+          "strategyqa-sim-98",
+          "strategyqa-sim-302"
+        ],
+        [
+          "strategyqa-sim-367",
+          "strategyqa-sim-392",
+          "strategyqa-sim-245",
+          "strategyqa-sim-449",
+          "strategyqa-sim-480",
+          "strategyqa-sim-427",
+          "strategyqa-sim-99",
+          "strategyqa-sim-589",
+          "strategyqa-sim-102",
+          "strategyqa-sim-491"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-218",
+          "strategyqa-sim-584",
+          "strategyqa-sim-190",
+          "strategyqa-sim-87",
+          "strategyqa-sim-374",
+          "strategyqa-sim-96",
+          "strategyqa-sim-138",
+          "strategyqa-sim-564"
+        ],
+        [
+          "strategyqa-sim-469",
+          "strategyqa-sim-241",
+          "strategyqa-sim-59",
+          "strategyqa-sim-599",
+          "strategyqa-sim-400",
+          "strategyqa-sim-324",
+          "strategyqa-sim-33",
+          "strategyqa-sim-39",
+          "strategyqa-sim-188",
+          "strategyqa-sim-547"
+        ],
+        [
+          "strategyqa-sim-523",
+          "strategyqa-sim-63",
+          "strategyqa-sim-408",
+          "strategyqa-sim-323",
+          "strategyqa-sim-101",
+          "strategyqa-sim-317",
+          "strategyqa-sim-414",
+          "strategyqa-sim-223",
+          "strategyqa-sim-265",
+          "strategyqa-sim-75"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.7026121974740973,
+        0.8608850969014216
+      ],
+      "rel_error_reduction": 0.3354430379746832
+    },
+    "self_consistency": {
+      "per_batch": [
+        0.7,
+        0.7,
+        0.6,
+        1.0,
+        0.8,
+        0.7,
+        0.6,
+        0.8,
+        0.6,
+        0.9
+      ],
+      "mean_prec": 0.74,
+      "K_b": [
+        38,
+        33,
+        35,
+        40,
+        34,
+        36,
+        37,
+        41,
+        35,
+        38
+      ],
+      "base_acc": 0.734,
+      "mean_calls": 11.0,
+      "survival": 1.0,
+      "auroc": 0.5951629755587879,
+      "prr": 0.16929508552308206,
+      "selected": [
+        [
+          "strategyqa-sim-206",
+          "strategyqa-sim-415",
+          "strategyqa-sim-550",
+          "strategyqa-sim-202",
+          "strategyqa-sim-259",
+          "strategyqa-sim-389",
+          "strategyqa-sim-181",
+          "strategyqa-sim-436",
+          "strategyqa-sim-119",
+          "strategyqa-sim-165"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-26",
+          "strategyqa-sim-528",
+          "strategyqa-sim-447",
+          "strategyqa-sim-371",
+          "strategyqa-sim-108",
+          "strategyqa-sim-194",
+          "strategyqa-sim-2",
+          "strategyqa-sim-248",
+          "strategyqa-sim-196"
+        ],
+        [
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-207",
+          "strategyqa-sim-441",
+          "strategyqa-sim-121",
+          "strategyqa-sim-219",
+          "strategyqa-sim-582",
+          "strategyqa-sim-335",
+          "strategyqa-sim-424"
+        ],
+        [
+          "strategyqa-sim-267",
+          "strategyqa-sim-513",
+          "strategyqa-sim-4",
+          "strategyqa-sim-9",
+          "strategyqa-sim-243",
+          "strategyqa-sim-477",
+          "strategyqa-sim-452",
+          "strategyqa-sim-21",
+          "strategyqa-sim-451",
+          "strategyqa-sim-587"
+        ],
+        [
+          "strategyqa-sim-25",
+          "strategyqa-sim-84",
+          "strategyqa-sim-309",
+          "strategyqa-sim-345",
+          "strategyqa-sim-329",
+          "strategyqa-sim-378",
+          "strategyqa-sim-494",
+          "strategyqa-sim-50",
+          "strategyqa-sim-161",
+          "strategyqa-sim-433"
+        ],
+        [
+          "strategyqa-sim-555",
+          "strategyqa-sim-89",
+          "strategyqa-sim-382",
+          "strategyqa-sim-175",
+          "strategyqa-sim-585",
+          "strategyqa-sim-158",
+          "strategyqa-sim-98",
+          "strategyqa-sim-302",
+          "strategyqa-sim-312",
+          "strategyqa-sim-407"
+        ],
+        [
+          "strategyqa-sim-409",
+          "strategyqa-sim-305",
+          "strategyqa-sim-99",
+          "strategyqa-sim-463",
+          "strategyqa-sim-456",
+          "strategyqa-sim-102",
+          "strategyqa-sim-491",
+          "strategyqa-sim-495",
+          "strategyqa-sim-257",
+          "strategyqa-sim-508"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-138",
+          "strategyqa-sim-218",
+          "strategyqa-sim-537",
+          "strategyqa-sim-584",
+          "strategyqa-sim-489",
+          "strategyqa-sim-51",
+          "strategyqa-sim-189",
+          "strategyqa-sim-18"
+        ],
+        [
+          "strategyqa-sim-298",
+          "strategyqa-sim-153",
+          "strategyqa-sim-241",
+          "strategyqa-sim-458",
+          "strategyqa-sim-82",
+          "strategyqa-sim-91",
+          "strategyqa-sim-324",
+          "strategyqa-sim-455",
+          "strategyqa-sim-182",
+          "strategyqa-sim-39"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-497",
+          "strategyqa-sim-64",
+          "strategyqa-sim-63",
+          "strategyqa-sim-505",
+          "strategyqa-sim-338",
+          "strategyqa-sim-223",
+          "strategyqa-sim-75",
+          "strategyqa-sim-341",
+          "strategyqa-sim-591"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.6480606758099601,
+        0.8182765965407257
+      ],
+      "rel_error_reduction": 0.02255639097744363
+    },
+    "self_consistency_deploy": {
+      "per_batch": [
+        0.7,
+        0.7,
+        0.8,
+        1.0,
+        0.9,
+        0.5,
+        0.8,
+        0.7,
+        0.5,
+        0.8
+      ],
+      "mean_prec": 0.74,
+      "K_b": [
+        41,
+        29,
+        33,
+        39,
+        35,
+        36,
+        32,
+        38,
+        37,
+        36
+      ],
+      "base_acc": 0.712,
+      "mean_calls": 3.0,
+      "survival": 1.0,
+      "auroc": 0.5786516853932584,
+      "prr": 0.16118988183440006,
+      "selected": [
+        [
+          "strategyqa-sim-206",
+          "strategyqa-sim-274",
+          "strategyqa-sim-174",
+          "strategyqa-sim-415",
+          "strategyqa-sim-550",
+          "strategyqa-sim-202",
+          "strategyqa-sim-235",
+          "strategyqa-sim-210",
+          "strategyqa-sim-259",
+          "strategyqa-sim-581"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-225",
+          "strategyqa-sim-26",
+          "strategyqa-sim-258",
+          "strategyqa-sim-528",
+          "strategyqa-sim-283",
+          "strategyqa-sim-447",
+          "strategyqa-sim-371",
+          "strategyqa-sim-108",
+          "strategyqa-sim-250"
+        ],
+        [
+          "strategyqa-sim-439",
+          "strategyqa-sim-123",
+          "strategyqa-sim-27",
+          "strategyqa-sim-574",
+          "strategyqa-sim-301",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-311",
+          "strategyqa-sim-527",
+          "strategyqa-sim-423"
+        ],
+        [
+          "strategyqa-sim-267",
+          "strategyqa-sim-513",
+          "strategyqa-sim-4",
+          "strategyqa-sim-9",
+          "strategyqa-sim-243",
+          "strategyqa-sim-38",
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-452",
+          "strategyqa-sim-420"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-25",
+          "strategyqa-sim-32",
+          "strategyqa-sim-544",
+          "strategyqa-sim-339",
+          "strategyqa-sim-114",
+          "strategyqa-sim-355",
+          "strategyqa-sim-84",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7"
+        ],
+        [
+          "strategyqa-sim-539",
+          "strategyqa-sim-0",
+          "strategyqa-sim-555",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-69",
+          "strategyqa-sim-382",
+          "strategyqa-sim-175",
+          "strategyqa-sim-585",
+          "strategyqa-sim-435"
+        ],
+        [
+          "strategyqa-sim-409",
+          "strategyqa-sim-305",
+          "strategyqa-sim-99",
+          "strategyqa-sim-154",
+          "strategyqa-sim-519",
+          "strategyqa-sim-367",
+          "strategyqa-sim-589",
+          "strategyqa-sim-179",
+          "strategyqa-sim-463",
+          "strategyqa-sim-456"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-138",
+          "strategyqa-sim-218",
+          "strategyqa-sim-537",
+          "strategyqa-sim-566",
+          "strategyqa-sim-556",
+          "strategyqa-sim-13",
+          "strategyqa-sim-584",
+          "strategyqa-sim-425"
+        ],
+        [
+          "strategyqa-sim-298",
+          "strategyqa-sim-153",
+          "strategyqa-sim-241",
+          "strategyqa-sim-59",
+          "strategyqa-sim-458",
+          "strategyqa-sim-133",
+          "strategyqa-sim-82",
+          "strategyqa-sim-91",
+          "strategyqa-sim-93",
+          "strategyqa-sim-324"
+        ],
+        [
+          "strategyqa-sim-523",
+          "strategyqa-sim-143",
+          "strategyqa-sim-497",
+          "strategyqa-sim-244",
+          "strategyqa-sim-565",
+          "strategyqa-sim-64",
+          "strategyqa-sim-573",
+          "strategyqa-sim-249",
+          "strategyqa-sim-227",
+          "strategyqa-sim-63"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.6480606758099601,
+        0.8182765965407257
+      ],
+      "rel_error_reduction": 0.0972222222222223
+    },
+    "semantic_entropy": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0
+      ],
+      "mean_prec": 0.99,
+      "K_b": [
+        41,
+        33,
+        36,
+        39,
+        34,
+        36,
+        34,
+        41,
+        34,
+        38
+      ],
+      "base_acc": 0.732,
+      "mean_calls": 11.0,
+      "survival": 1.0,
+      "auroc": 0.75790106842835,
+      "prr": 0.686776781319459,
+      "selected": [
+        [
+          "strategyqa-sim-259",
+          "strategyqa-sim-181",
+          "strategyqa-sim-387",
+          "strategyqa-sim-130",
+          "strategyqa-sim-478",
+          "strategyqa-sim-550",
+          "strategyqa-sim-492",
+          "strategyqa-sim-468",
+          "strategyqa-sim-553",
+          "strategyqa-sim-230"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-447",
+          "strategyqa-sim-509",
+          "strategyqa-sim-395",
+          "strategyqa-sim-248",
+          "strategyqa-sim-350",
+          "strategyqa-sim-252",
+          "strategyqa-sim-49",
+          "strategyqa-sim-314",
+          "strategyqa-sim-531"
+        ],
+        [
+          "strategyqa-sim-359",
+          "strategyqa-sim-551",
+          "strategyqa-sim-292",
+          "strategyqa-sim-527",
+          "strategyqa-sim-296",
+          "strategyqa-sim-269",
+          "strategyqa-sim-207",
+          "strategyqa-sim-219",
+          "strategyqa-sim-386",
+          "strategyqa-sim-517"
+        ],
+        [
+          "strategyqa-sim-452",
+          "strategyqa-sim-58",
+          "strategyqa-sim-587",
+          "strategyqa-sim-187",
+          "strategyqa-sim-450",
+          "strategyqa-sim-251",
+          "strategyqa-sim-472",
+          "strategyqa-sim-526",
+          "strategyqa-sim-267",
+          "strategyqa-sim-4"
+        ],
+        [
+          "strategyqa-sim-345",
+          "strategyqa-sim-228",
+          "strategyqa-sim-396",
+          "strategyqa-sim-50",
+          "strategyqa-sim-579",
+          "strategyqa-sim-66",
+          "strategyqa-sim-385",
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-7"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-407",
+          "strategyqa-sim-511",
+          "strategyqa-sim-287",
+          "strategyqa-sim-128",
+          "strategyqa-sim-382",
+          "strategyqa-sim-302",
+          "strategyqa-sim-312",
+          "strategyqa-sim-226",
+          "strategyqa-sim-391"
+        ],
+        [
+          "strategyqa-sim-217",
+          "strategyqa-sim-291",
+          "strategyqa-sim-99",
+          "strategyqa-sim-35",
+          "strategyqa-sim-427",
+          "strategyqa-sim-367",
+          "strategyqa-sim-589",
+          "strategyqa-sim-245",
+          "strategyqa-sim-580",
+          "strategyqa-sim-107"
+        ],
+        [
+          "strategyqa-sim-556",
+          "strategyqa-sim-87",
+          "strategyqa-sim-61",
+          "strategyqa-sim-584",
+          "strategyqa-sim-322",
+          "strategyqa-sim-437",
+          "strategyqa-sim-374",
+          "strategyqa-sim-518",
+          "strategyqa-sim-426",
+          "strategyqa-sim-190"
+        ],
+        [
+          "strategyqa-sim-241",
+          "strategyqa-sim-324",
+          "strategyqa-sim-569",
+          "strategyqa-sim-188",
+          "strategyqa-sim-547",
+          "strategyqa-sim-220",
+          "strategyqa-sim-327",
+          "strategyqa-sim-400",
+          "strategyqa-sim-208",
+          "strategyqa-sim-599"
+        ],
+        [
+          "strategyqa-sim-488",
+          "strategyqa-sim-323",
+          "strategyqa-sim-561",
+          "strategyqa-sim-64",
+          "strategyqa-sim-63",
+          "strategyqa-sim-223",
+          "strategyqa-sim-341",
+          "strategyqa-sim-333",
+          "strategyqa-sim-101",
+          "strategyqa-sim-516"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9542211033992769,
+        0.99891889829092
+      ],
+      "rel_error_reduction": 0.9626865671641791
+    },
+    "bsdetector_like": {
+      "per_batch": [
+        0.8,
+        0.8,
+        0.7,
+        1.0,
+        0.7,
+        0.8,
+        0.7,
+        0.9,
+        0.9,
+        0.9
+      ],
+      "mean_prec": 0.8200000000000001,
+      "K_b": [
+        41,
+        33,
+        36,
+        39,
+        34,
+        36,
+        34,
+        41,
+        34,
+        38
+      ],
+      "base_acc": 0.732,
+      "mean_calls": 10.0,
+      "survival": 1.0,
+      "auroc": 0.6331457466764538,
+      "prr": 0.30217208128567535,
+      "selected": [
+        [
+          "strategyqa-sim-415",
+          "strategyqa-sim-389",
+          "strategyqa-sim-119",
+          "strategyqa-sim-5",
+          "strategyqa-sim-130",
+          "strategyqa-sim-206",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-259",
+          "strategyqa-sim-181"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-509",
+          "strategyqa-sim-49",
+          "strategyqa-sim-371",
+          "strategyqa-sim-194",
+          "strategyqa-sim-2",
+          "strategyqa-sim-350",
+          "strategyqa-sim-108",
+          "strategyqa-sim-575",
+          "strategyqa-sim-252"
+        ],
+        [
+          "strategyqa-sim-292",
+          "strategyqa-sim-207",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-219",
+          "strategyqa-sim-232",
+          "strategyqa-sim-441",
+          "strategyqa-sim-121",
+          "strategyqa-sim-76",
+          "strategyqa-sim-457"
+        ],
+        [
+          "strategyqa-sim-21",
+          "strategyqa-sim-587",
+          "strategyqa-sim-251",
+          "strategyqa-sim-4",
+          "strategyqa-sim-452",
+          "strategyqa-sim-187",
+          "strategyqa-sim-450",
+          "strategyqa-sim-267",
+          "strategyqa-sim-513",
+          "strategyqa-sim-477"
+        ],
+        [
+          "strategyqa-sim-345",
+          "strategyqa-sim-378",
+          "strategyqa-sim-559",
+          "strategyqa-sim-66",
+          "strategyqa-sim-544",
+          "strategyqa-sim-84",
+          "strategyqa-sim-329",
+          "strategyqa-sim-50",
+          "strategyqa-sim-373",
+          "strategyqa-sim-494"
+        ],
+        [
+          "strategyqa-sim-312",
+          "strategyqa-sim-407",
+          "strategyqa-sim-496",
+          "strategyqa-sim-555",
+          "strategyqa-sim-382",
+          "strategyqa-sim-98",
+          "strategyqa-sim-302",
+          "strategyqa-sim-419",
+          "strategyqa-sim-413",
+          "strategyqa-sim-226"
+        ],
+        [
+          "strategyqa-sim-480",
+          "strategyqa-sim-427",
+          "strategyqa-sim-99",
+          "strategyqa-sim-102",
+          "strategyqa-sim-491",
+          "strategyqa-sim-508",
+          "strategyqa-sim-217",
+          "strategyqa-sim-86",
+          "strategyqa-sim-291",
+          "strategyqa-sim-305"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-218",
+          "strategyqa-sim-584",
+          "strategyqa-sim-374",
+          "strategyqa-sim-138",
+          "strategyqa-sim-489",
+          "strategyqa-sim-189",
+          "strategyqa-sim-437",
+          "strategyqa-sim-518"
+        ],
+        [
+          "strategyqa-sim-241",
+          "strategyqa-sim-400",
+          "strategyqa-sim-324",
+          "strategyqa-sim-39",
+          "strategyqa-sim-188",
+          "strategyqa-sim-547",
+          "strategyqa-sim-70",
+          "strategyqa-sim-153",
+          "strategyqa-sim-91",
+          "strategyqa-sim-455"
+        ],
+        [
+          "strategyqa-sim-63",
+          "strategyqa-sim-223",
+          "strategyqa-sim-75",
+          "strategyqa-sim-488",
+          "strategyqa-sim-143",
+          "strategyqa-sim-497",
+          "strategyqa-sim-64",
+          "strategyqa-sim-505",
+          "strategyqa-sim-338",
+          "strategyqa-sim-341"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.7361633350950134,
+        0.8856331478294299
+      ],
+      "rel_error_reduction": 0.32835820895522416
+    },
+    "cel": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.9800000000000001,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.974,
+      "survival": 0.634,
+      "auroc": 0.6837485672920312,
+      "prr": 0.54869371975585,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-468",
+          "strategyqa-sim-581",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-230",
+          "strategyqa-sim-492",
+          "strategyqa-sim-389"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-314",
+          "strategyqa-sim-2",
+          "strategyqa-sim-350",
+          "strategyqa-sim-528",
+          "strategyqa-sim-139",
+          "strategyqa-sim-590",
+          "strategyqa-sim-258"
+        ],
+        [
+          "strategyqa-sim-204",
+          "strategyqa-sim-517",
+          "strategyqa-sim-207",
+          "strategyqa-sim-527",
+          "strategyqa-sim-386",
+          "strategyqa-sim-423",
+          "strategyqa-sim-269",
+          "strategyqa-sim-264",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-251",
+          "strategyqa-sim-58",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-526",
+          "strategyqa-sim-231",
+          "strategyqa-sim-203",
+          "strategyqa-sim-451"
+        ],
+        [
+          "strategyqa-sim-579",
+          "strategyqa-sim-50",
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7",
+          "strategyqa-sim-309"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-336",
+          "strategyqa-sim-159",
+          "strategyqa-sim-419",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-555"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-495",
+          "strategyqa-sim-522",
+          "strategyqa-sim-427",
+          "strategyqa-sim-346",
+          "strategyqa-sim-154",
+          "strategyqa-sim-86",
+          "strategyqa-sim-99",
+          "strategyqa-sim-409",
+          "strategyqa-sim-456"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-489",
+          "strategyqa-sim-584",
+          "strategyqa-sim-426",
+          "strategyqa-sim-322",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200",
+          "strategyqa-sim-190",
+          "strategyqa-sim-51"
+        ],
+        [
+          "strategyqa-sim-220",
+          "strategyqa-sim-191",
+          "strategyqa-sim-548",
+          "strategyqa-sim-327",
+          "strategyqa-sim-39",
+          "strategyqa-sim-400",
+          "strategyqa-sim-547",
+          "strategyqa-sim-281",
+          "strategyqa-sim-469",
+          "strategyqa-sim-33"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-394",
+          "strategyqa-sim-333",
+          "strategyqa-sim-265",
+          "strategyqa-sim-101",
+          "strategyqa-sim-64",
+          "strategyqa-sim-591",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-338"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9373941512151887,
+        0.9958211875525282
+      ],
+      "rel_error_reduction": 0.9270072992700733
+    },
+    "cel_no_spread": {
+      "per_batch": [
+        1.0,
+        1.0,
+        0.8,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_prec": 0.97,
+      "K_b": [
+        41,
+        35,
+        32,
+        38,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.722,
+      "mean_calls": 10.974,
+      "survival": 0.634,
+      "auroc": 0.6723230833615655,
+      "prr": 0.5302122280545598,
+      "selected": [
+        [
+          "strategyqa-sim-581",
+          "strategyqa-sim-274",
+          "strategyqa-sim-389",
+          "strategyqa-sim-57",
+          "strategyqa-sim-155",
+          "strategyqa-sim-478",
+          "strategyqa-sim-553",
+          "strategyqa-sim-130",
+          "strategyqa-sim-492",
+          "strategyqa-sim-230"
+        ],
+        [
+          "strategyqa-sim-350",
+          "strategyqa-sim-395",
+          "strategyqa-sim-252",
+          "strategyqa-sim-590",
+          "strategyqa-sim-2",
+          "strategyqa-sim-318",
+          "strategyqa-sim-447",
+          "strategyqa-sim-509",
+          "strategyqa-sim-139",
+          "strategyqa-sim-248"
+        ],
+        [
+          "strategyqa-sim-292",
+          "strategyqa-sim-204",
+          "strategyqa-sim-484",
+          "strategyqa-sim-527",
+          "strategyqa-sim-578",
+          "strategyqa-sim-551",
+          "strategyqa-sim-517",
+          "strategyqa-sim-423",
+          "strategyqa-sim-299",
+          "strategyqa-sim-457"
+        ],
+        [
+          "strategyqa-sim-251",
+          "strategyqa-sim-58",
+          "strategyqa-sim-38",
+          "strategyqa-sim-571",
+          "strategyqa-sim-131",
+          "strategyqa-sim-451",
+          "strategyqa-sim-231",
+          "strategyqa-sim-450",
+          "strategyqa-sim-203",
+          "strategyqa-sim-576"
+        ],
+        [
+          "strategyqa-sim-19",
+          "strategyqa-sim-352",
+          "strategyqa-sim-421",
+          "strategyqa-sim-345",
+          "strategyqa-sim-229",
+          "strategyqa-sim-132",
+          "strategyqa-sim-494",
+          "strategyqa-sim-579",
+          "strategyqa-sim-50",
+          "strategyqa-sim-396"
+        ],
+        [
+          "strategyqa-sim-287",
+          "strategyqa-sim-159",
+          "strategyqa-sim-555",
+          "strategyqa-sim-407",
+          "strategyqa-sim-212",
+          "strategyqa-sim-570",
+          "strategyqa-sim-312",
+          "strategyqa-sim-226",
+          "strategyqa-sim-419",
+          "strategyqa-sim-67"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-427",
+          "strategyqa-sim-154",
+          "strategyqa-sim-522",
+          "strategyqa-sim-245",
+          "strategyqa-sim-346",
+          "strategyqa-sim-217",
+          "strategyqa-sim-495",
+          "strategyqa-sim-99",
+          "strategyqa-sim-480"
+        ],
+        [
+          "strategyqa-sim-200",
+          "strategyqa-sim-584",
+          "strategyqa-sim-558",
+          "strategyqa-sim-518",
+          "strategyqa-sim-190",
+          "strategyqa-sim-537",
+          "strategyqa-sim-218",
+          "strategyqa-sim-374",
+          "strategyqa-sim-74",
+          "strategyqa-sim-437"
+        ],
+        [
+          "strategyqa-sim-324",
+          "strategyqa-sim-70",
+          "strategyqa-sim-400",
+          "strategyqa-sim-455",
+          "strategyqa-sim-548",
+          "strategyqa-sim-569",
+          "strategyqa-sim-188",
+          "strategyqa-sim-39",
+          "strategyqa-sim-220",
+          "strategyqa-sim-241"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-362",
+          "strategyqa-sim-63",
+          "strategyqa-sim-323",
+          "strategyqa-sim-414",
+          "strategyqa-sim-591",
+          "strategyqa-sim-394",
+          "strategyqa-sim-265",
+          "strategyqa-sim-101",
+          "strategyqa-sim-223"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9221124305735975,
+        0.9914797168925964
+      ],
+      "rel_error_reduction": 0.8920863309352517
+    },
+    "cel_no_sprt": {
+      "per_batch": [
+        1.0,
+        0.9,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        0.9,
+        0.9
+      ],
+      "mean_prec": 0.95,
+      "K_b": [
+        38,
+        36,
+        32,
+        36,
+        32,
+        31,
+        34,
+        39,
+        30,
+        35
+      ],
+      "base_acc": 0.686,
+      "mean_calls": 8.0,
+      "survival": 1.0,
+      "auroc": 0.7649625819390541,
+      "prr": 0.649065310415786,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-550",
+          "strategyqa-sim-553",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-360",
+          "strategyqa-sim-274",
+          "strategyqa-sim-543",
+          "strategyqa-sim-581",
+          "strategyqa-sim-181"
+        ],
+        [
+          "strategyqa-sim-528",
+          "strategyqa-sim-350",
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-2",
+          "strategyqa-sim-395",
+          "strategyqa-sim-314",
+          "strategyqa-sim-590",
+          "strategyqa-sim-252",
+          "strategyqa-sim-575"
+        ],
+        [
+          "strategyqa-sim-517",
+          "strategyqa-sim-292",
+          "strategyqa-sim-527",
+          "strategyqa-sim-207",
+          "strategyqa-sim-269",
+          "strategyqa-sim-204",
+          "strategyqa-sim-439",
+          "strategyqa-sim-386",
+          "strategyqa-sim-578",
+          "strategyqa-sim-484"
+        ],
+        [
+          "strategyqa-sim-452",
+          "strategyqa-sim-450",
+          "strategyqa-sim-571",
+          "strategyqa-sim-131",
+          "strategyqa-sim-370",
+          "strategyqa-sim-38",
+          "strategyqa-sim-477",
+          "strategyqa-sim-77",
+          "strategyqa-sim-451",
+          "strategyqa-sim-251"
+        ],
+        [
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-19",
+          "strategyqa-sim-228",
+          "strategyqa-sim-345",
+          "strategyqa-sim-421",
+          "strategyqa-sim-132",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7",
+          "strategyqa-sim-229"
+        ],
+        [
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-419",
+          "strategyqa-sim-511",
+          "strategyqa-sim-588",
+          "strategyqa-sim-287",
+          "strategyqa-sim-159",
+          "strategyqa-sim-212",
+          "strategyqa-sim-98"
+        ],
+        [
+          "strategyqa-sim-367",
+          "strategyqa-sim-35",
+          "strategyqa-sim-291",
+          "strategyqa-sim-589",
+          "strategyqa-sim-245",
+          "strategyqa-sim-580",
+          "strategyqa-sim-107",
+          "strategyqa-sim-427",
+          "strategyqa-sim-440",
+          "strategyqa-sim-11"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-74",
+          "strategyqa-sim-489",
+          "strategyqa-sim-437",
+          "strategyqa-sim-558",
+          "strategyqa-sim-96",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200",
+          "strategyqa-sim-426"
+        ],
+        [
+          "strategyqa-sim-220",
+          "strategyqa-sim-327",
+          "strategyqa-sim-188",
+          "strategyqa-sim-39",
+          "strategyqa-sim-191",
+          "strategyqa-sim-400",
+          "strategyqa-sim-70",
+          "strategyqa-sim-182",
+          "strategyqa-sim-547",
+          "strategyqa-sim-324"
+        ],
+        [
+          "strategyqa-sim-341",
+          "strategyqa-sim-256",
+          "strategyqa-sim-265",
+          "strategyqa-sim-323",
+          "strategyqa-sim-143",
+          "strategyqa-sim-64",
+          "strategyqa-sim-362",
+          "strategyqa-sim-63",
+          "strategyqa-sim-101",
+          "strategyqa-sim-414"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.893899926116897,
+        0.9806681880141332
+      ],
+      "rel_error_reduction": 0.8407643312101909
+    },
+    "cel_no_flip": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.99,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 9.072,
+      "survival": 0.634,
+      "auroc": 0.6805915827150067,
+      "prr": 0.5436887118888863,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-468",
+          "strategyqa-sim-581",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-230",
+          "strategyqa-sim-492",
+          "strategyqa-sim-389"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-314",
+          "strategyqa-sim-2",
+          "strategyqa-sim-350",
+          "strategyqa-sim-528",
+          "strategyqa-sim-139",
+          "strategyqa-sim-590",
+          "strategyqa-sim-258"
+        ],
+        [
+          "strategyqa-sim-204",
+          "strategyqa-sim-517",
+          "strategyqa-sim-207",
+          "strategyqa-sim-527",
+          "strategyqa-sim-386",
+          "strategyqa-sim-423",
+          "strategyqa-sim-269",
+          "strategyqa-sim-264",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-251",
+          "strategyqa-sim-58",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-526",
+          "strategyqa-sim-231",
+          "strategyqa-sim-203",
+          "strategyqa-sim-451"
+        ],
+        [
+          "strategyqa-sim-579",
+          "strategyqa-sim-50",
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7",
+          "strategyqa-sim-309"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-336",
+          "strategyqa-sim-159",
+          "strategyqa-sim-419",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-555"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-495",
+          "strategyqa-sim-522",
+          "strategyqa-sim-427",
+          "strategyqa-sim-346",
+          "strategyqa-sim-154",
+          "strategyqa-sim-102",
+          "strategyqa-sim-463",
+          "strategyqa-sim-86",
+          "strategyqa-sim-99"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-489",
+          "strategyqa-sim-87",
+          "strategyqa-sim-584",
+          "strategyqa-sim-426",
+          "strategyqa-sim-322",
+          "strategyqa-sim-61",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200"
+        ],
+        [
+          "strategyqa-sim-220",
+          "strategyqa-sim-191",
+          "strategyqa-sim-548",
+          "strategyqa-sim-327",
+          "strategyqa-sim-39",
+          "strategyqa-sim-400",
+          "strategyqa-sim-547",
+          "strategyqa-sim-281",
+          "strategyqa-sim-469",
+          "strategyqa-sim-33"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-394",
+          "strategyqa-sim-333",
+          "strategyqa-sim-265",
+          "strategyqa-sim-101",
+          "strategyqa-sim-64",
+          "strategyqa-sim-591",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-338"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9542211033992769,
+        0.99891889829092
+      ],
+      "rel_error_reduction": 0.9635036496350364
+    },
+    "cel_no_se": {
+      "per_batch": [
+        1.0,
+        0.9,
+        0.9,
+        0.9,
+        0.9,
+        1.0,
+        0.9,
+        0.9,
+        0.9,
+        0.9
+      ],
+      "mean_prec": 0.9200000000000002,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.34,
+      "survival": 0.634,
+      "auroc": 0.6790130904264945,
+      "prr": 0.5206736855390653,
+      "selected": [
+        [
+          "strategyqa-sim-387",
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-119",
+          "strategyqa-sim-155",
+          "strategyqa-sim-478",
+          "strategyqa-sim-468",
+          "strategyqa-sim-230",
+          "strategyqa-sim-581"
+        ],
+        [
+          "strategyqa-sim-350",
+          "strategyqa-sim-139",
+          "strategyqa-sim-314",
+          "strategyqa-sim-318",
+          "strategyqa-sim-2",
+          "strategyqa-sim-248",
+          "strategyqa-sim-528",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-194"
+        ],
+        [
+          "strategyqa-sim-517",
+          "strategyqa-sim-359",
+          "strategyqa-sim-207",
+          "strategyqa-sim-123",
+          "strategyqa-sim-527",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-269",
+          "strategyqa-sim-441",
+          "strategyqa-sim-204"
+        ],
+        [
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-477",
+          "strategyqa-sim-571",
+          "strategyqa-sim-450",
+          "strategyqa-sim-251",
+          "strategyqa-sim-587",
+          "strategyqa-sim-77",
+          "strategyqa-sim-451",
+          "strategyqa-sim-526"
+        ],
+        [
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7",
+          "strategyqa-sim-309",
+          "strategyqa-sim-229",
+          "strategyqa-sim-378"
+        ],
+        [
+          "strategyqa-sim-159",
+          "strategyqa-sim-419",
+          "strategyqa-sim-353",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-147"
+        ],
+        [
+          "strategyqa-sim-86",
+          "strategyqa-sim-154",
+          "strategyqa-sim-35",
+          "strategyqa-sim-99",
+          "strategyqa-sim-495",
+          "strategyqa-sim-427",
+          "strategyqa-sim-409",
+          "strategyqa-sim-508",
+          "strategyqa-sim-456",
+          "strategyqa-sim-346"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-74",
+          "strategyqa-sim-437",
+          "strategyqa-sim-489",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200",
+          "strategyqa-sim-584",
+          "strategyqa-sim-426",
+          "strategyqa-sim-425"
+        ],
+        [
+          "strategyqa-sim-327",
+          "strategyqa-sim-39",
+          "strategyqa-sim-220",
+          "strategyqa-sim-469",
+          "strategyqa-sim-400",
+          "strategyqa-sim-458",
+          "strategyqa-sim-191",
+          "strategyqa-sim-547",
+          "strategyqa-sim-182",
+          "strategyqa-sim-548"
+        ],
+        [
+          "strategyqa-sim-341",
+          "strategyqa-sim-591",
+          "strategyqa-sim-394",
+          "strategyqa-sim-64",
+          "strategyqa-sim-143",
+          "strategyqa-sim-256",
+          "strategyqa-sim-338",
+          "strategyqa-sim-333",
+          "strategyqa-sim-265",
+          "strategyqa-sim-227"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.8547325158103118,
+        0.9614505975106312
+      ],
+      "rel_error_reduction": 0.7080291970802925
+    },
+    "cel_no_chal": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.9800000000000001,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.34,
+      "survival": 0.634,
+      "auroc": 0.6841105145683779,
+      "prr": 0.5495777061624351,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-468",
+          "strategyqa-sim-581",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-492",
+          "strategyqa-sim-230",
+          "strategyqa-sim-389"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-314",
+          "strategyqa-sim-2",
+          "strategyqa-sim-350",
+          "strategyqa-sim-528",
+          "strategyqa-sim-139",
+          "strategyqa-sim-590",
+          "strategyqa-sim-258"
+        ],
+        [
+          "strategyqa-sim-204",
+          "strategyqa-sim-517",
+          "strategyqa-sim-423",
+          "strategyqa-sim-207",
+          "strategyqa-sim-527",
+          "strategyqa-sim-386",
+          "strategyqa-sim-269",
+          "strategyqa-sim-264",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-251",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-231",
+          "strategyqa-sim-203",
+          "strategyqa-sim-526",
+          "strategyqa-sim-472"
+        ],
+        [
+          "strategyqa-sim-579",
+          "strategyqa-sim-50",
+          "strategyqa-sim-352",
+          "strategyqa-sim-396",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-336",
+          "strategyqa-sim-159",
+          "strategyqa-sim-419",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-555"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-522",
+          "strategyqa-sim-495",
+          "strategyqa-sim-346",
+          "strategyqa-sim-427",
+          "strategyqa-sim-154",
+          "strategyqa-sim-86",
+          "strategyqa-sim-99",
+          "strategyqa-sim-409",
+          "strategyqa-sim-456"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-489",
+          "strategyqa-sim-584",
+          "strategyqa-sim-426",
+          "strategyqa-sim-322",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200",
+          "strategyqa-sim-190",
+          "strategyqa-sim-51"
+        ],
+        [
+          "strategyqa-sim-548",
+          "strategyqa-sim-220",
+          "strategyqa-sim-191",
+          "strategyqa-sim-327",
+          "strategyqa-sim-39",
+          "strategyqa-sim-400",
+          "strategyqa-sim-281",
+          "strategyqa-sim-547",
+          "strategyqa-sim-469",
+          "strategyqa-sim-33"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-101",
+          "strategyqa-sim-394",
+          "strategyqa-sim-333",
+          "strategyqa-sim-265",
+          "strategyqa-sim-64",
+          "strategyqa-sim-591",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-338"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9373941512151887,
+        0.9958211875525282
+      ],
+      "rel_error_reduction": 0.9270072992700733
+    },
+    "cel_no_verb": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.9800000000000001,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.974,
+      "survival": 0.634,
+      "auroc": 0.6834268363797229,
+      "prr": 0.5481692979904448,
+      "selected": [
+        [
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-581",
+          "strategyqa-sim-468",
+          "strategyqa-sim-57",
+          "strategyqa-sim-387",
+          "strategyqa-sim-230",
+          "strategyqa-sim-155",
+          "strategyqa-sim-492",
+          "strategyqa-sim-389"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-2",
+          "strategyqa-sim-314",
+          "strategyqa-sim-528",
+          "strategyqa-sim-350",
+          "strategyqa-sim-139",
+          "strategyqa-sim-590",
+          "strategyqa-sim-258"
+        ],
+        [
+          "strategyqa-sim-204",
+          "strategyqa-sim-527",
+          "strategyqa-sim-207",
+          "strategyqa-sim-386",
+          "strategyqa-sim-517",
+          "strategyqa-sim-423",
+          "strategyqa-sim-269",
+          "strategyqa-sim-264",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-251",
+          "strategyqa-sim-58",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-526",
+          "strategyqa-sim-203",
+          "strategyqa-sim-231",
+          "strategyqa-sim-451"
+        ],
+        [
+          "strategyqa-sim-50",
+          "strategyqa-sim-579",
+          "strategyqa-sim-506",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7",
+          "strategyqa-sim-345",
+          "strategyqa-sim-229",
+          "strategyqa-sim-290",
+          "strategyqa-sim-228",
+          "strategyqa-sim-214"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-336",
+          "strategyqa-sim-555",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-419",
+          "strategyqa-sim-128",
+          "strategyqa-sim-226"
+        ],
+        [
+          "strategyqa-sim-495",
+          "strategyqa-sim-35",
+          "strategyqa-sim-522",
+          "strategyqa-sim-427",
+          "strategyqa-sim-346",
+          "strategyqa-sim-154",
+          "strategyqa-sim-86",
+          "strategyqa-sim-99",
+          "strategyqa-sim-409",
+          "strategyqa-sim-456"
+        ],
+        [
+          "strategyqa-sim-584",
+          "strategyqa-sim-489",
+          "strategyqa-sim-322",
+          "strategyqa-sim-46",
+          "strategyqa-sim-426",
+          "strategyqa-sim-189",
+          "strategyqa-sim-518",
+          "strategyqa-sim-190",
+          "strategyqa-sim-200",
+          "strategyqa-sim-51"
+        ],
+        [
+          "strategyqa-sim-191",
+          "strategyqa-sim-220",
+          "strategyqa-sim-548",
+          "strategyqa-sim-39",
+          "strategyqa-sim-547",
+          "strategyqa-sim-327",
+          "strategyqa-sim-400",
+          "strategyqa-sim-281",
+          "strategyqa-sim-469",
+          "strategyqa-sim-33"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-265",
+          "strategyqa-sim-333",
+          "strategyqa-sim-394",
+          "strategyqa-sim-101",
+          "strategyqa-sim-64",
+          "strategyqa-sim-591",
+          "strategyqa-sim-256",
+          "strategyqa-sim-338",
+          "strategyqa-sim-341"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9373941512151887,
+        0.9958211875525282
+      ],
+      "rel_error_reduction": 0.9270072992700733
+    },
+    "cel_no_L": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.9800000000000001,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.974,
+      "survival": 0.634,
+      "auroc": 0.6837485672920312,
+      "prr": 0.54869371975585,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-550",
+          "strategyqa-sim-468",
+          "strategyqa-sim-581",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-230",
+          "strategyqa-sim-492",
+          "strategyqa-sim-389"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-30",
+          "strategyqa-sim-252",
+          "strategyqa-sim-314",
+          "strategyqa-sim-2",
+          "strategyqa-sim-350",
+          "strategyqa-sim-528",
+          "strategyqa-sim-139",
+          "strategyqa-sim-590",
+          "strategyqa-sim-258"
+        ],
+        [
+          "strategyqa-sim-204",
+          "strategyqa-sim-517",
+          "strategyqa-sim-207",
+          "strategyqa-sim-527",
+          "strategyqa-sim-386",
+          "strategyqa-sim-423",
+          "strategyqa-sim-269",
+          "strategyqa-sim-264",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-251",
+          "strategyqa-sim-58",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-526",
+          "strategyqa-sim-231",
+          "strategyqa-sim-203",
+          "strategyqa-sim-451"
+        ],
+        [
+          "strategyqa-sim-579",
+          "strategyqa-sim-50",
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7",
+          "strategyqa-sim-309"
+        ],
+        [
+          "strategyqa-sim-473",
+          "strategyqa-sim-287",
+          "strategyqa-sim-336",
+          "strategyqa-sim-159",
+          "strategyqa-sim-419",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-555"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-495",
+          "strategyqa-sim-522",
+          "strategyqa-sim-427",
+          "strategyqa-sim-346",
+          "strategyqa-sim-154",
+          "strategyqa-sim-86",
+          "strategyqa-sim-99",
+          "strategyqa-sim-409",
+          "strategyqa-sim-456"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-489",
+          "strategyqa-sim-584",
+          "strategyqa-sim-426",
+          "strategyqa-sim-322",
+          "strategyqa-sim-518",
+          "strategyqa-sim-189",
+          "strategyqa-sim-200",
+          "strategyqa-sim-190",
+          "strategyqa-sim-51"
+        ],
+        [
+          "strategyqa-sim-220",
+          "strategyqa-sim-191",
+          "strategyqa-sim-548",
+          "strategyqa-sim-327",
+          "strategyqa-sim-39",
+          "strategyqa-sim-400",
+          "strategyqa-sim-547",
+          "strategyqa-sim-281",
+          "strategyqa-sim-469",
+          "strategyqa-sim-33"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-394",
+          "strategyqa-sim-333",
+          "strategyqa-sim-265",
+          "strategyqa-sim-101",
+          "strategyqa-sim-64",
+          "strategyqa-sim-591",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-338"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9373941512151887,
+        0.9958211875525282
+      ],
+      "rel_error_reduction": 0.9270072992700733
+    },
+    "cel_borda": {
+      "per_batch": [
+        1.0,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9
+      ],
+      "mean_prec": 0.9800000000000001,
+      "K_b": [
+        42,
+        37,
+        33,
+        36,
+        35,
+        35,
+        36,
+        39,
+        35,
+        35
+      ],
+      "base_acc": 0.726,
+      "mean_calls": 10.974,
+      "survival": 0.634,
+      "auroc": 0.7156703062476122,
+      "prr": 0.6245462115313611,
+      "selected": [
+        [
+          "strategyqa-sim-57",
+          "strategyqa-sim-274",
+          "strategyqa-sim-387",
+          "strategyqa-sim-155",
+          "strategyqa-sim-468",
+          "strategyqa-sim-119",
+          "strategyqa-sim-581",
+          "strategyqa-sim-550",
+          "strategyqa-sim-230",
+          "strategyqa-sim-478"
+        ],
+        [
+          "strategyqa-sim-350",
+          "strategyqa-sim-318",
+          "strategyqa-sim-314",
+          "strategyqa-sim-2",
+          "strategyqa-sim-30",
+          "strategyqa-sim-139",
+          "strategyqa-sim-447",
+          "strategyqa-sim-248",
+          "strategyqa-sim-528",
+          "strategyqa-sim-590"
+        ],
+        [
+          "strategyqa-sim-517",
+          "strategyqa-sim-207",
+          "strategyqa-sim-527",
+          "strategyqa-sim-359",
+          "strategyqa-sim-204",
+          "strategyqa-sim-269",
+          "strategyqa-sim-423",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-484"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-38",
+          "strategyqa-sim-452",
+          "strategyqa-sim-571",
+          "strategyqa-sim-58",
+          "strategyqa-sim-251",
+          "strategyqa-sim-526",
+          "strategyqa-sim-472",
+          "strategyqa-sim-451",
+          "strategyqa-sim-77"
+        ],
+        [
+          "strategyqa-sim-352",
+          "strategyqa-sim-506",
+          "strategyqa-sim-214",
+          "strategyqa-sim-228",
+          "strategyqa-sim-290",
+          "strategyqa-sim-345",
+          "strategyqa-sim-7",
+          "strategyqa-sim-19",
+          "strategyqa-sim-309",
+          "strategyqa-sim-579"
+        ],
+        [
+          "strategyqa-sim-159",
+          "strategyqa-sim-473",
+          "strategyqa-sim-419",
+          "strategyqa-sim-287",
+          "strategyqa-sim-89",
+          "strategyqa-sim-67",
+          "strategyqa-sim-212",
+          "strategyqa-sim-588",
+          "strategyqa-sim-555",
+          "strategyqa-sim-226"
+        ],
+        [
+          "strategyqa-sim-35",
+          "strategyqa-sim-495",
+          "strategyqa-sim-154",
+          "strategyqa-sim-427",
+          "strategyqa-sim-245",
+          "strategyqa-sim-522",
+          "strategyqa-sim-346",
+          "strategyqa-sim-99",
+          "strategyqa-sim-86",
+          "strategyqa-sim-102"
+        ],
+        [
+          "strategyqa-sim-46",
+          "strategyqa-sim-489",
+          "strategyqa-sim-584",
+          "strategyqa-sim-518",
+          "strategyqa-sim-426",
+          "strategyqa-sim-189",
+          "strategyqa-sim-322",
+          "strategyqa-sim-437",
+          "strategyqa-sim-200",
+          "strategyqa-sim-87"
+        ],
+        [
+          "strategyqa-sim-220",
+          "strategyqa-sim-327",
+          "strategyqa-sim-188",
+          "strategyqa-sim-191",
+          "strategyqa-sim-400",
+          "strategyqa-sim-548",
+          "strategyqa-sim-469",
+          "strategyqa-sim-324",
+          "strategyqa-sim-547",
+          "strategyqa-sim-39"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-64",
+          "strategyqa-sim-341",
+          "strategyqa-sim-101",
+          "strategyqa-sim-265",
+          "strategyqa-sim-362",
+          "strategyqa-sim-256",
+          "strategyqa-sim-394",
+          "strategyqa-sim-338",
+          "strategyqa-sim-591"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.9373941512151887,
+        0.9958211875525282
+      ],
+      "rel_error_reduction": 0.9270072992700733
+    }
+  },
+  "paired_vs_cel": {
+    "random": {
+      "mean_diff": 0.296,
+      "ci_lo": 0.244,
+      "ci_hi": 0.346,
+      "wilcoxon_p": 0.001953125,
+      "wins": 10,
+      "ties": 0,
+      "n": 10
+    },
+    "verbalized": {
+      "mean_diff": 0.19,
+      "ci_lo": 0.14999999999999997,
+      "ci_hi": 0.23000000000000004,
+      "wilcoxon_p": 0.001953125,
+      "wins": 10,
+      "ties": 0,
+      "n": 10
+    },
+    "self_consistency": {
+      "mean_diff": 0.24,
+      "ci_lo": 0.15,
+      "ci_hi": 0.32,
+      "wilcoxon_p": 0.0078125,
+      "wins": 8,
+      "ties": 2,
+      "n": 10
+    },
+    "self_consistency_deploy": {
+      "mean_diff": 0.24,
+      "ci_lo": 0.13999999999999999,
+      "ci_hi": 0.34,
+      "wilcoxon_p": 0.00390625,
+      "wins": 9,
+      "ties": 1,
+      "n": 10
+    },
+    "semantic_entropy": {
+      "mean_diff": -0.009999999999999998,
+      "ci_lo": -0.039999999999999994,
+      "ci_hi": 0.019999999999999997,
+      "wilcoxon_p": 1.0,
+      "wins": 1,
+      "ties": 7,
+      "n": 10
+    },
+    "bsdetector_like": {
+      "mean_diff": 0.16,
+      "ci_lo": 0.09999999999999999,
+      "ci_hi": 0.22000000000000003,
+      "wilcoxon_p": 0.0078125,
+      "wins": 8,
+      "ties": 2,
+      "n": 10
+    },
+    "cel_no_spread": {
+      "mean_diff": 0.009999999999999998,
+      "ci_lo": -0.029999999999999992,
+      "ci_hi": 0.059999999999999984,
+      "wilcoxon_p": 1.0,
+      "wins": 1,
+      "ties": 8,
+      "n": 10
+    },
+    "cel_no_sprt": {
+      "mean_diff": 0.029999999999999992,
+      "ci_lo": 0.0,
+      "ci_hi": 0.059999999999999984,
+      "wilcoxon_p": 0.25,
+      "wins": 3,
+      "ties": 7,
+      "n": 10
+    },
+    "cel_no_flip": {
+      "mean_diff": -0.009999999999999998,
+      "ci_lo": -0.029999999999999992,
+      "ci_hi": 0.0,
+      "wilcoxon_p": 1.0,
+      "wins": 0,
+      "ties": 9,
+      "n": 10
+    },
+    "cel_no_se": {
+      "mean_diff": 0.059999999999999984,
+      "ci_lo": 0.029999999999999992,
+      "ci_hi": 0.08999999999999998,
+      "wilcoxon_p": 0.03125,
+      "wins": 6,
+      "ties": 4,
+      "n": 10
+    },
+    "cel_no_chal": {
+      "mean_diff": 0.0,
+      "ci_lo": 0.0,
+      "ci_hi": 0.0,
+      "wilcoxon_p": 1.0,
+      "wins": 0,
+      "ties": 10,
+      "n": 10
+    },
+    "cel_no_verb": {
+      "mean_diff": 0.0,
+      "ci_lo": 0.0,
+      "ci_hi": 0.0,
+      "wilcoxon_p": 1.0,
+      "wins": 0,
+      "ties": 10,
+      "n": 10
+    },
+    "cel_no_L": {
+      "mean_diff": 0.0,
+      "ci_lo": 0.0,
+      "ci_hi": 0.0,
+      "wilcoxon_p": 1.0,
+      "wins": 0,
+      "ties": 10,
+      "n": 10
+    },
+    "cel_borda": {
+      "mean_diff": 0.0,
+      "ci_lo": -0.029999999999999992,
+      "ci_hi": 0.029999999999999992,
+      "wilcoxon_p": 1.0,
+      "wins": 1,
+      "ties": 8,
+      "n": 10
+    }
+  },
+  "confirmatory": {
+    "mean_diff": 0.24,
+    "ci_lo": 0.15,
+    "ci_hi": 0.32,
+    "wilcoxon_p": 0.0078125,
+    "wins": 8,
+    "ties": 2,
+    "n": 10
+  },
+  "budget_curve": {
+    "cel:cel_b3": {
+      "calls": 4.0,
+      "prec": 0.7969999999999999,
+      "lo": 0.7635000000000001,
+      "hi": 0.8345,
+      "auroc": 0.5975713447340458
+    },
+    "cel:cel_lean": {
+      "calls": 7.7584,
+      "prec": 0.9869999999999999,
+      "lo": 0.9780000000000001,
+      "hi": 0.9949999999999999,
+      "auroc": 0.6832638902151777
+    },
+    "cel:cel": {
+      "calls": 10.890400000000001,
+      "prec": 0.9734999999999999,
+      "lo": 0.9479999999999998,
+      "hi": 0.9945,
+      "auroc": 0.6826653532052815
+    },
+    "cel:cel_rich": {
+      "calls": 12.7696,
+      "prec": 0.9600000000000002,
+      "lo": 0.9199999999999999,
+      "hi": 1.0,
+      "auroc": 0.6875573151056329
+    },
+    "sc:3": {
+      "calls": 3.0,
+      "prec": 0.7725,
+      "lo": 0.7425,
+      "hi": 0.8059999999999998,
+      "auroc": 0.5770208881777819
+    },
+    "sc:6": {
+      "calls": 6.0,
+      "prec": 0.798,
+      "lo": 0.7555000000000001,
+      "hi": 0.8425000000000002,
+      "auroc": 0.5954924934257648
+    },
+    "sc:9": {
+      "calls": 9.0,
+      "prec": 0.7885000000000001,
+      "lo": 0.735,
+      "hi": 0.8435125000000002,
+      "auroc": 0.5870358706439499
+    },
+    "sc:12": {
+      "calls": 12.0,
+      "prec": 0.7855000000000001,
+      "lo": 0.7205,
+      "hi": 0.8495125000000001,
+      "auroc": 0.5802136428211051
+    },
+    "verbalized": {
+      "calls": 1.0,
+      "prec": 0.7899999999999999,
+      "lo": 0.7899999999999999,
+      "hi": 0.7899999999999999,
+      "auroc": 0.6629931897253682
+    },
+    "celk:2": {
+      "calls": 1.988,
+      "prec": 0.9200000000000002,
+      "lo": 0.8700000000000001,
+      "hi": 0.96,
+      "auroc": 0.7543396994596195
+    },
+    "celk:3": {
+      "calls": 2.976,
+      "prec": 0.96,
+      "lo": 0.9100000000000001,
+      "hi": 1.0,
+      "auroc": 0.7474091346509735
+    },
+    "celk:4": {
+      "calls": 2.976,
+      "prec": 0.96,
+      "lo": 0.9100000000000001,
+      "hi": 1.0,
+      "auroc": 0.7474091346509735
+    },
+    "celk:5": {
+      "calls": 2.976,
+      "prec": 0.96,
+      "lo": 0.9100000000000001,
+      "hi": 1.0,
+      "auroc": 0.7474091346509735
+    },
+    "celk:6": {
+      "calls": 2.976,
+      "prec": 0.96,
+      "lo": 0.9100000000000001,
+      "hi": 1.0,
+      "auroc": 0.7474091346509735
+    },
+    "celk:8": {
+      "calls": 2.976,
+      "prec": 0.96,
+      "lo": 0.9100000000000001,
+      "hi": 1.0,
+      "auroc": 0.7474091346509735
+    }
+  },
+  "budget_matched": {
+    "metric": "prec@k",
+    "n_dev": 100,
+    "n_candidates": 1760,
+    "by_k": {
+      "2": {
+        "allocation": "1 orig draw \u2192 distractor",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": false,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 1.98,
+        "dev_score": 0.9574999999999999,
+        "cel_k": {
+          "prec": 0.9200000000000002,
+          "calls": 1.988,
+          "auroc": 0.7543396994596195,
+          "prr": 0.5844313401171202,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.74,
+          "calls": 2.0,
+          "auroc": 0.6019630658358982,
+          "prr": 0.1953339333781041,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.8800000000000001,
+          "calls": 2.0,
+          "auroc": 0.697423241498386,
+          "prr": 0.5038571143361229,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.04,
+          "ci_lo": -0.009999999999999998,
+          "ci_hi": 0.09,
+          "wilcoxon_p": 0.25,
+          "wins": 4,
+          "ties": 5,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.18000000000000002,
+          "ci_lo": 0.10000000000000002,
+          "ci_hi": 0.24000000000000007,
+          "wilcoxon_p": 0.005859375,
+          "wins": 9,
+          "ties": 0,
+          "n": 10
+        }
+      },
+      "3": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": true,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 2.96,
+        "dev_score": 1.0,
+        "cel_k": {
+          "prec": 0.96,
+          "calls": 2.976,
+          "auroc": 0.7474091346509735,
+          "prr": 0.6005062975062897,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.74,
+          "calls": 3.0,
+          "auroc": 0.5786516853932584,
+          "prr": 0.16118988183440006,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.9,
+          "calls": 3.0,
+          "auroc": 0.6869050405742821,
+          "prr": 0.5100622361804081,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.059999999999999984,
+          "ci_lo": 0.009999999999999998,
+          "ci_hi": 0.10999999999999996,
+          "wilcoxon_p": 0.109375,
+          "wins": 6,
+          "ties": 3,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.22000000000000003,
+          "ci_lo": 0.12000000000000002,
+          "ci_hi": 0.32999999999999996,
+          "wilcoxon_p": 0.0078125,
+          "wins": 8,
+          "ties": 2,
+          "n": 10
+        }
+      },
+      "4": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": true,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 2.96,
+        "dev_score": 1.0,
+        "cel_k": {
+          "prec": 0.96,
+          "calls": 2.976,
+          "auroc": 0.7474091346509735,
+          "prr": 0.6005062975062897,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.75,
+          "calls": 4.0,
+          "auroc": 0.5810861534206523,
+          "prr": 0.16233085500448266,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.93,
+          "calls": 4.0,
+          "auroc": 0.6834390248720836,
+          "prr": 0.5202043883434456,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.029999999999999992,
+          "ci_lo": -0.019999999999999997,
+          "ci_hi": 0.07999999999999999,
+          "wilcoxon_p": 0.5,
+          "wins": 3,
+          "ties": 6,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.21000000000000002,
+          "ci_lo": 0.11000000000000001,
+          "ci_hi": 0.32,
+          "wilcoxon_p": 0.0078125,
+          "wins": 8,
+          "ties": 2,
+          "n": 10
+        }
+      },
+      "5": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": true,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 2.96,
+        "dev_score": 1.0,
+        "cel_k": {
+          "prec": 0.96,
+          "calls": 2.976,
+          "auroc": 0.7474091346509735,
+          "prr": 0.6005062975062897,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.76,
+          "calls": 5.0,
+          "auroc": 0.5912134558281352,
+          "prr": 0.1917499428611691,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.93,
+          "calls": 5.0,
+          "auroc": 0.6814005859024692,
+          "prr": 0.5226416855486095,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.029999999999999992,
+          "ci_lo": -0.019999999999999997,
+          "ci_hi": 0.07999999999999999,
+          "wilcoxon_p": 0.5,
+          "wins": 3,
+          "ties": 6,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.2,
+          "ci_lo": 0.11000000000000001,
+          "ci_hi": 0.3,
+          "wilcoxon_p": 0.00390625,
+          "wins": 9,
+          "ties": 1,
+          "n": 10
+        }
+      },
+      "6": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": true,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 2.96,
+        "dev_score": 1.0,
+        "cel_k": {
+          "prec": 0.96,
+          "calls": 2.976,
+          "auroc": 0.7474091346509735,
+          "prr": 0.6005062975062897,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.79,
+          "calls": 6.0,
+          "auroc": 0.5912006595483702,
+          "prr": 0.1872425775369659,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.96,
+          "calls": 6.0,
+          "auroc": 0.675614807665239,
+          "prr": 0.5131412208371336,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.0,
+          "ci_lo": -0.039999999999999994,
+          "ci_hi": 0.039999999999999994,
+          "wilcoxon_p": 1.0,
+          "wins": 2,
+          "ties": 6,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.17,
+          "ci_lo": 0.07,
+          "ci_hi": 0.28,
+          "wilcoxon_p": 0.015625,
+          "wins": 7,
+          "ties": 3,
+          "n": 10
+        }
+      },
+      "8": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "allocation_params": {
+          "k1": 1,
+          "para": false,
+          "extra": 0,
+          "flips": [
+            "distractor"
+          ],
+          "chal": true,
+          "se": false,
+          "verb": false
+        },
+        "dev_calls": 2.96,
+        "dev_score": 1.0,
+        "cel_k": {
+          "prec": 0.96,
+          "calls": 2.976,
+          "auroc": 0.7474091346509735,
+          "prr": 0.6005062975062897,
+          "survival": 0.988
+        },
+        "self_consistency": {
+          "prec": 0.78,
+          "calls": 8.0,
+          "auroc": 0.5952815829528159,
+          "prr": 0.18991576354159895,
+          "survival": 1.0
+        },
+        "self_consistency_verbal": {
+          "prec": 0.95,
+          "calls": 8.0,
+          "auroc": 0.6691730086250635,
+          "prr": 0.5021462198354868,
+          "survival": 1.0
+        },
+        "paired_vs_verbal": {
+          "mean_diff": 0.009999999999999998,
+          "ci_lo": -0.039999999999999994,
+          "ci_hi": 0.059999999999999984,
+          "wilcoxon_p": 1.0,
+          "wins": 2,
+          "ties": 6,
+          "n": 10
+        },
+        "paired": {
+          "mean_diff": 0.18000000000000002,
+          "ci_lo": 0.09,
+          "ci_hi": 0.2899999999999999,
+          "wilcoxon_p": 0.0078125,
+          "wins": 8,
+          "ties": 2,
+          "n": 10
+        }
+      }
+    }
+  },
+  "linkage": {
+    "certification_budget": {
+      "exact": 8.08,
+      "model": 6.72
+    },
+    "nested_allocation": "3 para draws \u2192 +6 draws, neg, relabel, distractor, chal, SE",
+    "adaptive": {
+      "cel_b3": {
+        "calls": 4.0,
+        "prec": 0.75,
+        "auroc": 0.5964148348910899,
+        "lo": 0.69,
+        "hi": 0.8099999999999999,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 2.2745281805976307
+      },
+      "cel_lean": {
+        "calls": 7.804,
+        "prec": 0.99,
+        "auroc": 0.6774248191474521,
+        "lo": 0.97,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.83,
+        "eps_sum": 1.2546689641071862
+      },
+      "cel": {
+        "calls": 10.974,
+        "prec": 0.9800000000000001,
+        "auroc": 0.6837485672920312,
+        "lo": 0.95,
+        "hi": 1.0,
+        "certified_exact": 1.0,
+        "certified_model": 0.84,
+        "eps_sum": 0.42086286710501747
+      },
+      "cel_rich": {
+        "calls": 12.876,
+        "prec": 0.9600000000000002,
+        "auroc": 0.686656746031746,
+        "lo": 0.9199999999999999,
+        "hi": 1.0,
+        "certified_exact": 0.97,
+        "certified_model": 0.81,
+        "eps_sum": 0.234144863921806
+      }
+    },
+    "nested": {
+      "calls": 10.974,
+      "prec": 0.9800000000000001,
+      "auroc": 0.7156703062476122,
+      "lo": 0.95,
+      "hi": 1.0,
+      "certified_exact": 0.93,
+      "certified_model": 0.84,
+      "eps_sum": 0.5821066645655476
+    },
+    "celk": {
+      "2": {
+        "allocation": "1 orig draw \u2192 distractor",
+        "dev_calls": 1.98,
+        "calls": 1.988,
+        "prec": 0.9200000000000002,
+        "auroc": 0.7543396994596195,
+        "lo": 0.8700000000000001,
+        "hi": 0.96,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "3": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "4": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "5": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "6": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "8": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "10": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "12": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "14": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "16": {
+        "allocation": "1 orig draw \u2192 distractor, chal",
+        "dev_calls": 2.96,
+        "calls": 2.976,
+        "prec": 0.96,
+        "auroc": 0.7474091346509735,
+        "lo": 0.9100000000000001,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      }
+    },
+    "derived": {
+      "2": {
+        "allocation": "1 para draw",
+        "dev_calls": 2.0,
+        "k_eff": 1,
+        "calls": 2.0,
+        "prec": 0.89,
+        "auroc": 0.716494559182767,
+        "lo": 0.85,
+        "hi": 0.93,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "3": {
+        "allocation": "1 para draw \u2192 neg",
+        "dev_calls": 2.99,
+        "k_eff": 3.10180895648355,
+        "calls": 2.994,
+        "prec": 0.9199999999999999,
+        "auroc": 0.8084240136205493,
+        "lo": 0.8800000000000001,
+        "hi": 0.95,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "4": {
+        "allocation": "1 para draw \u2192 neg, relabel",
+        "dev_calls": 3.98,
+        "k_eff": 5.2036179129671,
+        "calls": 3.988,
+        "prec": 0.9400000000000001,
+        "auroc": 0.8238211562661929,
+        "lo": 0.89,
+        "hi": 0.9800000000000001,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 4.50184855752101
+      },
+      "5": {
+        "allocation": "2 para draws \u2192 neg, relabel",
+        "dev_calls": 4.64,
+        "k_eff": 6.2036179129671,
+        "calls": 4.516,
+        "prec": 0.96,
+        "auroc": 0.77430316985757,
+        "lo": 0.93,
+        "hi": 0.99,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 3.14372637647017
+      },
+      "6": {
+        "allocation": "3 para draws \u2192 neg, relabel",
+        "dev_calls": 5.36,
+        "k_eff": 7.2036179129671,
+        "calls": 5.268,
+        "prec": 0.9600000000000002,
+        "auroc": 0.7138842942266685,
+        "lo": 0.9199999999999999,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.0,
+        "eps_sum": 2.2745281805976307
+      },
+      "8": {
+        "allocation": "3 para draws \u2192 +3 draws, neg, relabel",
+        "dev_calls": 7.4,
+        "k_eff": 10.2036179129671,
+        "calls": 7.17,
+        "prec": 0.9600000000000002,
+        "auroc": 0.7016680284581199,
+        "lo": 0.9199999999999999,
+        "hi": 1.0,
+        "certified_exact": 0.0,
+        "certified_model": 0.98,
+        "eps_sum": 0.9464234394064152
+      },
+      "10": {
+        "allocation": "4 para draws \u2192 +6 draws, neg, relabel",
+        "dev_calls": 9.96,
+        "k_eff": 14.2036179129671,
+        "calls": 9.336,
+        "prec": 0.9700000000000001,
+        "auroc": 0.7032043303897746,
+        "lo": 0.93,
+        "hi": 1.0,
+        "certified_exact": 0.96,
+        "certified_model": 0.93,
+        "eps_sum": 0.4014651170345779
+      },
+      "12": {
+        "allocation": "4 para draws \u2192 +6 draws, neg, relabel, distractor",
+        "dev_calls": 10.58,
+        "k_eff": 14.766357216979724,
+        "calls": 9.878,
+        "prec": 0.9800000000000001,
+        "auroc": 0.7053873051620932,
+        "lo": 0.95,
+        "hi": 1.0,
+        "certified_exact": 0.93,
+        "certified_model": 0.88,
+        "eps_sum": 0.4903714715240933
+      },
+      "14": {
+        "allocation": "4 para draws \u2192 +6 draws, neg, relabel, distractor",
+        "dev_calls": 10.58,
+        "k_eff": 14.766357216979724,
+        "calls": 9.878,
+        "prec": 0.9800000000000001,
+        "auroc": 0.7053873051620932,
+        "lo": 0.95,
+        "hi": 1.0,
+        "certified_exact": 0.93,
+        "certified_model": 0.88,
+        "eps_sum": 0.4903714715240933
+      },
+      "16": {
+        "allocation": "4 para draws \u2192 +6 draws, neg, relabel, distractor",
+        "dev_calls": 10.58,
+        "k_eff": 14.766357216979724,
+        "calls": 9.878,
+        "prec": 0.9800000000000001,
+        "auroc": 0.7053873051620932,
+        "lo": 0.95,
+        "hi": 1.0,
+        "certified_exact": 0.93,
+        "certified_model": 0.88,
+        "eps_sum": 0.4903714715240933
+      }
+    }
+  },
+  "arms": {
+    "A_12draws": {
+      "per_batch": [
+        0.9,
+        0.9,
+        0.9,
+        1.0,
+        0.8,
+        0.8,
+        0.9,
+        0.9,
+        0.8,
+        0.8
+      ],
+      "mean_prec": 0.8700000000000001,
+      "K_b": [
+        37,
+        38,
+        35,
+        42,
+        34,
+        34,
+        35,
+        41,
+        35,
+        41
+      ],
+      "base_acc": 0.744,
+      "mean_calls": 13.0,
+      "survival": 1.0,
+      "auroc": 0.6452032930107527,
+      "prr": 0.3519902897674487,
+      "selected": [
+        [
+          "strategyqa-sim-274",
+          "strategyqa-sim-415",
+          "strategyqa-sim-202",
+          "strategyqa-sim-581",
+          "strategyqa-sim-389",
+          "strategyqa-sim-568",
+          "strategyqa-sim-387",
+          "strategyqa-sim-492",
+          "strategyqa-sim-57",
+          "strategyqa-sim-230"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-528",
+          "strategyqa-sim-108",
+          "strategyqa-sim-139",
+          "strategyqa-sim-2",
+          "strategyqa-sim-590",
+          "strategyqa-sim-350",
+          "strategyqa-sim-258",
+          "strategyqa-sim-55",
+          "strategyqa-sim-371"
+        ],
+        [
+          "strategyqa-sim-123",
+          "strategyqa-sim-574",
+          "strategyqa-sim-359",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-423",
+          "strategyqa-sim-207",
+          "strategyqa-sim-204",
+          "strategyqa-sim-215"
+        ],
+        [
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-452",
+          "strategyqa-sim-21",
+          "strategyqa-sim-451",
+          "strategyqa-sim-472",
+          "strategyqa-sim-203",
+          "strategyqa-sim-587",
+          "strategyqa-sim-231",
+          "strategyqa-sim-263"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-339",
+          "strategyqa-sim-309",
+          "strategyqa-sim-345",
+          "strategyqa-sim-280",
+          "strategyqa-sim-378",
+          "strategyqa-sim-109",
+          "strategyqa-sim-50",
+          "strategyqa-sim-579",
+          "strategyqa-sim-396"
+        ],
+        [
+          "strategyqa-sim-597",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-69",
+          "strategyqa-sim-382",
+          "strategyqa-sim-175",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-312",
+          "strategyqa-sim-287"
+        ],
+        [
+          "strategyqa-sim-409",
+          "strategyqa-sim-99",
+          "strategyqa-sim-154",
+          "strategyqa-sim-463",
+          "strategyqa-sim-456",
+          "strategyqa-sim-102",
+          "strategyqa-sim-508",
+          "strategyqa-sim-35",
+          "strategyqa-sim-522",
+          "strategyqa-sim-86"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-138",
+          "strategyqa-sim-584",
+          "strategyqa-sim-190",
+          "strategyqa-sim-489",
+          "strategyqa-sim-51",
+          "strategyqa-sim-189",
+          "strategyqa-sim-87",
+          "strategyqa-sim-322"
+        ],
+        [
+          "strategyqa-sim-153",
+          "strategyqa-sim-469",
+          "strategyqa-sim-59",
+          "strategyqa-sim-458",
+          "strategyqa-sim-281",
+          "strategyqa-sim-33",
+          "strategyqa-sim-182",
+          "strategyqa-sim-39",
+          "strategyqa-sim-547",
+          "strategyqa-sim-191"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-64",
+          "strategyqa-sim-227",
+          "strategyqa-sim-338",
+          "strategyqa-sim-223",
+          "strategyqa-sim-265",
+          "strategyqa-sim-75",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-591"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.7938464187090415,
+        0.9251260267132607
+      ],
+      "rel_error_reduction": 0.49218750000000044
+    },
+    "B_6draws_battery": {
+      "per_batch": [
+        1.0,
+        0.8,
+        0.9,
+        1.0,
+        0.8,
+        1.0,
+        1.0,
+        1.0,
+        0.8,
+        0.9
+      ],
+      "mean_prec": 0.9200000000000002,
+      "K_b": [
+        39,
+        36,
+        31,
+        39,
+        34,
+        36,
+        34,
+        41,
+        31,
+        39
+      ],
+      "base_acc": 0.72,
+      "mean_calls": 10.0,
+      "survival": 1.0,
+      "auroc": 0.7406944444444444,
+      "prr": 0.5318487112597631,
+      "selected": [
+        [
+          "strategyqa-sim-274",
+          "strategyqa-sim-202",
+          "strategyqa-sim-581",
+          "strategyqa-sim-389",
+          "strategyqa-sim-119",
+          "strategyqa-sim-468",
+          "strategyqa-sim-387",
+          "strategyqa-sim-492",
+          "strategyqa-sim-57",
+          "strategyqa-sim-5"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-55",
+          "strategyqa-sim-108",
+          "strategyqa-sim-139",
+          "strategyqa-sim-125",
+          "strategyqa-sim-110",
+          "strategyqa-sim-30",
+          "strategyqa-sim-2",
+          "strategyqa-sim-590",
+          "strategyqa-sim-248"
+        ],
+        [
+          "strategyqa-sim-551",
+          "strategyqa-sim-359",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-423",
+          "strategyqa-sim-207",
+          "strategyqa-sim-163",
+          "strategyqa-sim-204",
+          "strategyqa-sim-567"
+        ],
+        [
+          "strategyqa-sim-549",
+          "strategyqa-sim-38",
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-452",
+          "strategyqa-sim-451",
+          "strategyqa-sim-472",
+          "strategyqa-sim-203",
+          "strategyqa-sim-587",
+          "strategyqa-sim-231"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-339",
+          "strategyqa-sim-84",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7",
+          "strategyqa-sim-345",
+          "strategyqa-sim-229",
+          "strategyqa-sim-378",
+          "strategyqa-sim-50",
+          "strategyqa-sim-205"
+        ],
+        [
+          "strategyqa-sim-597",
+          "strategyqa-sim-555",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-382",
+          "strategyqa-sim-98",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-312",
+          "strategyqa-sim-287"
+        ],
+        [
+          "strategyqa-sim-99",
+          "strategyqa-sim-154",
+          "strategyqa-sim-367",
+          "strategyqa-sim-346",
+          "strategyqa-sim-495",
+          "strategyqa-sim-245",
+          "strategyqa-sim-35",
+          "strategyqa-sim-11",
+          "strategyqa-sim-522",
+          "strategyqa-sim-113"
+        ],
+        [
+          "strategyqa-sim-218",
+          "strategyqa-sim-584",
+          "strategyqa-sim-190",
+          "strategyqa-sim-489",
+          "strategyqa-sim-189",
+          "strategyqa-sim-322",
+          "strategyqa-sim-200",
+          "strategyqa-sim-437",
+          "strategyqa-sim-46",
+          "strategyqa-sim-374"
+        ],
+        [
+          "strategyqa-sim-469",
+          "strategyqa-sim-241",
+          "strategyqa-sim-458",
+          "strategyqa-sim-281",
+          "strategyqa-sim-93",
+          "strategyqa-sim-111",
+          "strategyqa-sim-547",
+          "strategyqa-sim-191",
+          "strategyqa-sim-328",
+          "strategyqa-sim-220"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-565",
+          "strategyqa-sim-64",
+          "strategyqa-sim-227",
+          "strategyqa-sim-338",
+          "strategyqa-sim-265",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-561",
+          "strategyqa-sim-101"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.8547325158103118,
+        0.9614505975106312
+      ],
+      "rel_error_reduction": 0.7142857142857149
+    },
+    "B_half_kappa": {
+      "per_batch": [
+        1.0,
+        0.8,
+        0.9,
+        1.0,
+        0.8,
+        1.0,
+        1.0,
+        1.0,
+        0.8,
+        0.9
+      ],
+      "mean_prec": 0.9200000000000002,
+      "K_b": [
+        39,
+        36,
+        31,
+        39,
+        34,
+        36,
+        34,
+        41,
+        31,
+        39
+      ],
+      "base_acc": 0.72,
+      "mean_calls": 10.0,
+      "survival": 1.0,
+      "auroc": 0.7177380952380953,
+      "prr": 0.49635285831333764,
+      "selected": [
+        [
+          "strategyqa-sim-274",
+          "strategyqa-sim-202",
+          "strategyqa-sim-581",
+          "strategyqa-sim-389",
+          "strategyqa-sim-119",
+          "strategyqa-sim-468",
+          "strategyqa-sim-387",
+          "strategyqa-sim-492",
+          "strategyqa-sim-57",
+          "strategyqa-sim-5"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-55",
+          "strategyqa-sim-108",
+          "strategyqa-sim-139",
+          "strategyqa-sim-125",
+          "strategyqa-sim-110",
+          "strategyqa-sim-30",
+          "strategyqa-sim-2",
+          "strategyqa-sim-590",
+          "strategyqa-sim-248"
+        ],
+        [
+          "strategyqa-sim-551",
+          "strategyqa-sim-359",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-423",
+          "strategyqa-sim-207",
+          "strategyqa-sim-163",
+          "strategyqa-sim-204",
+          "strategyqa-sim-567"
+        ],
+        [
+          "strategyqa-sim-549",
+          "strategyqa-sim-38",
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-452",
+          "strategyqa-sim-451",
+          "strategyqa-sim-472",
+          "strategyqa-sim-203",
+          "strategyqa-sim-587",
+          "strategyqa-sim-231"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-339",
+          "strategyqa-sim-84",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7",
+          "strategyqa-sim-345",
+          "strategyqa-sim-229",
+          "strategyqa-sim-378",
+          "strategyqa-sim-50",
+          "strategyqa-sim-205"
+        ],
+        [
+          "strategyqa-sim-597",
+          "strategyqa-sim-555",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-382",
+          "strategyqa-sim-98",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-312",
+          "strategyqa-sim-287"
+        ],
+        [
+          "strategyqa-sim-99",
+          "strategyqa-sim-154",
+          "strategyqa-sim-367",
+          "strategyqa-sim-346",
+          "strategyqa-sim-495",
+          "strategyqa-sim-245",
+          "strategyqa-sim-35",
+          "strategyqa-sim-11",
+          "strategyqa-sim-522",
+          "strategyqa-sim-113"
+        ],
+        [
+          "strategyqa-sim-218",
+          "strategyqa-sim-584",
+          "strategyqa-sim-190",
+          "strategyqa-sim-489",
+          "strategyqa-sim-189",
+          "strategyqa-sim-322",
+          "strategyqa-sim-200",
+          "strategyqa-sim-437",
+          "strategyqa-sim-46",
+          "strategyqa-sim-374"
+        ],
+        [
+          "strategyqa-sim-469",
+          "strategyqa-sim-241",
+          "strategyqa-sim-458",
+          "strategyqa-sim-281",
+          "strategyqa-sim-93",
+          "strategyqa-sim-111",
+          "strategyqa-sim-547",
+          "strategyqa-sim-191",
+          "strategyqa-sim-328",
+          "strategyqa-sim-220"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-565",
+          "strategyqa-sim-64",
+          "strategyqa-sim-227",
+          "strategyqa-sim-338",
+          "strategyqa-sim-265",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341",
+          "strategyqa-sim-561",
+          "strategyqa-sim-101"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.8547325158103118,
+        0.9614505975106312
+      ],
+      "rel_error_reduction": 0.7142857142857149
+    },
+    "C_9draws": {
+      "per_batch": [
+        0.8,
+        0.9,
+        0.9,
+        1.0,
+        0.8,
+        0.8,
+        0.9,
+        0.8,
+        0.7,
+        0.8
+      ],
+      "mean_prec": 0.8400000000000001,
+      "K_b": [
+        40,
+        38,
+        35,
+        42,
+        34,
+        35,
+        34,
+        42,
+        35,
+        41
+      ],
+      "base_acc": 0.752,
+      "mean_calls": 10.0,
+      "survival": 1.0,
+      "auroc": 0.603798472889499,
+      "prr": 0.27559869225458533,
+      "selected": [
+        [
+          "strategyqa-sim-206",
+          "strategyqa-sim-274",
+          "strategyqa-sim-415",
+          "strategyqa-sim-550",
+          "strategyqa-sim-202",
+          "strategyqa-sim-581",
+          "strategyqa-sim-389",
+          "strategyqa-sim-568",
+          "strategyqa-sim-119",
+          "strategyqa-sim-165"
+        ],
+        [
+          "strategyqa-sim-318",
+          "strategyqa-sim-258",
+          "strategyqa-sim-528",
+          "strategyqa-sim-108",
+          "strategyqa-sim-139",
+          "strategyqa-sim-194",
+          "strategyqa-sim-30",
+          "strategyqa-sim-2",
+          "strategyqa-sim-590",
+          "strategyqa-sim-53"
+        ],
+        [
+          "strategyqa-sim-123",
+          "strategyqa-sim-574",
+          "strategyqa-sim-359",
+          "strategyqa-sim-292",
+          "strategyqa-sim-85",
+          "strategyqa-sim-527",
+          "strategyqa-sim-423",
+          "strategyqa-sim-207",
+          "strategyqa-sim-163",
+          "strategyqa-sim-204"
+        ],
+        [
+          "strategyqa-sim-38",
+          "strategyqa-sim-477",
+          "strategyqa-sim-58",
+          "strategyqa-sim-452",
+          "strategyqa-sim-21",
+          "strategyqa-sim-451",
+          "strategyqa-sim-576",
+          "strategyqa-sim-472",
+          "strategyqa-sim-203",
+          "strategyqa-sim-587"
+        ],
+        [
+          "strategyqa-sim-506",
+          "strategyqa-sim-339",
+          "strategyqa-sim-309",
+          "strategyqa-sim-7",
+          "strategyqa-sim-345",
+          "strategyqa-sim-229",
+          "strategyqa-sim-280",
+          "strategyqa-sim-378",
+          "strategyqa-sim-109",
+          "strategyqa-sim-50"
+        ],
+        [
+          "strategyqa-sim-597",
+          "strategyqa-sim-555",
+          "strategyqa-sim-588",
+          "strategyqa-sim-89",
+          "strategyqa-sim-69",
+          "strategyqa-sim-382",
+          "strategyqa-sim-175",
+          "strategyqa-sim-67",
+          "strategyqa-sim-473",
+          "strategyqa-sim-312"
+        ],
+        [
+          "strategyqa-sim-409",
+          "strategyqa-sim-99",
+          "strategyqa-sim-154",
+          "strategyqa-sim-463",
+          "strategyqa-sim-456",
+          "strategyqa-sim-346",
+          "strategyqa-sim-102",
+          "strategyqa-sim-495",
+          "strategyqa-sim-508",
+          "strategyqa-sim-35"
+        ],
+        [
+          "strategyqa-sim-31",
+          "strategyqa-sim-61",
+          "strategyqa-sim-138",
+          "strategyqa-sim-584",
+          "strategyqa-sim-425",
+          "strategyqa-sim-190",
+          "strategyqa-sim-489",
+          "strategyqa-sim-51",
+          "strategyqa-sim-189",
+          "strategyqa-sim-87"
+        ],
+        [
+          "strategyqa-sim-153",
+          "strategyqa-sim-469",
+          "strategyqa-sim-59",
+          "strategyqa-sim-458",
+          "strategyqa-sim-281",
+          "strategyqa-sim-93",
+          "strategyqa-sim-33",
+          "strategyqa-sim-182",
+          "strategyqa-sim-39",
+          "strategyqa-sim-111"
+        ],
+        [
+          "strategyqa-sim-143",
+          "strategyqa-sim-64",
+          "strategyqa-sim-227",
+          "strategyqa-sim-338",
+          "strategyqa-sim-223",
+          "strategyqa-sim-265",
+          "strategyqa-sim-75",
+          "strategyqa-sim-333",
+          "strategyqa-sim-256",
+          "strategyqa-sim-341"
+        ]
+      ],
+      "pooled_jeffreys": [
+        0.7589404952968146,
+        0.9017242759446833
+      ],
+      "rel_error_reduction": 0.35483870967741965
+    }
+  },
+  "arms_tests": {
+    "B_vs_A": {
+      "mean_diff": 0.04999999999999999,
+      "ci_lo": 0.0,
+      "ci_hi": 0.09999999999999998,
+      "wilcoxon_p": 0.1875,
+      "wins": 5,
+      "ties": 4,
+      "n": 10
+    },
+    "B_vs_C": {
+      "mean_diff": 0.07999999999999999,
+      "ci_lo": 0.019999999999999997,
+      "ci_hi": 0.13999999999999996,
+      "wilcoxon_p": 0.0625,
+      "wins": 6,
+      "ties": 3,
+      "n": 10
+    }
+  },
+  "monotonicity": {
+    "strata": [
+      {
+        "stratum": 1,
+        "n": 50,
+        "acc": 1.0,
+        "lo": 0.9512415405559286,
+        "hi": 1.0
+      },
+      {
+        "stratum": 2,
+        "n": 50,
+        "acc": 1.0,
+        "lo": 0.9512415405559286,
+        "hi": 1.0
+      },
+      {
+        "stratum": 3,
+        "n": 50,
+        "acc": 0.66,
+        "lo": 0.52264592365714,
+        "hi": 0.7794249068986814
+      },
+      {
+        "stratum": 4,
+        "n": 50,
+        "acc": 0.82,
+        "lo": 0.6971952218073794,
+        "hi": 0.9070238900109058
+      },
+      {
+        "stratum": 5,
+        "n": 50,
+        "acc": 0.76,
+        "lo": 0.6293068324098305,
+        "hi": 0.8615862345326064
+      },
+      {
+        "stratum": 6,
+        "n": 50,
+        "acc": 0.6,
+        "lo": 0.4617435894430282,
+        "hi": 0.7270476302805684
+      },
+      {
+        "stratum": 7,
+        "n": 50,
+        "acc": 0.6,
+        "lo": 0.4617435894430282,
+        "hi": 0.7270476302805684
+      },
+      {
+        "stratum": 8,
+        "n": 50,
+        "acc": 0.52,
+        "lo": 0.3836705340928138,
+        "hi": 0.654087371951928
+      },
+      {
+        "stratum": 9,
+        "n": 50,
+        "acc": 0.6,
+        "lo": 0.4617435894430282,
+        "hi": 0.7270476302805684
+      },
+      {
+        "stratum": 10,
+        "n": 50,
+        "acc": 0.7,
+        "lo": 0.5644720922981614,
+        "hi": 0.8131228674643434
+      }
+    ],
+    "isotonic_gap": {
+      "gap": 0.002938666666666664,
+      "ci_lo": 0.0005927499999999996,
+      "ci_hi": 0.011043866666666662
+    },
+    "top_strata": {
+      "1-10": {
+        "n": 100,
+        "acc": 0.98
+      },
+      "11-30": {
+        "n": 200,
+        "acc": 0.715
+      },
+      "31-50": {
+        "n": 200,
+        "acc": 0.61
+      },
+      "p_1-10>11-30": 2.7629026813437808e-08,
+      "p_11-30>31-50": 0.013303382507874441
+    }
+  },
+  "heldout_audit": {
+    "selected_pass": 0.91,
+    "control_pass": 0.795,
+    "fisher_p": 0.007464400512992428,
+    "executed_calls": 300
+  },
+  "leave_one_out": {
+    "L": {
+      "d_prec": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "d_auroc": 0.0,
+      "d_prr": 0.0,
+      "calls_saved": 0.0
+    },
+    "flip": {
+      "d_prec": -0.009999999999999998,
+      "ci": [
+        -0.029999999999999992,
+        0.0
+      ],
+      "d_auroc": 0.003156984577024402,
+      "d_prr": 0.005005007866963673,
+      "calls_saved": 1.902000000000001
+    },
+    "se": {
+      "d_prec": 0.059999999999999984,
+      "ci": [
+        0.029999999999999992,
+        0.08999999999999998
+      ],
+      "d_auroc": 0.004735476865536659,
+      "d_prr": 0.028020034216784673,
+      "calls_saved": 0.6340000000000003
+    },
+    "chal": {
+      "d_prec": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "d_auroc": -0.0003619472763467524,
+      "d_prr": -0.0008839864065850467,
+      "calls_saved": 0.6340000000000003
+    },
+    "verb": {
+      "d_prec": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "d_auroc": 0.000321730912308249,
+      "d_prr": 0.0005244217654052363,
+      "calls_saved": 0.0
+    }
+  },
+  "shapley": {
+    "phi": {
+      "L": 0.015026666666666683,
+      "flip": 0.021793333333333338,
+      "se": 0.06814333333333335,
+      "chal": 0.012043333333333338,
+      "verb": 0.07339333333333335
+    },
+    "phi_ci": {
+      "L": [
+        -0.0009613333333333363,
+        0.03218008333333336
+      ],
+      "flip": [
+        0.006152750000000011,
+        0.036276916666666666
+      ],
+      "se": [
+        0.05217125000000002,
+        0.08456450000000001
+      ],
+      "chal": [
+        -0.0006674999999999899,
+        0.023377750000000003
+      ],
+      "verb": [
+        0.05879125000000001,
+        0.08811783333333337
+      ]
+    },
+    "V": {
+      "{}": 0.7895999999999999,
+      "L": 0.858,
+      "flip": 0.8732,
+      "se": 0.9738,
+      "chal": 0.8554,
+      "verb": 1.0,
+      "L,flip": 0.937,
+      "L,se": 0.99,
+      "L,chal": 0.8802,
+      "L,verb": 0.9800000000000001,
+      "flip,se": 0.9700000000000001,
+      "chal,flip": 0.9269999999999999,
+      "flip,verb": 0.99,
+      "chal,se": 0.982,
+      "se,verb": 1.0,
+      "chal,verb": 0.9800000000000001,
+      "L,flip,se": 0.99,
+      "L,chal,flip": 0.9292,
+      "L,flip,verb": 0.9800000000000001,
+      "L,chal,se": 0.9848000000000001,
+      "L,se,verb": 1.0,
+      "L,chal,verb": 0.9663999999999999,
+      "chal,flip,se": 0.9800000000000001,
+      "flip,se,verb": 0.99,
+      "chal,flip,verb": 0.9800000000000001,
+      "chal,se,verb": 1.0,
+      "L,chal,flip,se": 0.9747999999999999,
+      "L,flip,se,verb": 0.99,
+      "L,chal,flip,verb": 0.9764000000000002,
+      "L,chal,se,verb": 0.99,
+      "chal,flip,se,verb": 0.99,
+      "L,chal,flip,se,verb": 0.9800000000000001
+    },
+    "total_gain": 0.19040000000000004,
+    "efficiency_check": 1.3877787807814457e-17,
+    "phi_per_call": {
+      "L": 0.002504444444444447,
+      "flip": 0.007264444444444446,
+      "se": 0.06814333333333335,
+      "chal": 0.012043333333333338,
+      "verb": 0.07339333333333335
+    },
+    "random_reference": 0.6839999999999999,
+    "screen_gain": 0.10559999999999992,
+    "flip_increment": 0.07900000000000007
+  },
+  "kappa_hat": {
+    "kappa_hat": {
+      "neg": 5.18108564510981,
+      "relabel": 2.809194228443841,
+      "distractor": 2.898843423699897
+    },
+    "ci": {
+      "neg": [
+        0.5322006210432003,
+        26.55855875183546
+      ],
+      "relabel": [
+        -1.0773920516348225,
+        13.546755623511652
+      ],
+      "distractor": [
+        -2.5405845509181084,
+        17.640625009484424
+      ]
+    },
+    "beta_agree": 0.17435196012193271
+  },
+  "kappa_derived": {
+    "neg": 2.10180895648355,
+    "relabel": 2.10180895648355,
+    "distractor": 0.5627393040126236
+  },
+  "jaccard": {
+    "per_batch": [
+      0.5384615384615384,
+      0.5384615384615384
+    ],
+    "mean": 0.5384615384615384,
+    "chance_floor": 0.11574046726508452,
+    "tie_aware": 0.7,
+    "top_group_size": 10.0
+  }
+}

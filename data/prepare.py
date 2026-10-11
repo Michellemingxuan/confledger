@@ -5,15 +5,15 @@
 For each dataset: downloads from HF (cached under ~/.cache/huggingface), checks the
 field types the loaders rely on, and records the dataset fingerprint. StrategyQA
 and MMLU items are built with the real loaders + split and written to
-<results>/data/<ds>__{dev,eval}.jsonl for inspection. TriviaQA items need the
+<results>/<ds>/<config>/data/<ds>__{dev,eval}.jsonl for inspection, next to a
+manifest.json per dataset. TriviaQA items need the
 generator model for distractors (an API call), so they are built at collect time;
 a distractor-free preview would consume the RNG differently and not match.
 """
 import json
 from collections import Counter
-from pathlib import Path
 
-from confledger.utility.config import arg_parser, from_args
+from confledger.utility.config import arg_parser, from_args, results_dir
 from data import load_items, make_split
 from data.loaders import HF_SOURCES
 
@@ -36,13 +36,12 @@ a = arg_parser(__doc__).parse_args()
 cfg = from_args(a)
 sp = cfg["split"]
 need = sp["n_dev"] + sp["n_eval"]
-out = Path(cfg["paths"]["results"]) / "data"
-out.mkdir(parents=True, exist_ok=True)
 
 from datasets import load_dataset  # noqa: E402
 
-manifest = {}
 for name in cfg["_datasets"]:
+    out = results_dir(cfg, name) / "data"
+    out.mkdir(parents=True, exist_ok=True)
     hf, conf, split = HF_SOURCES[name]
     ds = load_dataset(hf, conf, split=split)
     info = {"hf_id": hf, "config": conf, "split": split, "fingerprint": ds._fingerprint,
@@ -59,8 +58,6 @@ for name in cfg["_datasets"]:
                                          "gold": it.gold}) + "\n")
             info[f"{part}_labels"] = dict(Counter(it.gold for it in its))
         assert len({it.item_id for it in items}) == len(items), "duplicate item ids"
-    manifest[name] = info
     print(f"{name}: {json.dumps(info)}")
-
-(out / "manifest.json").write_text(json.dumps(manifest, indent=2))
-print(f"wrote {out / 'manifest.json'}")
+    (out / "manifest.json").write_text(json.dumps({name: info}, indent=2))
+    print(f"wrote {out / 'manifest.json'}")

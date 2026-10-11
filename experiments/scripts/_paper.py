@@ -1,14 +1,16 @@
 """Paper output helpers for experiments/: LaTeX tables and the output folder.
 
-Tables and PDF figures go to <results>/paper/.
+Tables and PDF figures go to <results>/all/<config>/paper/.
 """
 from __future__ import annotations
 
 from pathlib import Path
 
+from confledger.utility.config import results_dir
+
 
 def paper_dir(cfg: dict) -> Path:
-    p = Path(cfg["paths"]["results"]) / "paper"
+    p = results_dir(cfg) / "paper"
     p.mkdir(parents=True, exist_ok=True)
     return p
 

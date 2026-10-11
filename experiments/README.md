@@ -4,13 +4,13 @@
 experiments/
   scripts/         estimate, collect, evaluate, dev audit, one script per paper table/figure, run_all.sh
   triviaqa.ipynb   per-dataset notebook
-  results/         everything runs produce
+  results/         everything runs produce, one folder per dataset
 ```
 
-Every step is `python experiments/scripts/<step>.py -c CONFIG`. Only `collect.py` spends API
+Every step is `python experiments/scripts/<step>.py -c CONFIG`, run from the repo root. Only `collect.py` spends API
 calls. The paper scripts read the per-cell protocol results that `evaluate.py` writes, recomputing them from cached collections if
 missing (`--force` recomputes). Every script takes `-c CONFIG`, plus `-d`/`-m` to
-restrict to cells. Tables and PDFs go to `<results>/paper/`, plus a PNG copy of each figure for the notebook (§10 of `triviaqa.ipynb` runs them all and shows the figures).
+restrict to cells. Tables and PDFs go to `results/all/<config>/paper/`, plus a PNG copy of each figure for the notebook (§10 of `triviaqa.ipynb` runs them all and shows the figures).
 
 | Script | Paper | Output |
 |---|---|---|
@@ -36,22 +36,29 @@ ledger. They only call `confledger`; any logic they need goes into the package.
 |---|---|
 | `triviaqa.ipynb` | TriviaQA (stable-but-wrong regime) |
 
-`scripts/_paper.py` holds the LaTeX helpers. `scripts/run_all.sh CONFIG` runs the whole chain:
+`experiments/scripts/_paper.py` holds the LaTeX helpers. `experiments/scripts/run_all.sh CONFIG` runs the whole chain:
 `estimate.py` → `collect.py` → `evaluate.py` → every paper script above. Every
-collect/evaluate appends seed, environment and git commit to `<results>/run_log.jsonl`.
+collect/evaluate appends seed, environment and git commit to `results/all/<config>/run_log.jsonl`.
 
 ## `results/`: everything a run produces
 
-One config in `configs/` = one run = one folder here, named after the config:
+One folder per dataset; inside it, one folder per config in `configs/` (one config = one run),
+named after the config. Outputs that span datasets go to `all/`:
 
 ```
 results/
-  cache/          shared response cache (gitignored): an identical request is never paid twice
-  <config name>/  e.g. smoke/, default/
-    collections/  raw per-item records (large, gitignored)
-    results/      per-cell reports, summary.json, paper/  (default/results/data/ = data.prepare manifests)
-  simulation/     dry-run outputs (gitignored)
+  cache/                   shared response cache (gitignored): an identical request is never paid twice
+    simulation/            the dry run's own cache
+  <dataset>/               triviaqa/, strategyqa/, mmlu/
+    <config name>/         e.g. smoke/, default/, simulation/
+      data/                data.prepare: manifest.json, <ds>__{dev,eval}.jsonl
+      collections/         raw per-item records (large, gitignored)
+      <ds>__<model>.json   per-cell protocol result, plus .md report and _budget/_strata .png
+  all/
+    <config name>/         summary.json (Holm across cells), paper/ (tables + figures), audit/, run_log.jsonl
 ```
+
+Everything under `simulation/` is a pipeline check, never evidence.
 
 ```bash
 python experiments/scripts/collect.py  -c configs/smoke.yaml -v
@@ -59,5 +66,5 @@ python experiments/scripts/evaluate.py -c configs/smoke.yaml
 ```
 
 For a variant (another prompt, split or model), copy the config under a new name
-and change its `paths` to the new folder. Don't edit a config that already has
+(its outputs then land in folders with the new name). Don't edit a config that already has
 results: the config is the record of what produced them.

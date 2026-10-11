@@ -1,0 +1,10 @@
+{
+  "triviaqa": {
+    "hf_id": "mandarjoshi/trivia_qa",
+    "config": "rc.nocontext",
+    "split": "validation",
+    "fingerprint": "b024cd028213e383",
+    "rows": 17944,
+    "unique_question_ids": 9960
+  }
+}

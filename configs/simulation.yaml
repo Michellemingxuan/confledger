@@ -14,4 +14,4 @@ models:
 generator: {provider: simulated, seed: 1}
 judge: {provider: simulated, seed: 1, name: judge}
 collect: {n_paraphrases: 12, n_same: 16, n_reuse_paras: 3, n_reuse_samples: 3, temperature: 0.7, verbal_per_draw: true, workers: 8}
-paths: {cache: experiments/results/simulation/cache, collections: experiments/results/simulation/collections, results: experiments/results/simulation/results}
+paths: {cache: experiments/results/cache/simulation, results: experiments/results}   # own cache: simulated responses never mix with real ones

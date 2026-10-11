@@ -10,9 +10,8 @@ Step 2 -- score:   python experiments/scripts/dev_audit.py -c CFG -m gpt-4.1 sco
 """
 import csv
 import random
-from pathlib import Path
 
-from confledger.utility.config import arg_parser, from_args
+from confledger.utility.config import arg_parser, from_args, results_dir
 from confledger.utility.llm import cache_path, read_responses
 
 from confledger.utility.answer_parsing import parse_answer, parse_json_list
@@ -23,7 +22,7 @@ ap.add_argument("action", choices=["export", "score"])
 ap.add_argument("--n", type=int, default=50)
 a = ap.parse_args()
 cfg = from_args(a)
-out = Path(cfg["paths"]["results"]) / "audit"
+out = results_dir(cfg) / "audit"          # the response cache spans datasets
 out.mkdir(parents=True, exist_ok=True)
 mk = cfg["_models"][0]
 

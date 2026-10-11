@@ -1,0 +1,106 @@
+% =========================================================================
+% DRAFT (2026-10-08, decisions.md #16, PROPOSED): evidence-odds theorem.
+% Not \input into main.tex yet. Uses main.tex macros (\pbar, \E, \Prob, \ind);
+% needs \newtheorem{theorem}{Theorem} in the preamble.
+% Plain-language companion: docs/separation_theorem.md.
+% Type of result: Theorem 1 and Corollary 1 are exact under Assumption S (a stylised
+% model); Corollary 2 is exact and needs only exchangeability.
+% =========================================================================
+
+\subsection{The Ledger Is the Log-Odds of Error}
+\label{sec:method:odds}
+
+\paragraph{Setting.}
+In the stable pool, each case has a type $T \in \{\mathrm{C}\} \cup \mathcal{W}$:
+correct ($\mathrm{C}$) or one of several ways of being wrong ($\mathcal{W}$, e.g.\
+$\mathrm{F}$, following a surface cue, and $\mathrm{B}$, holding a false belief), with
+shares $\rho_t$ and $Z = \ind\{T = \mathrm{C}\}$. A case has draws $D$ and the outcomes
+$b = (b_1, \dots, b_r)$ of $r$ label-action probes. For a wrong type $t$ and probe $j$,
+\[
+  \lambda_{t,j}(b_j) = \frac{\Prob(b_j \mid T = t)}{\Prob(b_j \mid T = \mathrm{C})},
+  \qquad
+  O_0 = \frac{\sum_{t \in \mathcal{W}} \rho_t}{\rho_{\mathrm C}}.
+\]
+
+\begin{assumption}[S]
+\label{ass:S}
+Within the pool: cases are i.i.d.; $D \perp T$; and $b_1, \dots, b_r$ are independent
+of $D$ and of each other given $T$.
+\end{assumption}
+
+$D \perp T$ is Lemma~\ref{lem:power}(i) with type independent of stability: the draws
+are i.i.d.\ $\Bern(\pbar)$ whatever the reason for the answer.
+
+\begin{theorem}[Evidence odds]
+\label{thm:odds}
+Under Assumption~\ref{ass:S},
+\begin{equation}
+  \frac{\Prob(Z = 0 \mid D, b)}{\Prob(Z = 1 \mid D, b)}
+  \;=\; \sum_{t \in \mathcal{W}} \frac{\rho_t}{\rho_{\mathrm C}}
+        \prod_{j=1}^{r} \lambda_{t,j}(b_j).
+  \label{eq:odds}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By Bayes and Assumption~\ref{ass:S},
+$\Prob(T = t \mid D, b) \propto \rho_t\, \Prob(D)\, \prod_j \Prob(b_j \mid T = t)$;
+$\Prob(D)$ cancels in the ratio of the wrong types to $\mathrm{C}$.
+\end{proof}
+
+The draws do not appear in Eq.~\eqref{eq:odds}: on the axis of correctness given
+stability, their likelihood ratio is $1$. Each probe multiplies the odds of error by its
+likelihood ratio, so the ledger of log-likelihood ratios is the log-odds of error.
+
+\begin{corollary}[Neutral, geometric, floored]
+\label{cor:odds}
+For a case that passes $r$ exchangeable probes, with $\lambda_t = \lambda_{t,j}(1)$,
+\[
+  \frac{\rho_{\mathrm B}}{\rho_{\mathrm C}}\,\lambda_{\mathrm B}^{\,r}
+  \;\le\; O_r \;\le\; O_0 \max_{t \in \mathcal{W}} \lambda_t^{\,r},
+  \qquad O_0 \text{ for } r = 0 \text{ at any number of draws.}
+\]
+Hence every rule that sees only draws delivers a top-$K$ with
+$\E[\mathrm{FDP}] = O_0/(1 + O_0)$.
+\end{corollary}
+
+\begin{proof}
+Set $b = \mathbf{1}_r$ in Eq.~\eqref{eq:odds} and bound the sum by its $\mathrm{B}$ term
+and by its largest ratio. With $r = 0$, every case has $\Prob(Z = 0 \mid D) =
+O_0/(1 + O_0)$; sum over the delivered set by linearity of expectation.
+\end{proof}
+
+\begin{corollary}[Price of a guarantee]
+\label{cor:price}
+With conformal p-values from $M_{\mathrm{cal}}$ exchangeable labelled cases and BH,
+the smallest level $\alpha^\ast_K$ that delivers $K$ of $m$ cases satisfies
+\[
+  \E[\alpha^\ast_K \mid t] \;\le\; \frac{m\,G(t)}{K} + \frac{m}{K (M_{\mathrm{cal}} + 1)},
+  \qquad G(t) = \Prob(Z = 0,\ \hat s \ge t),
+\]
+with $t$ the $K$-th test score: the score's own top-$K$ error plus a price of order
+$m/(K M_{\mathrm{cal}})$. The level is guaranteed for any score: a weak score costs
+deliveries, not errors.
+\end{corollary}
+
+\begin{proof}
+BH returns $K$ cases once $p_{(K)} \le K\alpha/m$, so $\alpha^\ast_K \le m\,p_{(K)}/K$.
+Given the test scores, $p_{(K)} = (1 + N)/(M_{\mathrm{cal}} + 1)$ with
+$N \sim \mathrm{Bin}(M_{\mathrm{cal}}, G(t))$. Validity is Jin \& Cand\`es (2023).
+\end{proof}
+
+\begin{remark}
+(i) With one catchable type ($\lambda_{\mathrm F} < 1$) and one blind type
+($\lambda_{\mathrm B} > 1$), $O_r = a\lambda_{\mathrm F}^r + b\lambda_{\mathrm B}^r$ is
+convex in $r$ and minimised at
+$r^\ast = \ln\!\big(a \ln \lambda_{\mathrm F}^{-1} / (b \ln \lambda_{\mathrm B})\big)
+/ \ln(\lambda_{\mathrm B}/\lambda_{\mathrm F})$; at $\rho = (0.80, 0.15, 0.05)$ for
+$(\mathrm C, \mathrm F, \mathrm B)$, pass rates $0.95, 0.5, 1$: $r^\ast = 5.2$, minimum
+$\mathrm{FDP} = 0.081$, against $0.20$ for any number of draws.
+(ii) By Proposition~\ref{prop:topk}, ranking by Eq.~\eqref{eq:odds} is the best size-$K$
+rule on these signals; the hard filter ``all probes pass'' is the case $b = \mathbf{1}_r$.
+(iii) In practice the pool is estimated from $n$ draws; an unstable binary case enters
+with probability at most $p_s^{\,n} + (1 - p_s)^n$ against at least $p_h^{\,n}$ for a
+stable one, a leak that falls only as $(p_s/p_h)^n$. The gap between the fitted score
+$\hat s$ and Eq.~\eqref{eq:odds} is estimated by cross-fitting.
+\end{remark}

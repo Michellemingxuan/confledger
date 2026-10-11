@@ -27,12 +27,12 @@ models:
 
 # Paraphrase / distractor generator (fixed across runs). Must differ from every
 # model under test: it sees the gold answer when writing distractors.
-generator: {provider: openai_compat, model: "<generator-model-id>"}
+generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal}   # reasoning model: no temperature
 
 # Rationale judge. DEVIATION (decisions.md #6): the design wants a different
 # provider from the model under test; SafeChain offers only OpenAI models, so the
 # judge is a different OpenAI model instead. One judge serves every model.
-judge: {provider: openai_compat, model: "<judge-model-id>"}
+judge: {provider: openai_compat, model: "gpt-5", reasoning_effort: low}
 alt_judge: {provider: openai_compat, model: "<cheaper-judge-id>"}   # judge-sensitivity check
 judge_sensitivity_dataset: strategyqa   # alt_judge also run here
 
@@ -45,4 +45,5 @@ collect:
   verbal_per_draw: true    # true: confidence line on every draw, no separate verbal call (-1 call/question)
   workers: 8
 
-paths: {cache: experiments/results/cache, collections: experiments/results/default/collections, results: experiments/results/default/results}
+# Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset).
+paths: {cache: experiments/results/cache, results: experiments/results}

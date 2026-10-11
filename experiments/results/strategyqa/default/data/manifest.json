@@ -1,0 +1,21 @@
+{
+  "strategyqa": {
+    "hf_id": "ChilleD/StrategyQA",
+    "config": null,
+    "split": "train",
+    "fingerprint": "4a14c01ebd9f0d7e",
+    "rows": 1603,
+    "answer_balance": {
+      "False": 865,
+      "True": 738
+    },
+    "dev_labels": {
+      "no": 50,
+      "yes": 50
+    },
+    "eval_labels": {
+      "no": 288,
+      "yes": 212
+    }
+  }
+}

@@ -4,6 +4,10 @@ A config (configs/*.yaml) is one run. Models under test are a list identified by
 their model id; one `judge` (optionally an `alt_judge`) serves all of them.
 `_datasets` / `_models` hold the cells selected on the command line. Relative paths resolve against the working
 directory, so run everything from the repo root.
+
+Outputs are grouped by dataset: <results>/<dataset>/<config name>/ holds one dataset's
+collections and per-cell reports; <results>/all/<config name>/ holds what spans datasets
+(summary.json, paper/, run_log.jsonl).
 """
 from __future__ import annotations
 
@@ -20,7 +24,26 @@ from typing import Iterator
 import yaml
 
 
+def load_env(path: str | Path = ".env") -> list[str]:
+    """Export KEY=VALUE lines from a .env file (API keys) into the environment, without
+    overriding variables already set in the shell. Returns the keys it set."""
+    p, added = Path(path), []
+    if not p.exists():
+        return added
+    for line in p.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.removeprefix("export ").split("=", 1)
+        key, value = key.strip(), value.strip().strip("'\"")
+        if key and key not in os.environ:
+            os.environ[key] = value
+            added.append(key)
+    return added
+
+
 def load_config(path: str | Path, datasets=None, models=None) -> dict:
+    load_env()                                    # API keys from ./.env (repo root)
     cfg = yaml.safe_load(Path(path).read_text())
     cfg["_path"] = str(path)
     cfg["_datasets"] = list(datasets or cfg["datasets"])
@@ -32,6 +55,11 @@ def load_config(path: str | Path, datasets=None, models=None) -> dict:
     return cfg
 
 
+def results_dir(cfg: dict, ds: str | None = None) -> Path:
+    """<results>/<ds>/<config name>/, or <results>/all/<config name>/ when ds is None."""
+    return Path(cfg["paths"]["results"]) / (ds or "all") / Path(cfg["_path"]).stem
+
+
 def model_spec(cfg: dict, model_id: str) -> dict:
     """The `models:` entry of a model under test, by its model id."""
     for m in cfg["models"]:
@@ -41,7 +69,7 @@ def model_spec(cfg: dict, model_id: str) -> dict:
 
 
 def arg_parser(desc: str) -> argparse.ArgumentParser:
-    """Standard options for data/ and experiments/ scripts."""
+    """Standard options for data/ and experiments/scripts/."""
     ap = argparse.ArgumentParser(description=desc, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-c", "--config", default="configs/default.yaml")
     ap.add_argument("-d", "--dataset", action="append", help="restrict to dataset(s)")
@@ -83,7 +111,7 @@ def _git() -> dict:
 
 
 def record_run(cfg: dict, command: str) -> None:
-    """Append seed, environment, git commit and the full config to <results>/run_log.jsonl."""
+    """Append seed, environment, git commit and the full config to <results>/all/<config>/run_log.jsonl."""
     pkgs = {}
     for name in ("confledger", "numpy", "scipy", "openai", "anthropic", "datasets"):
         try:
@@ -96,7 +124,7 @@ def record_run(cfg: dict, command: str) -> None:
              "env": {"python": platform.python_version(), "platform": platform.platform(),
                      "LLM_BACKEND": os.environ.get("LLM_BACKEND"), "packages": pkgs},
              "git": _git(), "config": {k: v for k, v in cfg.items() if not k.startswith("_")}}
-    out = Path(cfg["paths"]["results"])
+    out = results_dir(cfg)
     out.mkdir(parents=True, exist_ok=True)
     with (out / "run_log.jsonl").open("a") as fh:
         fh.write(json.dumps(entry, default=str) + "\n")

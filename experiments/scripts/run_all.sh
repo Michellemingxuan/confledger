@@ -13,4 +13,4 @@ python $S/evaluate.py -c "$CFG" > /dev/null      # per-cell protocol + reports +
 for exp in sprt_characteristics main_ladder budget_curves mode_linkage evidence_exchange monotonicity signal_effects robustness; do
   python "$S/$exp.py" -c "$CFG"
 done
-echo "Paper tables and figures: see the 'paper/' folder under the results path."
+echo "Paper tables and figures: see experiments/results/all/<config name>/paper/."

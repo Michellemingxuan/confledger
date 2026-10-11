@@ -26,7 +26,7 @@ from data import load_split
 from . import prompts as P
 from .utility.answer_parsing import parse_answer, parse_confidence, parse_explanation, parse_json_list
 from .methods import cel_from_settings, max_cel_calls
-from .utility.config import check_config, model_spec, record_run
+from .utility.config import check_config, model_spec, record_run, results_dir
 from .utility.llm import CachedClient, Request, cached_client
 from .sprt_posterior import majority
 from .utility.records import CaseData, Draw, Item
@@ -189,8 +189,8 @@ def estimate_calls(cfg: dict, reseed_batches: int = 0) -> list[dict]:
 
 
 def collection_path(cfg: dict, ds: str, mk: str, suffix: str = "") -> Path:
-    """<collections>/<ds>__<mk><suffix>.jsonl; suffix '' (eval), '__dev', '__reseed'."""
-    return Path(cfg["paths"]["collections"]) / f"{ds}__{mk}{suffix}.jsonl"
+    """<results>/<ds>/<config>/collections/<ds>__<mk><suffix>.jsonl; suffix '' (eval), '__dev', '__reseed'."""
+    return results_dir(cfg, ds) / "collections" / f"{ds}__{mk}{suffix}.jsonl"
 
 
 def load_collection(path: str | Path) -> dict[str, CaseData]:

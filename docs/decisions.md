@@ -129,6 +129,14 @@ Condensed from the design conversations. Each entry: decision — why.
     control matters: it matches CEL-k on 2 of 3 datasets. Dev-selection optimism: 100 dev
     items per dataset in the full run; eval stays untouched.
     Full write-up (strategy, cost model, theory, limitations): docs/cel_k_allocation.md.
+15. Generator and judge = gpt-5, a reasoning model (2026-09-30; models available: gpt-4.1 and
+    gpt-5, gpt-4.1 is under test). A `reasoning_effort` in a model spec switches the backend
+    (direct API and SafeChain) to reasoning parameters: no temperature (fixed default), and
+    max_completion_tokens = the request's cap + `reasoning_tokens` (default 4000) of headroom
+    for hidden reasoning. Generator effort minimal, judge effort low. Consequences: paraphrases
+    and distractors are sampled at gpt-5's default temperature instead of 0.7, and the judge's
+    clustering is no longer temperature-0; both are cached, so every replay is reproducible.
+    The model under test (gpt-4.1) keeps T=0.7 draws and T=0 probes unchanged.
 15. Bridge between adaptive CEL and CEL-k (2026-09-29): one evidence ledger under two
     constraints -- adaptive CEL spends until certification, CEL-k maximises evidence under
     an expected-call budget. Sec. 3 theory was written for adaptive CEL only; now:
@@ -156,6 +164,29 @@ Condensed from the design conversations. Each entry: decision — why.
     Sec. 4 mode-linkage figure + mapping row. Simulated dry run: the dev-chosen CEL-k stops
     spending at ~2 calls because simulated dev prec@10 saturates (ties -> fewer calls);
     a simulator artefact to recheck on real data, not a finding.
+16. PROPOSED, not in code (2026-10-08): headline theorem + method redesign. Design log with
+    each idea's propose/validate/challenge/outcome: the "CEL Run Pipeline" artifact.
+    - Headline theory: separation theorem (docs/separation_theorem.md). Any draw-only rule,
+      self-consistency with any number of draws included, has E[FDP of top-k] = rho, the
+      share of stable-but-wrong cases; r label-action probes give rho_A < rho. Exact given a
+      stylised model (M1-M5); lifts Lemma 4 from a test to the delivered set; names the
+      blind spot (stable wrong belief passes every probe) and gives a finite best r.
+    - Redesign (each item to be decided before coding): calibration set of M labelled cases
+      outside eval (8 calls/case: 1 generator + 5 fresh-paraphrase draws + negation + relabel);
+      logistic fit of Z with an unpenalised stability term eta = psi(a+m) - psi(b+n-m) and a
+      ridge penalty on the other signals only; SHAP importance to rank/prune signals and
+      v_g = I_g / c_g as the greedy order (Props. K, K': equal-weight knapsack, model-based),
+      replacing the dev-chosen enumeration (#14, kept as an offline reference); pessimistic
+      score s = mu_hat - lambda*sigma_hat (lambda by 5-fold CV on M_fit) replacing Borda;
+      optional conformal selection + BH on M_cal for FDR on correctness; optional GLR stop in
+      the certified mode (~25 unanimous draws at delta = 0.1, vs 9).
+    - Reverses "Jeffreys prior, not empirical Bayes" for the certificate, at the user's choice:
+      a Beta prior per dataset x model fitted on the calibration draws, depth = bootstrap 95th
+      percentile (pessimistic); the certificate becomes model-based, the Jeffreys depth (9)
+      is reported next to it as the exact reference. Double use is avoided because the prior
+      is fitted on calibration cases only, never on the cases it certifies.
+    Paper, tests (test_sprt_posterior.py for any prior change) and code follow only after the
+    items are confirmed.
 Observed in dry run: the screen trades global AUROC/PRR for top-k precision (address in
 paper); plain Jaccard understates stability under top ties (add tie-aware variant).
 

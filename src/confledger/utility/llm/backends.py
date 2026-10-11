@@ -39,18 +39,33 @@ class AnthropicBackend:
         return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
 
 
+def sampling_kwargs(req: Request, reasoning_effort: str | None = None,
+                    reasoning_tokens: int = 4000) -> dict:
+    """Request parameters for a chat completion. Standard models get the request's
+    temperature and max_tokens. Reasoning models (gpt-5, o-series; a spec with
+    `reasoning_effort`) reject both: they sample at their fixed default temperature and
+    take max_completion_tokens, which also covers hidden reasoning, so the output
+    budget gets `reasoning_tokens` of headroom."""
+    if reasoning_effort:
+        return {"max_completion_tokens": req.max_tokens + reasoning_tokens,
+                "reasoning_effort": reasoning_effort}
+    return {"max_tokens": req.max_tokens, "temperature": req.temperature}
+
+
 class OpenAICompatBackend:
     def __init__(self, model: str, base_url: str | None = None,
-                 api_key_env: str = "OPENAI_API_KEY", name: str | None = None):
+                 api_key_env: str = "OPENAI_API_KEY", name: str | None = None,
+                 reasoning_effort: str | None = None, reasoning_tokens: int = 4000):
         import openai  # noqa: PLC0415
         self.client = openai.OpenAI(base_url=base_url, api_key=os.environ.get(api_key_env))
         self.model = model
         self.name = name or f"openai_compat:{model}"
+        self.reasoning = (reasoning_effort, reasoning_tokens)
 
     def generate(self, req: Request) -> str:
         r = self.client.chat.completions.create(
-            model=self.model, max_tokens=req.max_tokens, temperature=req.temperature,
-            messages=[{"role": "user", "content": req.prompt}])
+            model=self.model, messages=[{"role": "user", "content": req.prompt}],
+            **sampling_kwargs(req, *self.reasoning))
         return r.choices[0].message.content or ""
 
 
@@ -72,7 +87,8 @@ class SafeChainBackend:
     CALL_TIMEOUT_S = float(os.environ.get("SAFECHAIN_CALL_TIMEOUT_S", "180"))
     STALL_RETRY_S = float(os.environ.get("SAFECHAIN_STALL_RETRY_S", "40"))
 
-    def __init__(self, model: str, name: str | None = None):
+    def __init__(self, model: str, name: str | None = None,
+                 reasoning_effort: str | None = None, reasoning_tokens: int = 4000):
         from langchain_core.messages import HumanMessage  # noqa: PLC0415
         from langchain_core.prompts import MessagesPlaceholder  # noqa: PLC0415
         from safechain.core.model import amodel  # noqa: PLC0415
@@ -81,6 +97,7 @@ class SafeChainBackend:
         self._template = ValidChatPromptTemplate.from_messages([MessagesPlaceholder("messages")])
         self.model = model
         self.name = name or f"safechain:{model}"
+        self.reasoning = (reasoning_effort, reasoning_tokens)
         self._llm = None
         self._loop = asyncio.new_event_loop()
         threading.Thread(target=self._loop.run_forever, daemon=True,
@@ -92,8 +109,7 @@ class SafeChainBackend:
     async def _call(self, req: Request):
         if self._llm is None:
             await self._build()
-        chain = self._template | self._llm.bind(temperature=req.temperature,
-                                                 max_tokens=req.max_tokens)
+        chain = self._template | self._llm.bind(**sampling_kwargs(req, *self.reasoning))
         inp = {"messages": [self._human(content=req.prompt)]}
         first = min(self.STALL_RETRY_S, self.CALL_TIMEOUT_S)
         if first > 0:
@@ -125,13 +141,14 @@ def make_backend(spec: dict):
     if (kind == "openai_compat" and not spec.get("base_url")      # explicit endpoints stay put
             and os.environ.get("LLM_BACKEND") == "safechain"):
         kind = "safechain"
+    reasoning = {k: spec[k] for k in ("reasoning_effort", "reasoning_tokens") if k in spec}
     if kind == "safechain":
-        return SafeChainBackend(spec["model"], spec.get("name"))
+        return SafeChainBackend(spec["model"], spec.get("name"), **reasoning)
     if kind == "anthropic":
         return AnthropicBackend(spec["model"], spec.get("name"))
     if kind == "openai_compat":
         return OpenAICompatBackend(spec["model"], spec.get("base_url"),
-                                   spec.get("api_key_env", "OPENAI_API_KEY"), spec.get("name"))
+                                   spec.get("api_key_env", "OPENAI_API_KEY"), spec.get("name"), **reasoning)
     if kind == "simulated":
         from .simulated_model import SimulatedBackend  # noqa: PLC0415
         return SimulatedBackend(**{k: v for k, v in spec.items() if k != "provider"})

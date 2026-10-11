@@ -1,0 +1,17 @@
+{
+  "mmlu": {
+    "hf_id": "cais/mmlu",
+    "config": "all",
+    "split": "test",
+    "fingerprint": "436299c1c09696bb",
+    "rows": 14042,
+    "dev_labels": {
+      "no": 52,
+      "yes": 48
+    },
+    "eval_labels": {
+      "no": 248,
+      "yes": 252
+    }
+  }
+}

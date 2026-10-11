@@ -38,7 +38,7 @@ evidence** — the method wins there by construction.
    directly (`OPENAI_API_KEY`). Set `LLM_BACKEND=safechain` in the private
    environment, where SafeChain serves the same model ids.
 4. `python experiments/scripts/collect.py -c configs/<name>.yaml`, then `evaluate.py`. Each
-   config writes to its own `experiments/results/<name>/`; for a variant of a run,
+   config writes to `experiments/results/<dataset>/<name>/`; for a variant of a run,
    copy the config under a new name rather than editing one that already has results.
 5. Freeze prompts and thresholds on the dev slice with `experiments/scripts/dev_audit.py`:
    hand-audit ~50 extractions and the paraphrases for meaning preservation.
@@ -57,8 +57,11 @@ coalitions, evidence arms) is a re-scoring of cached data.
 |---|---|---|
 | `src/confledger/` | the method and its evaluation protocol (a library; no CLI) | only via `collect.py` |
 | `data/` | all data preprocessing: dataset loaders (TriviaQA de-duplication), dev/eval split, `prepare.py` (download + checks) | no |
-| `experiments/` | `scripts/` (`estimate.py`, `collect.py`, `evaluate.py`, `dev_audit.py`, one script per paper table/figure, `run_all.sh`), per-dataset notebooks (`triviaqa.ipynb`), and `results/` (one folder per config, plus the shared cache); see `experiments/README.md` | no |
+| `experiments/scripts/` | every step as a script: `estimate.py`, `collect.py`, `evaluate.py`, `dev_audit.py`, one script per paper table/figure, `run_all.sh`; see `experiments/README.md` | only `collect.py` |
+| `experiments/` | per-dataset notebooks (`triviaqa.ipynb`) and `results/` (one folder per dataset, a config folder inside each; `all/` for cross-dataset outputs; the shared cache) | no |
 | `configs/` | templates: `default.yaml` (full grid), `smoke.yaml` (one pair), `simulation.yaml` (dry run) | — |
+| `docs/` | paper draft (`paper/`), design history (`decisions.md`), methodology and theory notes, brainstorming | — |
+| `tests/` | `pytest -q` | no |
 
 Suggested order: `data.prepare` → `estimate.py` → `collect.py` one cell → `dev_audit`
 (fix prompts if gates fail) → collect the grid → `experiments/scripts/run_all.sh`.

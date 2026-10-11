@@ -26,10 +26,12 @@ datasets: [triviaqa]
 models:                          # models under test, identified by model id
   - {provider: openai_compat, model: "gpt-4.1"}
 
-generator: {provider: openai_compat, model: "gpt-4.1-mini"}   # must differ from gpt-4.1
+# gpt-5 is a reasoning model: reasoning_effort switches the backend to its parameters
+# (no temperature; max_completion_tokens with reasoning headroom).
+generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal}   # must differ from gpt-4.1
 
 # Same-provider judge: documented deviation (decisions.md #6).
-judge: {provider: openai_compat, model: "<judge-model-id>"}
+judge: {provider: openai_compat, model: "gpt-5", reasoning_effort: low}
 
 collect:
   n_paraphrases: 3
@@ -40,5 +42,6 @@ collect:
   verbal_per_draw: true    # true: confidence line on every draw, no separate verbal call (-1 call/question)
   workers: 8
 
-# Outputs go to experiments/results/<config name>/; the response cache is shared by all configs.
-paths: {cache: experiments/results/cache, collections: experiments/results/smoke/collections, results: experiments/results/smoke/results}
+# Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset);
+# the response cache is shared by all real configs.
+paths: {cache: experiments/results/cache, results: experiments/results}
