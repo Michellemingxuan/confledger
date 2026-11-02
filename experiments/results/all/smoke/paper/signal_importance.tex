@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\toprule
+Signal & triviaqa \\
+\midrule
+\multicolumn{2}{l}{\emph{gpt-4.1}: rank (share of total importance)} \\
+agreement (stability) & 1 (100\%) \\
+survived the screen & 7 (0\%) \\
+negation probe & 8 (0\%) \\
+relabel probe & 9 (0\%) \\
+distractor probe & 10 (0\%) \\
+challenge & 3 (0\%) \\
+verbal confidence & 6 (0\%) \\
+semantic entropy & 2 (0\%) \\
+answer length & 5 (0\%) \\
+hedging words & 11 (0\%) \\
+confidence drop under negation & 4 (0\%) \\
+\bottomrule
+\end{tabular}
+\caption{Task-specific signal importance for confidence estimation: mean $|$SHAP$|$ of each signal in the score model fitted on $\mathcal{D}_{\mathrm{fit}}$ with every signal bought, as rank and share of the total (model-based; bootstrap intervals in the figure). Kendall $\tau$ compares the datasets' importance vectors.}
+\label{tab:signal-importance}
+\end{table}

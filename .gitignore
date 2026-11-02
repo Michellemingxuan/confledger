@@ -11,3 +11,7 @@ experiments/results/cache_full/
 experiments/results/*/*/collections/
 build/
 .DS_Store
+docs/paper/*.aux
+docs/paper/*.log
+docs/paper/*.out
+docs/paper/*.synctex.gz

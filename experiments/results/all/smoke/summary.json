@@ -1,0 +1,26 @@
+{
+  "triviaqa__gpt-4.1": {
+    "cel": 1.0,
+    "self_consistency": 0.9,
+    "confirmatory_p": 0.242,
+    "confirmatory_p_holm": 0.968
+  },
+  "triviaqa__gemini-2.5-flash": {
+    "cel": 1.0,
+    "self_consistency": 0.9411764705882353,
+    "confirmatory_p": 0.7124,
+    "confirmatory_p_holm": 1.0
+  },
+  "triviaqa__qwen3-8b": {
+    "cel": 0.5,
+    "self_consistency": 0.8,
+    "confirmatory_p": 0.7144,
+    "confirmatory_p_holm": 1.0
+  },
+  "triviaqa__llama-3.1-8b": {
+    "cel": 1.0,
+    "self_consistency": 0.875,
+    "confirmatory_p": 0.2634,
+    "confirmatory_p_holm": 0.968
+  }
+}

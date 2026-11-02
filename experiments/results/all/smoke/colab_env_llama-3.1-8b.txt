@@ -1,0 +1,5 @@
+meta-llama/Llama-3.1-8B-Instruct@0e9e39f249a16976918f6564b8830bc894c89659
+torch==2.13.0
+transformers==5.19.0
+vllm==0.32.0
+GPU 0: NVIDIA A100-SXM4-80GB (UUID: GPU-4cb9fe4f-f9e3-1f5a-bb02-039c1efd1e59)

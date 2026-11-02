@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\toprule
+Signal & triviaqa \\
+\midrule
+\multicolumn{2}{l}{\emph{gemini-2.5-flash}: rank (share of total importance)} \\
+agreement (stability) & 4 (12\%) \\
+survived the screen & 11 (0\%) \\
+negation probe & 2 (23\%) \\
+relabel probe & 1 (27\%) \\
+distractor probe & 6 (5\%) \\
+challenge & 3 (18\%) \\
+verbal confidence & 10 (0\%) \\
+semantic entropy & 5 (11\%) \\
+answer length & 7 (4\%) \\
+hedging words & 9 (0\%) \\
+confidence drop under negation & 8 (0\%) \\
+\bottomrule
+\end{tabular}
+\caption{Task-specific signal importance for confidence estimation: mean $|$SHAP$|$ of each signal in the score model fitted on $\mathcal{D}_{\mathrm{fit}}$ with every signal bought, as rank and share of the total (model-based; bootstrap intervals in the figure). Kendall $\tau$ compares the datasets' importance vectors.}
+\label{tab:signal-importance}
+\end{table}

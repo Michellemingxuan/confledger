@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrrr}
+\toprule
+Dataset & Model & screen & signals & flip incr. & $\phi/c$ L & $\phi/c$ flip & $\phi/c$ se & $\phi/c$ chal & $\phi/c$ verb \\
+\midrule
+triviaqa & gemini-2.5-flash & +0.019 & +0.121 & +0.054 & +0.0015 & +0.0136 & +0.0348 & +0.0288 & +0.0070 \\
+\bottomrule
+\end{tabular}
+\caption{Gain decomposition (random $\to$ screen $\to$ signals), the flip increment $V(\{L,\mathrm{flip}\})-V(\{L\})$, and value per API call.}
+\label{tab:shapley_cost}
+\end{table}

@@ -1,0 +1,110 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrl}
+\toprule
+$k$ & Method & prec@10\% & calls & acc. & AUROC & AUARC & $\Delta$ vs CEL-$k$ [95\% CI] \\
+\midrule
+\multicolumn{8}{l}{\emph{triviaqa / gpt-4.1}} \\
+2 & \textbf{CEL-$k$ (ours)} & 0.500 & 2.00 & 0.900 & 0.111 & 0.794 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 2.00 & 0.900 & 0.694 & 0.934 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 2.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 1.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 2.00 & 0.850 & 0.500 & 0.850 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 2.00 & 0.900 & 0.889 & 0.980 & +0.500 [+0.500, +0.500] \\
+3 & \textbf{CEL-$k$ (ours)} & 0.500 & 3.00 & 0.900 & 0.083 & 0.782 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 3.00 & 0.900 & 0.986 & 0.991 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 3.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 3.00 & 0.900 & 0.667 & 0.931 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 2.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 3.00 & 0.900 & 0.639 & 0.928 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 3.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 3.00 & 0.850 & 0.833 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 3.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 3.00 & 0.900 & 0.833 & 0.973 & +0.500 [+0.500, +0.500] \\
+4 & \textbf{CEL-$k$ (ours)} & 0.500 & 4.00 & 0.900 & 0.083 & 0.782 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 4.00 & 0.900 & 0.931 & 0.985 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 4.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 4.00 & 0.900 & 0.667 & 0.927 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 3.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 4.00 & 0.900 & 0.889 & 0.981 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 4.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 4.00 & 0.900 & 0.708 & 0.940 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 4.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 4.00 & 0.900 & 0.750 & 0.959 & +0.500 [+0.500, +0.500] \\
+5 & \textbf{CEL-$k$ (ours)} & 0.500 & 5.00 & 0.900 & 0.083 & 0.782 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 5.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 5.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 5.00 & 0.900 & 0.667 & 0.927 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 4.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 5.00 & 0.900 & 0.903 & 0.983 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 5.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 5.00 & 0.900 & 0.583 & 0.920 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 5.00 & 0.900 & 0.417 & 0.884 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 5.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+6 & \textbf{CEL-$k$ (ours)} & 0.500 & 6.00 & 0.900 & 0.111 & 0.794 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 6.00 & 0.900 & 0.903 & 0.983 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 6.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 6.00 & 0.900 & 0.667 & 0.927 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 5.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 6.00 & 0.900 & 0.917 & 0.984 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 6.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 6.00 & 0.900 & 0.583 & 0.920 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 6.00 & 0.900 & 0.333 & 0.843 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 6.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+8 & \textbf{CEL-$k$ (ours)} & 0.500 & 8.00 & 0.900 & 0.083 & 0.744 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 8.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 8.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 8.00 & 0.900 & 0.667 & 0.927 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 7.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 8.00 & 0.900 & 0.875 & 0.980 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 8.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 8.00 & 0.900 & 0.611 & 0.919 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 8.00 & 0.900 & 0.667 & 0.933 & +0.500 [+0.500, +0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 8.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+10 & \textbf{CEL-$k$ (ours)} & 0.500 & 10.00 & 0.900 & 0.083 & 0.782 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 10.00 & 0.900 & 0.944 & 0.987 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency & 1.000 & 10.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Self-consistency + verbal confidence & 1.000 & 10.00 & 0.900 & 0.667 & 0.927 & +0.500 [+0.500, +0.500] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 9.00 & 0.900 & 0.708 & 0.937 & +0.500 [+0.500, +0.500] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 10.00 & 0.900 & 0.875 & 0.979 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 10.00 & 0.900 & 0.500 & 0.900 & +0.500 [+0.500, +0.500] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 10.00 & 0.900 & 0.569 & 0.914 & +0.500 [+0.500, +0.500] \\
+ & CISC (Taubenfeld et al.) & 0.500 & 10.00 & 0.900 & 0.250 & 0.777 & -0.000 [-0.000, -0.000] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 10.00 & 0.900 & 0.806 & 0.971 & +0.500 [+0.500, +0.500] \\
+12 & \textbf{CEL-$k$ (ours)} & 1.000 & 12.00 & 0.900 & 0.111 & 0.807 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 12.00 & 0.900 & 0.944 & 0.987 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency & 1.000 & 12.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency + verbal confidence & 1.000 & 12.00 & 0.900 & 0.667 & 0.927 & -0.000 [-0.000, -0.000] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 11.00 & 0.900 & 0.708 & 0.937 & -0.000 [-0.000, -0.000] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 12.00 & 0.900 & 0.847 & 0.976 & -0.000 [-0.000, -0.000] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 12.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & Avg-Conf, paraphrases (Xiong et al.) & 1.000 & 12.00 & 0.900 & 0.597 & 0.917 & -0.000 [-0.000, -0.000] \\
+ & CISC (Taubenfeld et al.) & 0.500 & 12.00 & 0.900 & 0.194 & 0.767 & -0.500 [-0.500, -0.500] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 12.00 & 0.900 & 0.806 & 0.971 & -0.000 [-0.000, -0.000] \\
+14 & \textbf{CEL-$k$ (ours)} & 1.000 & 14.00 & 0.900 & 0.833 & 0.975 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 14.00 & 0.900 & 0.944 & 0.987 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency & 1.000 & 14.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency + verbal confidence & 1.000 & 14.00 & 0.900 & 0.667 & 0.927 & -0.000 [-0.000, -0.000] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 13.00 & 0.900 & 0.708 & 0.937 & -0.000 [-0.000, -0.000] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 14.00 & 0.900 & 0.833 & 0.974 & -0.000 [-0.000, -0.000] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 14.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 14.00 & 0.900 & 0.319 & 0.832 & -0.000 [-0.000, -0.000] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 14.00 & 0.900 & 0.806 & 0.970 & -0.000 [-0.000, -0.000] \\
+15 & \textbf{CEL-$k$ (ours)} & 1.000 & 15.00 & 0.900 & 0.833 & 0.975 & -- \\
+ & \quad CEL-$k$, Borda & 1.000 & 15.00 & 0.900 & 0.944 & 0.987 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency & 1.000 & 15.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & Self-consistency + verbal confidence & 1.000 & 15.00 & 0.900 & 0.667 & 0.927 & -0.000 [-0.000, -0.000] \\
+ & BSDetector (Chen & Mueller) & 1.000 & 14.00 & 0.900 & 0.708 & 0.937 & -0.000 [-0.000, -0.000] \\
+ & Semantic entropy (Kuhn et al.) & 1.000 & 15.00 & 0.900 & 0.833 & 0.974 & -0.000 [-0.000, -0.000] \\
+ & Avg-Conf (Xiong et al.) & 1.000 & 15.00 & 0.900 & 0.500 & 0.900 & -0.000 [-0.000, -0.000] \\
+ & CISC (Taubenfeld et al.) & 1.000 & 15.00 & 0.900 & 0.333 & 0.843 & -0.000 [-0.000, -0.000] \\
+ & Black-box calibrator (Pedapati et al.) & 1.000 & 15.00 & 0.900 & 0.694 & 0.956 & -0.000 [-0.000, -0.000] \\
+\bottomrule
+\end{tabular}
+\caption{Ranking mode at a fixed budget $k$ (R1). CEL-$k$: the allocation chosen on the dev slice (expected calls per case at most $k$), ranked by $\hat\mu - \lambda\hat\sigma$ fitted on the dev slice; every baseline spends exactly $k$ calls (semantic entropy and BSDetector: $k-1$ draws plus their extra call), CISC and the black-box calibrator refit at each $k$. prec@10\% averaged over 10 batches; accuracy of each method's own answers; AUROC and AUARC pooled over the 500 items; $\Delta$ = method minus CEL-$k$, paired over batches.}
+\label{tab:budget_curve}
+\end{table}

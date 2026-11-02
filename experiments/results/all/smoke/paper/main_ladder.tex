@@ -1,0 +1,33 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & prec@10\% & calls & acc. & AUROC & AUARC & PRR & $\Delta$ vs CEL \\
+\midrule
+\multicolumn{8}{l}{\emph{triviaqa / gpt-4.1} (matched budget 14 calls)} \\
+Random & 0.900 & 1.0 & 0.900 & 0.500 & 0.900 & -0.000 & -0.100 \\
+Verbalized & 1.000 & 1.0 & 0.900 & 0.708 & 0.937 & 0.397 & -0.000 \\
+Self-consistency & 1.000 & 14.0 & 0.900 & 0.500 & 0.900 & -0.000 & -0.000 \\
+\quad deployment baseline (fixed draws) & 1.000 & 3.0 & 0.900 & 0.500 & 0.900 & -0.000 & -0.000 \\
+Semantic entropy & 1.000 & 14.0 & 0.900 & 0.833 & 0.974 & 0.801 & -0.000 \\
+BSDetector-style & 1.000 & 13.0 & 0.900 & 0.708 & 0.937 & 0.397 & -0.000 \\
+Avg-Conf, one phrasing \citep{xiong2023} & 1.000 & 14.0 & 0.900 & 0.500 & 0.900 & -0.000 & -0.000 \\
+Avg-Conf, paraphrases \citep{xiong2023} & 1.000 & 13.0 & 0.900 & 0.597 & 0.917 & 0.188 & -0.000 \\
+CISC, verbal \citep{taubenfeld2025} & 1.000 & 14.0 & 0.900 & 0.319 & 0.832 & -0.738 & -0.000 \\
+Pedapati-style LR \citep{pedapati2024} & 1.000 & 14.0 & 0.900 & 0.806 & 0.970 & 0.759 & -0.000 \\
+\textbf{CEL (ours)} & 1.000 & 13.9 & 0.900 & 0.764 & 0.963 & 0.679 & -- \\
+\quad ranked by $\hat\mu - \lambda\hat\sigma$ & 1.000 & 13.9 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\quad Borda combiner & 1.000 & 13.9 & 0.900 & 0.875 & 0.979 & 0.854 & -0.000 \\
+\quad no spread & 1.000 & 13.9 & 0.900 & 0.903 & 0.982 & 0.890 & -0.000 \\
+\quad no SPRT & 1.000 & 8.0 & 0.850 & 0.980 & 0.982 & 0.978 & -0.000 \\
+\quad no invariance & 1.000 & 11.2 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\quad no SE & 1.000 & 13.0 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\quad no challenge & 1.000 & 13.0 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\quad no verbal & 1.000 & 13.9 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\quad no $L$ & 1.000 & 13.9 & 0.900 & 0.764 & 0.963 & 0.679 & -0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Baseline ladder and ablations. prec@10\% averaged over 10 batches; baselines matched to CEL's realised calls per case. Each method is scored on its own answers (acc.\ = their accuracy); AUROC, AUARC and PRR pooled over the 500 items.}
+\label{tab:main}
+\end{table}

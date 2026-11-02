@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & prec@10\% & calls & acc. & AUROC & AUARC & power ($\alpha{=}0.1$) & $\Delta$ vs CEL-$k$ \\
+\midrule
+\multicolumn{8}{l}{\emph{triviaqa / gpt-4.1}: elbow $k^* = 2$ (dev), CEL-$k$ plan 1 orig draw → chal} \\
+\textbf{CEL-$k$ (ours)}, $\hat\mu - \lambda\hat\sigma$ & 0.500 & 2.00 & 0.900 & 0.111 & 0.794 & -- & -- \\
+Self-consistency & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & -- & +0.500 \\
+SC + verbal tie-break & 1.000 & 2.00 & 0.900 & 0.708 & 0.937 & -- & +0.500 \\
+BSDetector-style & 1.000 & 1.00 & 0.900 & 0.708 & 0.937 & -- & +0.500 \\
+Avg-Conf, one phrasing \citep{xiong2023} & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & -- & +0.500 \\
+Avg-Conf, paraphrases \citep{xiong2023} & 1.000 & 2.00 & 0.850 & 0.500 & 0.850 & -- & +0.500 \\
+CISC, verbal \citep{taubenfeld2025} & 1.000 & 2.00 & 0.900 & 0.500 & 0.900 & -- & +0.500 \\
+Pedapati-style LR \citep{pedapati2024} & 1.000 & 2.00 & 0.900 & 0.889 & 0.980 & -- & +0.500 \\
+\textbf{certified CEL} (own spend) & 1.000 & 13.90 & 0.900 & 0.764 & 0.963 & -- & -- \\
+\bottomrule
+\end{tabular}
+\caption{Both modes at the elbow $k^*$ of CEL-$k$'s dev curve (Kneedle on dev prec@10\% over budgets; chosen on dev only). CEL-$k$ and every baseline at $k^*$ calls per case; certified CEL at its own adaptive spend for reference, since the SPRT sets its spend. Power: share of correct answers delivered by conformal BH at FDR $\alpha = 0.1$.}
+\label{tab:elbow}
+\end{table}

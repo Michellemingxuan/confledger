@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llllrrrrrr}
+\toprule
+Dataset & Model & Budget & Score & ECE & Brier & mean conf. & acc. & AUROC & AUARC \\
+\midrule
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & CEL $\hat\mu$ (ours) & 0.039 & 0.103 & 0.881 & 0.860 & 0.731 & 0.939 \\
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & SC agreement & 0.125 & 0.135 & 0.975 & 0.850 & 0.593 & 0.875 \\
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & Avg-Conf & 0.125 & 0.134 & 0.975 & 0.850 & 0.596 & 0.875 \\
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & Avg-Conf, paraphrases & 0.152 & 0.165 & 0.897 & 0.745 & 0.735 & 0.844 \\
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & CISC & 0.125 & 0.135 & 0.975 & 0.850 & 0.596 & 0.875 \\
+triviaqa & gemini-2.5-flash & k = 3 (deployment) & Black-box calibrator (Pedapati et al.) & 0.056 & 0.118 & 0.899 & 0.850 & 0.776 & 0.933 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & CEL $\hat\mu$ (ours) & 0.050 & 0.124 & 0.760 & 0.805 & 0.825 & 0.937 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & SC agreement & 0.117 & 0.124 & 0.962 & 0.845 & 0.729 & 0.910 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & Verbalized & 0.136 & 0.134 & 0.996 & 0.860 & 0.602 & 0.885 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & Avg-Conf & 0.116 & 0.122 & 0.961 & 0.845 & 0.734 & 0.910 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & Avg-Conf, paraphrases & 0.080 & 0.132 & 0.882 & 0.830 & 0.714 & 0.902 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & CISC & 0.117 & 0.124 & 0.962 & 0.845 & 0.772 & 0.905 \\
+triviaqa & gemini-2.5-flash & matched budget (12 calls) & Black-box calibrator (Pedapati et al.) & 0.068 & 0.125 & 0.885 & 0.835 & 0.737 & 0.902 \\
+\bottomrule
+\end{tabular}
+\caption{Calibration of the scores that claim to be $P(\text{correct})$ (R3), each against its own method's correctness, pooled over the evaluation items. ECE with 10 equal-width bins. CEL's ranking score $\hat\mu - \lambda\hat\sigma$ is not a probability and is not listed; $\hat\mu$ is fitted on the dev slice (model-based).}
+\label{tab:calibration}
+\end{table}

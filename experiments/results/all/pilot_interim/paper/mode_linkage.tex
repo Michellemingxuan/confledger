@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllllrlr}
+\toprule
+Dataset & Model & $k$ & Dev-chosen allocation & p@10 & Derived allocation & $\keff$ & p@10 \\
+\midrule
+triviaqa & gemini-2.5-flash & 2 & 1 orig draw → neg & 1.000 & 1 para draw & 1.0 & 0.840 \\
+triviaqa & gemini-2.5-flash & 3 & 1 orig draw → neg, relabel & 1.000 & 1 para draw → neg & 3.1 & 0.936 \\
+triviaqa & gemini-2.5-flash & 4 & 1 orig draw → neg, relabel, distractor & 1.000 & 1 para draw → neg, relabel & 5.2 & 0.950 \\
+triviaqa & gemini-2.5-flash & 5 & 1 para draw → +1 draw, neg, SE & 1.000 & 2 para draws → neg, relabel & 6.2 & 1.000 \\
+triviaqa & gemini-2.5-flash & 6 & 1 para draw → +1 draw, neg, chal, SE & 0.900 & 3 para draws → +1 draw, neg, relabel & 8.2 & 1.000 \\
+triviaqa & gemini-2.5-flash & 8 & 1 para draw → +1 draw, neg, relabel, distractor, chal, SE & 0.750 & 3 para draws → +4 draws, neg, relabel & 11.2 & 1.000 \\
+triviaqa & gemini-2.5-flash & 10 & 1 para draw → +3 draws, neg, relabel, distractor, chal, SE & 0.900 & 4 para draws → +6 draws, neg, relabel, distractor & 14.8 & 1.000 \\
+triviaqa & gemini-2.5-flash & 12 & 1 para draw → +5 draws, neg, relabel, distractor, chal, SE & 1.000 & 4 para draws → +6 draws, neg, relabel, distractor & 14.8 & 1.000 \\
+triviaqa & gemini-2.5-flash & 14 & 4 orig draws → +6 draws, neg, relabel, distractor, chal & 0.950 & 4 para draws → +6 draws, neg, relabel, distractor & 14.8 & 1.000 \\
+triviaqa & gemini-2.5-flash & 15 & 4 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 0.950 & 4 para draws → +6 draws, neg, relabel, distractor & 14.8 & 1.000 \\
+triviaqa & gemini-2.5-flash & 16 & 4 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 0.950 & 4 para draws → +6 draws, neg, relabel, distractor & 14.8 & 1.000 \\
+triviaqa & gemini-2.5-flash & \multicolumn{6}{l}{certification budget: exact 7.6, model-based 6.4 calls. Adaptive CEL 11.8 calls, p@10 1.000; replayed as an allocation p@10 1.000} \\
+\bottomrule
+\end{tabular}
+\caption{Mode linkage (Sec.~\ref{sec:method:budget}). Per budget $k$ (expected calls per case), the CEL-$k$ allocation chosen on the dev slice and the allocation derived from Proposition~\ref{prop:exchange} (maximal $\keff$ of a clean survivor, label-free), each with its evaluation precision@10; per cell, the certification budgets and the nesting check (adaptive CEL vs.\ its allocation replayed and ranked like CEL-$k$, Proposition~\ref{prop:nesting}). Both CEL-$k$ columns rank by $\hat\mu - \lambda\hat\sigma$ fitted on the dev slice.}
+\label{tab:mode_linkage}
+\end{table}

@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{rlrrrrrrr}
+\toprule
+$k$ & CEL-$k$ allocation & E[calls] dev / eval & CEL-$k$ p@10 & SC-$k$ p@10 & SC-$k$+verb. & $\Delta$ vs SC & 95\% CI & $p$ (paired bootstrap) \\
+\midrule
+\multicolumn{9}{l}{\emph{triviaqa / gpt-4.1} (allocation chosen on 100 dev items by AUARC)} \\
+2 & 1 orig draw → neg & 2.0 / 2.0 & 1.000 & 0.939 & 0.982 & +0.061 & [+0.004, +0.096] & 0.042 \\
+3 & 3 orig draws & 3.0 / 3.0 & 1.000 & 0.944 & 0.981 & +0.056 & [+0.025, +0.092] & 0.008 \\
+4 & 3 orig draws → SE & 4.0 / 4.0 & 1.000 & 0.944 & 0.981 & +0.056 & [+0.016, +0.092] & 0.024 \\
+5 & 3 orig draws → distractor, SE & 5.0 / 5.0 & 1.000 & 0.944 & 0.981 & +0.056 & [-0.014, +0.091] & 0.075 \\
+6 & 3 orig draws → relabel, distractor, SE & 6.0 / 5.9 & 1.000 & 0.944 & 0.980 & +0.056 & [-0.014, +0.091] & 0.075 \\
+8 & 1 para draw → +4 draws, neg, chal & 7.9 / 8.0 & 1.000 & 0.944 & 0.987 & +0.056 & [+0.026, +0.092] & 0.000 \\
+10 & 1 para draw → +4 draws, neg, relabel, distractor, chal & 9.9 / 10.0 & 1.000 & 0.944 & 0.987 & +0.056 & [+0.026, +0.092] & 0.000 \\
+12 & 1 para draw → +6 draws, neg, distractor, chal, SE & 11.9 / 11.9 & 1.000 & 0.944 & 0.987 & +0.056 & [+0.026, +0.092] & 0.000 \\
+14 & 3 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 13.9 / 13.8 & 1.000 & 0.944 & 0.987 & +0.056 & [+0.026, +0.092] & 0.000 \\
+15 & 3 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 13.9 / 13.8 & 1.000 & 0.944 & 0.987 & +0.056 & [+0.026, +0.092] & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Budget-allocated CEL-$k$ against self-consistency with $k$ draws. CEL-$k$'s allocation (screen draws; survivors' extra draws, flips, challenge, SE) is the best on the dev slice among those whose expected calls per case are at most $k$; it is compared on expected calls (batch average), self-consistency on exactly $k$. SC-$k$+verb.: self-consistency also ranking by the confidence each draw carries (the control for free verbal confidence). $\Delta$ paired over batches.}
+\label{tab:budget_matched}
+\end{table}

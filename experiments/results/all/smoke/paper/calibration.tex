@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llllrrrrrr}
+\toprule
+Dataset & Model & Budget & Score & ECE & Brier & mean conf. & acc. & AUROC & AUARC \\
+\midrule
+triviaqa & gpt-4.1 & k = 3 (deployment) & CEL $\hat\mu$ (ours) & 0.252 & 0.163 & 0.648 & 0.900 & 0.083 & 0.782 \\
+triviaqa & gpt-4.1 & k = 3 (deployment) & SC agreement & 0.100 & 0.100 & 1.000 & 0.900 & 0.500 & 0.900 \\
+triviaqa & gpt-4.1 & k = 3 (deployment) & Avg-Conf & 0.100 & 0.100 & 1.000 & 0.900 & 0.500 & 0.900 \\
+triviaqa & gpt-4.1 & k = 3 (deployment) & Avg-Conf, paraphrases & 0.101 & 0.076 & 0.951 & 0.850 & 0.833 & 0.937 \\
+triviaqa & gpt-4.1 & k = 3 (deployment) & CISC & 0.100 & 0.100 & 1.000 & 0.900 & 0.500 & 0.900 \\
+triviaqa & gpt-4.1 & k = 3 (deployment) & Pedapati-style LR & 0.252 & 0.128 & 0.673 & 0.900 & 0.833 & 0.973 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & CEL $\hat\mu$ (ours) & 0.385 & 0.371 & 0.615 & 0.900 & 0.764 & 0.963 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & SC agreement & 0.100 & 0.100 & 1.000 & 0.900 & 0.500 & 0.900 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & Verbalized & 0.088 & 0.091 & 0.988 & 0.900 & 0.708 & 0.937 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & Avg-Conf & 0.100 & 0.100 & 1.000 & 0.900 & 0.500 & 0.900 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & Avg-Conf, paraphrases & 0.070 & 0.090 & 0.915 & 0.900 & 0.597 & 0.917 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & CISC & 0.100 & 0.100 & 1.000 & 0.900 & 0.319 & 0.832 \\
+triviaqa & gpt-4.1 & matched budget (14 calls) & Pedapati-style LR & 0.242 & 0.164 & 0.658 & 0.900 & 0.806 & 0.970 \\
+\bottomrule
+\end{tabular}
+\caption{Calibration of the scores that claim to be $P(\text{correct})$ (R3), each against its own method's correctness, pooled over the evaluation items. ECE with 10 equal-width bins. CEL's ranking score $\hat\mu - \lambda\hat\sigma$ is not a probability and is not listed; $\hat\mu$ is fitted on the dev slice (model-based).}
+\label{tab:calibration}
+\end{table}

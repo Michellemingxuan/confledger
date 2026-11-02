@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{rlrrrrrrr}
+\toprule
+$k$ & CEL-$k$ allocation & E[calls] dev / eval & CEL-$k$ p@10 & SC-$k$ p@10 & SC-$k$+verb. & $\Delta$ vs SC & 95\% CI & wins \\
+\midrule
+\multicolumn{9}{l}{\emph{triviaqa / gpt-4.1} (allocation chosen on 5 dev items by prec@k)} \\
+2 & 1 orig draw → chal & 2.0 / 2.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+3 & 1 orig draw → neg, chal & 3.0 / 3.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+4 & 1 orig draw → neg, relabel, chal & 4.0 / 4.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+5 & 1 orig draw → neg, relabel, distractor, chal & 5.0 / 5.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+6 & 1 orig draw → +1 draw, neg, relabel, chal, SE & 6.0 / 6.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+8 & 1 orig draw → +2 draws, neg, relabel, distractor, chal, SE & 8.0 / 8.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+10 & 1 orig draw → +4 draws, neg, relabel, distractor, chal, SE & 10.0 / 10.0 & 0.500 & 1.000 & 1.000 & -0.500 & [-0.500, -0.500] & 0/1 \\
+12 & 1 orig draw → +6 draws, neg, relabel, distractor, chal, SE & 12.0 / 12.0 & 1.000 & 1.000 & 1.000 & +0.000 & [+0.000, +0.000] & 0/1 \\
+14 & 3 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 14.0 / 14.0 & 1.000 & 1.000 & 1.000 & +0.000 & [+0.000, +0.000] & 0/1 \\
+15 & 4 orig draws → +6 draws, neg, relabel, distractor, chal, SE & 15.0 / 15.0 & 1.000 & 1.000 & 1.000 & +0.000 & [+0.000, +0.000] & 0/1 \\
+\bottomrule
+\end{tabular}
+\caption{Budget-allocated CEL-$k$ against self-consistency with $k$ draws. CEL-$k$'s allocation (screen draws; survivors' extra draws, flips, challenge, SE) is the best on the dev slice among those whose expected calls per case are at most $k$; it is compared on expected calls (batch average), self-consistency on exactly $k$. SC-$k$+verb.: self-consistency also ranking by the confidence each draw carries (the control for free verbal confidence). $\Delta$ paired over batches.}
+\label{tab:budget_matched}
+\end{table}

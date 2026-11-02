@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrl}
+\toprule
+Dataset & Model & A (12d) & B (6d+probes) & B ($\kappa/2$) & C (9d) & B$-$A & B$-$C & Verdict \\
+\midrule
+triviaqa & gemini-2.5-flash & 0.936 & 0.977 & 0.977 & 0.921 & +0.041 & +0.056 & B$\approx$A$>$C \\
+\bottomrule
+\end{tabular}
+\caption{Evidence-equivalence arms. Prediction (Prop.~3): B buys A's quality at C's price.}
+\label{tab:arms}
+\end{table}

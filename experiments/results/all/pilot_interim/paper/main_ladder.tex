@@ -1,0 +1,33 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & prec@10\% & calls & acc. & AUROC & AUARC & PRR & $\Delta$ vs CEL \\
+\midrule
+\multicolumn{8}{l}{\emph{triviaqa / gemini-2.5-flash} (matched budget 12 calls)} \\
+Random & 0.860 & 1.0 & 0.860 & 0.500 & 0.860 & 0.000 & -0.140 \\
+Verbalized & 0.885 & 1.0 & 0.860 & 0.602 & 0.885 & 0.192 & -0.115 \\
+Self-consistency & 0.915 & 12.0 & 0.845 & 0.729 & 0.910 & 0.455 & -0.085 \\
+\quad deployment baseline (fixed draws) & 0.876 & 3.0 & 0.850 & 0.593 & 0.875 & 0.179 & -0.124 \\
+Semantic entropy & 0.980 & 12.0 & 0.845 & 0.860 & 0.956 & 0.783 & -0.020 \\
+BSDetector \citep{chen2024} & 0.932 & 11.0 & 0.845 & 0.773 & 0.923 & 0.552 & -0.068 \\
+Avg-Conf, one phrasing \citep{xiong2023} & 0.915 & 12.0 & 0.845 & 0.734 & 0.910 & 0.460 & -0.085 \\
+Avg-Conf, paraphrases \citep{xiong2023} & 0.917 & 12.0 & 0.830 & 0.714 & 0.902 & 0.465 & -0.083 \\
+CISC, verbal \citep{taubenfeld2025} & 0.895 & 12.0 & 0.845 & 0.772 & 0.905 & 0.425 & -0.105 \\
+Black-box calibrator \citep{pedapati2024} & 0.900 & 12.0 & 0.835 & 0.737 & 0.902 & 0.446 & -0.100 \\
+\textbf{CEL (ours)} & 1.000 & 11.8 & 0.805 & 0.773 & 0.927 & 0.701 & -- \\
+\quad ranked by $\hat\mu - \lambda\hat\sigma$ & 1.000 & 11.8 & 0.805 & 0.825 & 0.937 & 0.760 & -0.000 \\
+\quad Borda combiner & 1.000 & 11.8 & 0.805 & 0.789 & 0.933 & 0.733 & -0.000 \\
+\quad no spread & 1.000 & 11.8 & 0.810 & 0.800 & 0.938 & 0.750 & -0.000 \\
+\quad no SPRT & 0.986 & 8.0 & 0.745 & 0.926 & 0.940 & 0.894 & -0.014 \\
+\quad no invariance & 1.000 & 9.6 & 0.805 & 0.745 & 0.914 & 0.623 & -0.000 \\
+\quad no SE & 0.987 & 11.1 & 0.805 & 0.779 & 0.927 & 0.700 & -0.013 \\
+\quad no challenge & 1.000 & 11.1 & 0.805 & 0.774 & 0.927 & 0.702 & -0.000 \\
+\quad no verbal & 1.000 & 11.8 & 0.805 & 0.773 & 0.927 & 0.700 & -0.000 \\
+\quad no $L$ & 1.000 & 11.8 & 0.805 & 0.773 & 0.927 & 0.701 & -0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Baseline ladder and ablations. prec@10\% averaged over 10 batches; baselines matched to CEL's realised calls per case. Each method is scored on its own answers (acc.\ = their accuracy); AUROC, AUARC and PRR pooled over the evaluated items.}
+\label{tab:main}
+\end{table}

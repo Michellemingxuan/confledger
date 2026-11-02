@@ -1,0 +1,8 @@
+{
+  "triviaqa__gpt-4.1": {
+    "cel": 1.0,
+    "self_consistency": 0.9438775510204082,
+    "confirmatory_p": 0.0,
+    "confirmatory_p_holm": 0.0
+  }
+}

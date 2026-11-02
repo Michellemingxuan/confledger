@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrrrrr}
+\toprule
+Dataset & Model & Jaccard & floor & tie-aware & top group & held-out sel. & held-out ctl. & $p$ & judge $\rho$ & judge J \\
+\midrule
+triviaqa & gemini-2.5-flash & 0.481 & 0.054 & 0.950 & 27.0 & 1.000 & 1.000 & 1.000 & -- & -- \\
+\bottomrule
+\end{tabular}
+\caption{Robustness. Selection stability under fully re-drawn stage 2 (Jaccard vs.\ the chance floor; tie-aware = share of re-drawn selections inside the original top tie-group); held-out probe survival for selected (ranks 1--10) vs.\ matched controls (11--30); judge-swap sensitivity where available.}
+\label{tab:robust}
+\end{table}
