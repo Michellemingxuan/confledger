@@ -7,9 +7,11 @@ would be about 4 hours here. SafeChain's speed is untested at this scale.
 
 ## In the private environment
 
-1. Unpack `confledger_private_run.tar.gz` and install, from the repo root:
+1. Get the code and install it:
 
    ```bash
+   git clone -b cel-k-safeguards-private-run https://github.com/Michellemingxuan/confledger.git
+   cd confledger
    pip install -e ".[data]"
    ```
 
