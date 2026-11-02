@@ -14,10 +14,10 @@ not implemented: Xiong's misleading hints and Top-K/Pair-Rank, CISC's P(True), a
 Pedapati's sentence permutation, entity-frequency, stop-word and NLI split-response features.
 """
 from .cisc import cisc, fit_cisc
-from .others import bsdetector_like, random_selection, semantic_entropy, verbalized
+from .others import bsdetector_draws, bsdetector_like, random_selection, semantic_entropy, verbalized
 from .pedapati import fit_pedapati, pedapati
 from .self_consistency import self_consistency, self_consistency_verbal
 from .xiong import xiong
 
 __all__ = ["self_consistency", "self_consistency_verbal", "xiong", "cisc", "fit_cisc", "pedapati",
-           "fit_pedapati", "verbalized", "semantic_entropy", "bsdetector_like", "random_selection"]
+           "fit_pedapati", "verbalized", "semantic_entropy", "bsdetector_like", "bsdetector_draws", "random_selection"]

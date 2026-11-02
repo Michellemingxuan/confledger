@@ -477,12 +477,23 @@ Condensed from the design conversations. Each entry: decision — why.
     - Consequence to state in the paper: at small k the score reduces to agreement, verbal
       confidence and (at k = 2) the negation probe, a learned counterpart of BSDetector's fixed
       0.7 / 0.3 blend; gains over BSDetector there come from the allocation, not a richer score.
-    - Separate, open: BSDetector spends k - 1 calls when verbal_per_draw is on (bsdetector_like
-      adds no reflection call, baseline_policies passes B - 1 draws), one below every other
-      baseline. Fix (pass B draws) or state it; needs its own entry.
+    - Separate: BSDetector's call count was one too low with verbal_per_draw on; fixed in #37.
     - Housekeeping: tests/test_pipeline.py fails at import (it imports `self_consistency` from
       confledger.methods; it now lives in baselines/), before and after this change; the other
       67 tests pass.
+37. BSDetector-style baseline spends exactly the budget (2026-11-02). `bsdetector_like` charges
+    its draws plus one reflection call, but the reflection call is 0 when verbal_per_draw is on
+    (its certainty is the draws' stated confidence). `baseline_policies` and `methods.registry`
+    passed B - 1 draws in both cases, so in the main configuration BSDetector spent B - 1 calls,
+    one below every other baseline, which understated it at every budget (a bias in CEL's favour).
+    Now `bsdetector_draws(B, verbal_per_draw)` gives B draws with confidence on the draws and B - 1
+    plus the verbal call otherwise; both call sites use it. Semantic entropy is unchanged
+    (B - 1 draws + its judge call is already B). Test: tests/test_baselines.py. Docs updated:
+    comparison_methods.tex and .md, call_accounting.tex, the budget-curve caption.
+    Stale: every stored result file that includes BSDetector (pilot_gpt41, pilot_interim, pilot,
+    smoke, simulation) still has the old count until its evaluate.py is re-run; no result was
+    re-run for this entry. At k = 2 with verbal_per_draw on, BSDetector now has 2 draws (before: 1,
+    where it equalled verbalized confidence).
 
 Observed in dry run: the screen trades global AUROC/PRR for top-k precision (address in
 paper); plain Jaccard understates stability under top ties (add tie-aware variant).

@@ -337,7 +337,7 @@ def registry(budget: int = 8, deploy_sc_draws: int = 3, base: CELConfig = CELCon
     cheap deployment setting (`deploy_sc_draws` draws; not budget-matched, reported with
     its own call count). Baselines live in baselines/; the fitted ones (CISC, Pedapati)
     are added by run_protocol once D_fit is known."""
-    from .baselines import (bsdetector_like, random_selection, self_consistency, semantic_entropy,
+    from .baselines import (bsdetector_draws, bsdetector_like, random_selection, self_consistency, semantic_entropy,
                             verbalized, xiong)
     methods: dict[str, Callable] = {
         "random": random_selection,
@@ -345,7 +345,7 @@ def registry(budget: int = 8, deploy_sc_draws: int = 3, base: CELConfig = CELCon
         "self_consistency": lambda cd, seed=None: self_consistency(cd, budget, seed),
         "self_consistency_deploy": lambda cd, seed=None: self_consistency(cd, deploy_sc_draws, seed),
         "semantic_entropy": lambda cd, seed=None: semantic_entropy(cd, budget - 1, seed),
-        "bsdetector_like": lambda cd, seed=None: bsdetector_like(cd, budget - 1, seed=seed),
+        "bsdetector_like": lambda cd, seed=None: bsdetector_like(cd, bsdetector_draws(budget, verbal_per_draw), seed=seed),
     }
     if verbal_per_draw:                            # Avg-Conf needs a confidence on every draw
         methods["xiong_avgconf"] = lambda cd, seed=None: xiong(cd, budget, "self_random", seed)

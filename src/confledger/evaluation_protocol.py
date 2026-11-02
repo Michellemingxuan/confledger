@@ -25,7 +25,7 @@ from .utility.config import cells, record_run, results_dir, top_k
 from .ranking import borda_scores, key_scores, ranks_within, select_top_k
 from .methods import (ARMS, SIGNAL_ABLATIONS, CELConfig, CaseScore, allocation_space, budget_configs,
                       cel, cel_alloc, cel_as_allocation, cel_from_settings, evidence_depth, registry)
-from .baselines import (bsdetector_like, cisc, fit_cisc, fit_pedapati, pedapati, self_consistency,
+from .baselines import (bsdetector_draws, bsdetector_like, cisc, fit_cisc, fit_pedapati, pedapati, self_consistency,
                         self_consistency_verbal, semantic_entropy, verbalized, xiong)
 from .baselines.cisc import draw_conf
 from .certified_selection import bh, conformal_pvalues, ebh, evalue, pass_rates, selection_outcome
@@ -277,15 +277,16 @@ def celk_policy(alloc, fit_coll: dict[str, CaseData], k_frac: float, o: dict) ->
 
 
 def baseline_policies(fit: Sequence[CaseData], B: int, vpd: bool, gray: bool = False) -> tuple[dict, dict]:
-    """Every baseline at exactly B calls per case (semantic entropy and BSDetector-style:
-    B - 1 draws + their extra call), from its first feasible B. CISC's T and the
+    """Every baseline at exactly B calls per case (semantic entropy: B - 1 draws + its judge
+    call; BSDetector-style: B draws when confidence rides on the draws, else B - 1 + a verbal
+    call, decisions.md #37), from its first feasible B. CISC's T and the
     Pedapati-style regression are refit on D_fit at this B."""
     pol: dict[str, Callable] = {
         "self_consistency": lambda cd, seed=None: self_consistency(cd, B, seed),
         "self_consistency_verbal": lambda cd, seed=None: self_consistency_verbal(cd, B, seed)}
     info: dict = {"cisc": {}}
     if B >= 2:
-        pol["bsdetector_like"] = lambda cd, seed=None: bsdetector_like(cd, B - 1, seed=seed)
+        pol["bsdetector_like"] = lambda cd, seed=None: bsdetector_like(cd, bsdetector_draws(B, vpd), seed=seed)
     if B >= 3:
         pol["semantic_entropy"] = lambda cd, seed=None: semantic_entropy(cd, B - 1, seed)
     if vpd:                                           # Avg-Conf needs a confidence on every draw

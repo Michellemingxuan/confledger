@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from confledger.baselines import cisc, fit_cisc, fit_pedapati, pedapati, self_consistency, xiong
+from confledger.baselines import bsdetector_draws, bsdetector_like, cisc, fit_cisc, fit_pedapati, pedapati, self_consistency, xiong
 from confledger.baselines.cisc import vote
 from confledger.baselines.pedapati import rouge_l, split
 from confledger.utility.records import NO, YES, CaseData, Draw
@@ -40,3 +40,18 @@ def test_pedapati_features_and_fit():
     assert s.calls == 8 and 0 < s.signals["p_lr"] < 1
     assert s.signals["p_lr"] > pedapati(fit[-1], f).signals["p_lr"]     # unanimous ranks above split
     assert self_consistency(fit[0], 8).calls == 8
+
+
+def test_bsdetector_spends_exactly_the_budget():
+    """Decisions.md #37: with confidence on every draw BSDetector's reflection certainty is free,
+    so a budget of B buys B draws; without it, B - 1 draws plus one verbal call."""
+    from confledger.methods import registry
+    cd = _cd([YES, YES, NO, YES, YES], [90, 80, 60, 85, 95])
+    for B in (2, 3, 5):
+        assert bsdetector_like(cd, bsdetector_draws(B, True)).calls == B
+        assert registry(B, verbal_per_draw=True)["bsdetector_like"](cd).calls == B
+    cd_free = _cd([YES, YES, NO, YES, YES], [90, 80, 60, 85, 95])
+    cd_free.meta["verbal_per_draw"] = False
+    cd_free.verbal_conf = 70.0
+    for B in (2, 3, 5):
+        assert bsdetector_like(cd_free, bsdetector_draws(B, False)).calls == B

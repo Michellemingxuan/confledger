@@ -134,8 +134,8 @@ latex_table(["$k$", "Method", "prec@10\\%", "calls", "acc.", "AUROC", "AUARC", "
             rk_rows,
             "Ranking mode at a fixed budget $k$ (R1). CEL-$k$: the allocation chosen on the dev slice "
             "(expected calls per case at most $k$), ranked by $\\hat\\mu - \\lambda\\hat\\sigma$ fitted on the "
-            "dev slice; every baseline spends exactly $k$ calls (semantic entropy and BSDetector: "
-            "$k-1$ draws plus their extra call), CISC and the black-box calibrator refit at each $k$. "
+            "dev slice; every baseline spends exactly $k$ calls (semantic entropy: $k-1$ draws plus its judge call; "
+            "BSDetector: $k$ draws, its certainty rides on them), CISC and the black-box calibrator refit at each $k$. "
             "prec@10\\% averaged over 10 batches; accuracy of each method's own answers; AUROC and AUARC "
             "pooled over the 500 items; $\\Delta$ = method minus CEL-$k$, paired over batches.",
             "tab:budget_curve", out / "budget_curve.tex", "llrrrrrl")

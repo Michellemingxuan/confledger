@@ -27,6 +27,13 @@ def random_selection(cd: CaseData, **_) -> CaseScore:
     return CaseScore(cd.item_id, ans, ans == cd.gold, 1, key=(0,))
 
 
+def bsdetector_draws(budget: int, verbal_per_draw: bool) -> int:
+    """Draws that make BSDetector-style spend exactly `budget` calls: its reflection certainty
+    rides on the draws when verbal_per_draw is on (no extra call), otherwise it costs one
+    separate verbal call (decisions.md #37)."""
+    return budget if verbal_per_draw else budget - 1
+
+
 def bsdetector_like(cd: CaseData, b: int = 7, w: float = 0.7, seed: Optional[int] = None) -> CaseScore:
     """Approximation of BSDetector (Chen & Mueller): observed consistency blended
     with self-reflection certainty. Their self-reflection prompt differs from our

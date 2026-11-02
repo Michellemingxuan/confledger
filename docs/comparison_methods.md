@@ -35,7 +35,7 @@ A failed extraction counts as a draw that disagrees.
 | Self-consistency | $k$ same-prompt draws | majority | $(m/n)$ | answers that survive resampling are more often right |
 | Self-consistency + verbal | $k$ same-prompt draws | majority | $(m/n,\ \bar c)$, $\bar c$ = mean $c_i$ | control: same draws, but also reads the free confidences |
 | Semantic entropy | $k-1$ draws, 1 judge call | majority | $(-H,\ m/n)$, $H$ = entropy of the reason groups | consistent *reasoning*, not only consistent answers |
-| BSDetector | $k-1$ draws | majority | $(0.7\,m/n + 0.3\,c_1/100)$ | blends observed consistency with stated confidence |
+| BSDetector | $k$ draws | majority | $(0.7\,m/n + 0.3\,c_1/100)$ | blends observed consistency with stated confidence |
 | Avg-Conf (self-random) | $k$ same-prompt draws | majority $\tilde Y$ | $(A,\ m/n)$, $A = \sum_{i:\,\hat Y_i=\tilde Y} c_i \,/\, \sum_i c_i$ | confidence mass that backs the majority |
 | Avg-Conf (prompting) | 1 generator call, $k-1$ draws, one paraphrase each | majority $\tilde Y$ | $(A,\ m/n)$ | same, with varied wording |
 | CISC | $k$ same-prompt draws | confidence-weighted vote | $(W)$, $W$ = weight share of the winning answer | high-confidence draws count more in the vote and the score |
@@ -184,9 +184,10 @@ $265/355 = 0.746$, also below. That is the extra information the confidence-awar
 - CISC with the answer token's probability in place of the length-normalised response probability is a
   gray-box variant, reported separately from the black-box comparisons.
 
-# 7. Open check: BSDetector's call count
+# 7. BSDetector's call count (fixed, decisions.md #37)
 
-`bsdetector_like` (`baselines/others.py:30`) charges its draws plus one reflection call, but the reflection
-call is 0 when `verbal_per_draw` is on, and `baseline_policies` passes $B-1$ draws expecting a total of $B$.
-In the main configuration BSDetector therefore spends $k-1$ calls, one fewer than the other baselines. With
-`verbal_per_draw` off it spends $k$. Either state this in the paper or pass $B$ draws when it is on.
+`bsdetector_like` adds one reflection call only when `verbal_per_draw` is off. The matched-budget
+code used to pass $B-1$ draws in both cases, so with confidence on every draw (the main
+configuration) BSDetector spent $k-1$ calls, one fewer than the other baselines. It now gets
+$k$ draws in that case (`bsdetector_draws`), and $k-1$ draws plus one verbal call otherwise, so it
+spends exactly $k$ either way. Results produced before the fix gave BSDetector one draw too few.
