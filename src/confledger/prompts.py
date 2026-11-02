@@ -20,6 +20,8 @@ ANSWER_FORMAT_AB = (
     "Explanation: <one or two sentences giving your reason>"
 )
 
+CONFIDENCE_LINE = "\nConfidence: <an integer from 0 to 100, the probability your answer is correct>"
+
 # Unrelated true statements for the distractor-insertion probe (sigma_g = id).
 DISTRACTORS = [
     "The Pacific Ocean is the largest ocean on Earth.",
@@ -39,18 +41,18 @@ def _pick(seq, key: str):
 def answer_prompt(question: str, with_confidence: bool = False) -> str:
     """The draw prompt. with_confidence adds the verbal-confidence line to every draw
     (collect.verbal_per_draw), replacing the separate verbal call."""
-    fmt = ANSWER_FORMAT_YN
-    if with_confidence:
-        fmt += "\nConfidence: <an integer from 0 to 100, the probability your answer is correct>"
+    fmt = ANSWER_FORMAT_YN + (CONFIDENCE_LINE if with_confidence else "")
     return f"{question}\n\n{fmt}"
 
 
 # --- label-action probes (Sec. 3.4, signal 2) -------------------------------
 
-def negation_prompt(question: str) -> str:
-    """Structural negation: the correct answer flips (sigma_g(y) = 1 - y)."""
+def negation_prompt(question: str, with_confidence: bool = False) -> str:
+    """Structural negation: the correct answer flips (sigma_g(y) = 1 - y). with_confidence
+    adds the confidence line (collect.verbal_per_draw): confidence under negation."""
+    fmt = ANSWER_FORMAT_YN + (CONFIDENCE_LINE if with_confidence else "")
     return (f"Consider the following question:\n\"{question}\"\n\n"
-            f"Is the correct answer to that question \"No\"?\n\n{ANSWER_FORMAT_YN}")
+            f"Is the correct answer to that question \"No\"?\n\n{fmt}")
 
 
 def relabel_prompt(question: str) -> str:

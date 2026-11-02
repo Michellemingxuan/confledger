@@ -1,0 +1,50 @@
+# Mid-size pilot: TriviaQA x gemini-2.5-flash, about 300 items, gpt-5.4 judge. Run before the full grid, to see
+# whether CEL beats self-consistency and to get a usable D_fit. A pilot, not the paper's results.
+#   python experiments/scripts/estimate.py -c configs/pilot.yaml
+#   python experiments/scripts/collect.py  -c configs/pilot.yaml -v
+#   python experiments/scripts/evaluate.py -c configs/pilot.yaml
+# Resumable: collect.py picks up from the cache and the partial collections.
+# Keep in sync with default.yaml (models, generator, judge, collect settings).
+seed: 0
+top_frac: 0.10   # top 10% of the whole eval set: k = ceil(0.10 * n_eval)
+budget: null
+budget_matched_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 15]   # CEL-k (expected calls in (k - band, k]) vs every baseline at k calls; up to 15 = a certified survivor's cost, so CEL-k reaches certified CEL's spend (needs n_same >= max k)
+linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
+deployment_sc_draws: 3   # self-consistency at this many draws = the cheap deployment baseline
+# SPRT certification (Sec. 3.2, Cor. 1); these are the paper's values. The stage-2 depth is
+# derived: unanimous draws to certify = max(SPRT boundary, Cor. 1: eps <= eps0 at p0_star).
+# Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
+# p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
+sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
+split: {n_dev: 100, n_eval: 200, n_cal: 0}   # top 10% of 200 = 20 selected items per model; no D_cal, so no certified-mode result
+
+datasets: [triviaqa]
+
+# Transport by env var: LLM_BACKEND=safechain (private env) or unset (direct API).
+models:                          # models under test, identified by model id
+  - {provider: openai_compat, model: "gemini-2.5-flash",          # thinking off (decisions.md #31)
+     base_url: "https://generativelanguage.googleapis.com/v1beta/openai/", api_key_env: GEMINI_API_KEY,
+     extra: {reasoning_effort: "none"}}
+
+# gpt-5 is a reasoning model: reasoning_effort switches the backend to its parameters
+# (no temperature; max_completion_tokens with reasoning headroom).
+generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal}   # must differ from gpt-4.1
+
+# Rationale judge for semantic entropy: gpt-5 for now, an interim choice until the direction
+# is confirmed (decisions.md #33). One judge serves every model. To change it, edit this line
+# and run experiments/scripts/recluster.py: no new calls to the models under test.
+judge: {provider: openai_compat, model: "gpt-5.4", reasoning_effort: low}   # pilot judge; gpt-5 elsewhere (decisions.md #33)
+
+collect:
+  n_paraphrases: 12
+  n_same: 15
+  n_reuse_paras: 3
+  n_reuse_samples: 3
+  temperature: 0.7
+  verbal_per_draw: true    # true: confidence line on every draw and the negation probe, no separate verbal call (-1 call/question)
+  logprobs: false          # gray-box: P(Yes) at the answer token on every draw (no extra call; not with reasoning models)
+  workers: 8
+
+# Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset);
+# the response cache is shared by all real configs.
+paths: {cache: experiments/results/cache, results: experiments/results}

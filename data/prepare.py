@@ -5,7 +5,7 @@
 For each dataset: downloads from HF (cached under ~/.cache/huggingface), checks the
 field types the loaders rely on, and records the dataset fingerprint. StrategyQA
 and MMLU items are built with the real loaders + split and written to
-<results>/<ds>/<config>/data/<ds>__{dev,eval}.jsonl for inspection, next to a
+<results>/<ds>/<config>/data/<ds>__{dev,eval,cal}.jsonl for inspection, next to a
 manifest.json per dataset. TriviaQA items need the
 generator model for distractors (an API call), so they are built at collect time;
 a distractor-free preview would consume the RNG differently and not match.
@@ -35,7 +35,7 @@ def check(name: str, ds) -> dict:
 a = arg_parser(__doc__).parse_args()
 cfg = from_args(a)
 sp = cfg["split"]
-need = sp["n_dev"] + sp["n_eval"]
+need = sp["n_dev"] + sp["n_eval"] + sp.get("n_cal", 0)
 
 from datasets import load_dataset  # noqa: E402
 
@@ -50,8 +50,10 @@ for name in cfg["_datasets"]:
     assert usable >= need, f"{name}: {usable} usable rows < {need} needed"
     if name != "triviaqa":
         items = load_items(name, need, cfg["seed"])
-        s = make_split(items, sp["n_dev"], sp["n_eval"], sp["batch_size"], cfg["seed"])
-        for part, its in (("dev", s.dev), ("eval", s.eval)):
+        s = make_split(items, sp["n_dev"], sp["n_eval"], sp.get("batch_size"), cfg["seed"], sp.get("n_cal", 0))
+        for part, its in (("dev", s.dev), ("eval", s.eval), ("cal", s.cal)):
+            if not its:
+                continue
             with open(out / f"{name}__{part}.jsonl", "w") as fh:
                 for it in its:
                     fh.write(json.dumps({"item_id": it.item_id, "question": it.question,

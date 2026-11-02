@@ -24,6 +24,7 @@ import json
 import random
 import re
 
+from ..answer_parsing import p_yes_trailer
 from ..records import NO, YES, flip
 from .request import Request
 
@@ -87,9 +88,18 @@ class SimulatedBackend:
         return max(50, min(99, round((50 + 45 * sig + r.gauss(0, 6)) / 5) * 5))
 
     @staticmethod
-    def _fmt(ans: str, reason: int, ab: bool = False) -> str:
+    def _fmt(ans: str, reason: int, ab: bool = False, hedge: bool = False, long: bool = False) -> str:
         tok = ("B" if ans == YES else "A") if ab else ("Yes" if ans == YES else "No")
-        return f"Answer: {tok}\nExplanation: The key consideration is factor R{reason}."
+        why = f"The key consideration is {'probably ' if hedge else ''}factor R{reason}."
+        if long:
+            why += " This follows from the definitions involved and the usual reading of the question."
+        return f"Answer: {tok}\nExplanation: {why}"
+
+    @staticmethod
+    def _style(lat: dict, r: random.Random) -> dict:
+        """Rationale style: unsure models hedge more, confident ones explain more."""
+        return {"hedge": r.random() < {"concept_confident": 0.1, "concept_uncertain": 0.6, "cue": 0.25}[lat["kind"]],
+                "long": r.random() < {"concept_confident": 0.6, "concept_uncertain": 0.3, "cue": 0.3}[lat["kind"]]}
 
     # -- protocol -------------------------------------------------------------
     def generate(self, req: Request) -> str:
@@ -129,10 +139,19 @@ class SimulatedBackend:
             base = lat["mode"]
             passing = flip(base) if variant == "neg" else base
             ans = passing if r.random() < p_pass else flip(passing)
-            return self._fmt(ans, self._reason(lat, r), ab=(variant == "relabel"))
+            out = self._fmt(ans, self._reason(lat, r), ab=(variant == "relabel"))
+            if m.get("with_conf"):                 # confidence under negation: cue-followers drop
+                drop = r.gauss(5, 4) if concept else r.gauss(18, 8)
+                out += f"\nConfidence: {max(0, min(100, round(self._conf(lat, r) - drop)))}"
+            return out
         p = self._p_variant(lat, m["item_id"], variant)
         ans = lat["mode"] if r.random() < p else flip(lat["mode"])
         if r.random() < 0.01:          # rare malformed output -> extraction failure
             return "I think it depends on how you read it."
-        out = self._fmt(ans, self._reason(lat, r))
-        return out + f"\nConfidence: {self._conf(lat, r)}" if m.get("with_conf") else out
+        out = self._fmt(ans, self._reason(lat, r), **self._style(lat, r))
+        if m.get("with_conf"):
+            out += f"\nConfidence: {self._conf(lat, r)}"
+        if req.logprobs:                           # gray-box: first-token probability of Yes
+            q = min(0.999, max(0.5, p + r.gauss(0, 0.04)))
+            out += p_yes_trailer(q if ans == YES else 1 - q)
+        return out

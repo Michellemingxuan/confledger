@@ -14,6 +14,7 @@ anthropic = ["anthropic>=0.40"]
 openai = ["openai>=1.40"]
 data = ["datasets>=2.19"]
 dev = ["pytest>=7"]
+nli = ["torch>=2.1", "transformers>=4.40,<5"]   # local NLI judge (decisions.md #30)
 notebook = ["ipykernel>=6", "pandas>=2", "nbformat>=5", "nbclient>=0.10"]
 
 

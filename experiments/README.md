@@ -16,15 +16,17 @@ restrict to cells. Tables and PDFs go to `results/all/<config>/paper/`, plus a P
 |---|---|---|
 | `estimate.py` | §4.3 | API calls per cell before any spend |
 | `collect.py` | §4.3 | the collection: the only API spend (resumable) |
+| `colab_targets.ipynb` | §4.3 | `collect.py` for the open-weights targets on a Colab A100: serves each with vLLM, saves collections and cache to Drive |
 | `evaluate.py` | §4 | per-cell protocol results, reports, `summary.json` (Holm) |
 | `dev_audit.py export/score` | §4.1 | extraction + paraphrase audit CSVs to hand-label, then accuracy with Jeffreys CIs (gates ≥0.98 / ≥0.95); run before the grid |
 | `sprt_characteristics.py` | §3 | `sprt_constants.tex` (derived constants, also printed), `sprt_settings.tex` (draws vs guarantee strength under other H0/H1/α/β); exact operating characteristics of the **truncated** SPRT (`truncation.tex`, `truncation_oc.pdf`) |
 | `main_ladder.py` | §4.4 | `main_ladder.tex` (ladder + ablations per cell), `confirmatory.tex` (Holm) |
-| `budget_curves.py` | §4.5 headline | `budget_curves_<model>.pdf` (prec@10 and AUROC vs calls: adaptive CEL, budget-matched CEL-k, self-consistency, deployment baseline ringed), `budget_matched.tex` (CEL-k vs SC at exactly k calls), `horizontal_gap.tex` |
+| `budget_curves.py` | §4.5 headline | `budget_curves_<model>.pdf` (prec@1%, 5% and 10%, AUROC and AUARC vs calls: CEL-k, certified CEL, self-consistency, its verbal control, BSDetector), `budget_curve.tex` (every method at every k), `budget_matched.tex` (CEL-k vs SC at exactly k calls), `horizontal_gap.tex` |
 | `mode_linkage.py` | §3.9 | `mode_linkage_<model>.pdf` (CEL-k at growing budget, derived allocation, vs adaptive CEL: prec@10 with bootstrap band, and certified share of the top-10, exact and model-based; shading = certification budgets), `mode_linkage.tex` (dev-chosen vs derived allocation per budget; nesting check) |
 | `evidence_exchange.py` | Prop. 3 | `evidence_arms.tex` (A/B/C verdicts), `exchange_rates.tex` (κ vs κ̂) |
 | `monotonicity.py` | Ass. 1 | `monotonicity.pdf`, `monotonicity.tex` |
 | `signal_effects.py` | §3.8 | `signal_effects.tex` (per signal: leave-one-out Δprec@10 with CI, ΔAUROC, calls saved; Shapley on prec@10 with CI), `shapley_cost.tex`; prints measured vs asserted signal order |
+| `signal_importance.py` | Appendix | `signal_importance_<model>.pdf` (share of total \|SHAP\| per signal in the score model on D_fit, bootstrap 90% intervals, one panel per dataset), `signal_importance.tex` (rank and share per dataset; Kendall τ between datasets) |
 | `robustness.py` | §4.5 | `robustness.tex` (Jaccard, tie-aware stability, held-out audit, judge swap) |
 
 **Notebooks** (`pip install -e ".[notebook]"`) organise one dataset end to end:

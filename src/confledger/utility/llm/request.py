@@ -14,6 +14,7 @@ class Request:
     sample: int = 0               # distinguishes repeated samples of an identical prompt
     max_tokens: int = 300
     meta: dict = field(default_factory=dict)
+    logprobs: bool = False        # ask for token logprobs; the backend appends a [[p_yes: ...]] trailer
 
 
 class Backend(Protocol):

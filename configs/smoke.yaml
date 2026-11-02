@@ -4,13 +4,13 @@
 #   python experiments/scripts/collect.py  -c configs/smoke.yaml --reseed-batches 0 -v
 #   python experiments/scripts/evaluate.py -c configs/smoke.yaml
 # Cost: python experiments/scripts/estimate.py -c configs/smoke.yaml --reseed-batches 0
-# NOTE: evaluate.py needs n_paraphrases >= 12 and n_same >= 12 (the protocol's budget curve,
-# evidence arms and matched budget); with fewer draws the smoke run tests collection only.
+# NOTE: evaluate.py needs n_paraphrases >= 12 (richest CEL-k plan, 12-draw evidence arm) and
+# n_same >= max(12, matched budget); 15 = a surviving CEL case's cost, so the match always fits.
 # Keep in sync with default.yaml (models, generator, judge, collect settings).
 seed: 0
-k: 10
+top_frac: 0.10   # top 10% of the whole eval set: k = ceil(0.10 * n_eval)
 budget: null
-budget_matched_k: [2, 3, 4, 5, 6, 8]   # CEL-k (expected calls <= k) vs self-consistency with k draws
+budget_matched_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 15]   # CEL-k (expected calls in (k - band, k]) vs every baseline at k calls; up to 15 = a certified survivor's cost, so CEL-k reaches certified CEL's spend (needs n_same >= max k)
 linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
 deployment_sc_draws: 3   # self-consistency at this many draws = the cheap deployment baseline
 # SPRT certification (Sec. 3.2, Cor. 1); these are the paper's values. The stage-2 depth is
@@ -18,28 +18,41 @@ deployment_sc_draws: 3   # self-consistency at this many draws = the cheap deplo
 # Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
 # p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
 sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
-split: {n_dev: 10, n_eval: 50, batch_size: 50}   # 60 of 9,960 questions; 1 batch
+split: {n_dev: 5, n_eval: 20, n_cal: 0}   # 25 of 9,960 questions; top 10% of the 20 eval items (k = 2); no D_cal (cost)
 
 datasets: [triviaqa]
 
 # Transport by env var: LLM_BACKEND=safechain (private env) or unset (direct API).
 models:                          # models under test, identified by model id
   - {provider: openai_compat, model: "gpt-4.1"}
+  - {provider: openai_compat, model: "gemini-2.5-flash",          # thinking off (decisions.md #31)
+     base_url: "https://generativelanguage.googleapis.com/v1beta/openai/", api_key_env: GEMINI_API_KEY,
+     extra: {reasoning_effort: "none"}}
+  - {provider: openai_compat, model: "qwen3-8b",                  # open-weights, thinking off; served by vLLM on Colab (decisions.md #32)
+     repo: "Qwen/Qwen3-8B", revision: "b968826d9c46dd6066d109eabc6255188de91218",
+     base_url: "http://localhost:8000/v1", api_key_env: VLLM_API_KEY,
+     extra: {extra_body: {chat_template_kwargs: {enable_thinking: false}}}}
+  - {provider: openai_compat, model: "llama-3.1-8b",              # open-weights; gated, needs HF_TOKEN; served by vLLM on Colab
+     repo: "meta-llama/Llama-3.1-8B-Instruct", revision: "0e9e39f249a16976918f6564b8830bc894c89659",
+     base_url: "http://localhost:8000/v1", api_key_env: VLLM_API_KEY}
 
 # gpt-5 is a reasoning model: reasoning_effort switches the backend to its parameters
 # (no temperature; max_completion_tokens with reasoning headroom).
 generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal}   # must differ from gpt-4.1
 
-# Same-provider judge: documented deviation (decisions.md #6).
+# Rationale judge for semantic entropy: gpt-5 for now, an interim choice until the direction
+# is confirmed (decisions.md #33). One judge serves every model. To change it, edit this line
+# and run experiments/scripts/recluster.py: no new calls to the models under test.
 judge: {provider: openai_compat, model: "gpt-5", reasoning_effort: low}
 
 collect:
-  n_paraphrases: 3
-  n_same: 3
+  n_paraphrases: 12
+  n_same: 15
   n_reuse_paras: 3
   n_reuse_samples: 3
   temperature: 0.7
-  verbal_per_draw: true    # true: confidence line on every draw, no separate verbal call (-1 call/question)
+  verbal_per_draw: true    # true: confidence line on every draw and the negation probe, no separate verbal call (-1 call/question)
+  logprobs: false          # gray-box: P(Yes) at the answer token on every draw (no extra call; not with reasoning models)
   workers: 8
 
 # Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset);

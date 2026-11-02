@@ -22,6 +22,7 @@ import asyncio
 import os
 import threading
 
+from ..answer_parsing import answer_token_prob, p_yes_trailer
 from .request import Request
 
 
@@ -55,18 +56,26 @@ def sampling_kwargs(req: Request, reasoning_effort: str | None = None,
 class OpenAICompatBackend:
     def __init__(self, model: str, base_url: str | None = None,
                  api_key_env: str = "OPENAI_API_KEY", name: str | None = None,
-                 reasoning_effort: str | None = None, reasoning_tokens: int = 4000):
+                 reasoning_effort: str | None = None, reasoning_tokens: int = 4000,
+                 extra: dict | None = None):
         import openai  # noqa: PLC0415
         self.client = openai.OpenAI(base_url=base_url, api_key=os.environ.get(api_key_env))
         self.model = model
         self.name = name or f"openai_compat:{model}"
         self.reasoning = (reasoning_effort, reasoning_tokens)
+        self.extra = dict(extra or {})   # provider-specific request fields, sent as-is (e.g. Gemini thinking off)
 
     def generate(self, req: Request) -> str:
+        kw = {**sampling_kwargs(req, *self.reasoning), **self.extra}
+        lp = req.logprobs and not self.reasoning[0]          # reasoning models give no logprobs
+        if lp:
+            kw.update(logprobs=True, top_logprobs=5)
         r = self.client.chat.completions.create(
-            model=self.model, messages=[{"role": "user", "content": req.prompt}],
-            **sampling_kwargs(req, *self.reasoning))
-        return r.choices[0].message.content or ""
+            model=self.model, messages=[{"role": "user", "content": req.prompt}], **kw)
+        text = r.choices[0].message.content or ""
+        if lp and r.choices[0].logprobs is not None:
+            text += p_yes_trailer(answer_token_prob(r.choices[0].logprobs.content))
+        return text
 
 
 class SafeChainBackend:
@@ -109,7 +118,10 @@ class SafeChainBackend:
     async def _call(self, req: Request):
         if self._llm is None:
             await self._build()
-        chain = self._template | self._llm.bind(**sampling_kwargs(req, *self.reasoning))
+        kw = sampling_kwargs(req, *self.reasoning)
+        if req.logprobs and not self.reasoning[0]:
+            kw.update(logprobs=True, top_logprobs=5)
+        chain = self._template | self._llm.bind(**kw)
         inp = {"messages": [self._human(content=req.prompt)]}
         first = min(self.STALL_RETRY_S, self.CALL_TIMEOUT_S)
         if first > 0:
@@ -130,7 +142,11 @@ class SafeChainBackend:
         c = reply.content
         if isinstance(c, list):
             c = "".join(p if isinstance(p, str) else p.get("text", "") for p in c)
-        return c or ""
+        c = c or ""
+        if req.logprobs and not self.reasoning[0]:
+            lp = (getattr(reply, "response_metadata", {}) or {}).get("logprobs") or {}
+            c += p_yes_trailer(answer_token_prob(lp.get("content")))
+        return c
 
     def generate(self, req: Request) -> str:
         return asyncio.run_coroutine_threadsafe(self._generate(req), self._loop).result()
@@ -148,7 +164,8 @@ def make_backend(spec: dict):
         return AnthropicBackend(spec["model"], spec.get("name"))
     if kind == "openai_compat":
         return OpenAICompatBackend(spec["model"], spec.get("base_url"),
-                                   spec.get("api_key_env", "OPENAI_API_KEY"), spec.get("name"), **reasoning)
+                                   spec.get("api_key_env", "OPENAI_API_KEY"), spec.get("name"), **reasoning,
+                                   extra=spec.get("extra"))
     if kind == "simulated":
         from .simulated_model import SimulatedBackend  # noqa: PLC0415
         return SimulatedBackend(**{k: v for k, v in spec.items() if k != "provider"})

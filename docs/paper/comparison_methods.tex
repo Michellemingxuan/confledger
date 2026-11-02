@@ -1,0 +1,97 @@
+% Draft: methods for comparison, for Section~\ref{sec:exp:baselines}. Not yet \input by main.tex.
+% Written from src/confledger/baselines/ and evaluation_protocol.baseline_policies; it would
+% replace the list "Baselines: (i)--(viii)" and the "three departures" paragraph.
+
+\paragraph{Methods for comparison.}
+We compare CEL with the ten methods in Table~\ref{tab:comparison}. Random
+selection and verbalized confidence spend one call; the others are given a
+budget of $k$ calls per case. All of them replay the shared cache, so they
+see the same draws as CEL. Each method returns its own answer and is scored
+on the correctness of that answer, so a method's accuracy can differ from
+another's at the same budget, and it is reported beside the ranking metrics.
+Every fitted quantity is frozen on the development slice before any
+evaluation case is scored, and is refit at each $k$. Throughout, $m$ is the
+number of the $n$ draws that agree with the majority answer, and a failed
+extraction counts as a draw that disagrees. In our main configuration,
+verbalized confidence $c_i \in [0, 100]$ rides on every draw, so it costs
+no call and is available to every method.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Methods for comparison at budget $k$. Draws use the original wording
+unless stated. ``Fitted'' lists what is learned on the development slice.}
+\label{tab:comparison}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.27\linewidth}p{0.37\linewidth}p{0.08\linewidth}@{}}
+\toprule
+Method & Calls & Ranking score & Fitted \\
+\midrule
+Random & $1$ draw & None; a uniformly random order & -- \\
+Verbalized & $1$ draw & Stated confidence $c$ & -- \\
+Self-consistency & $k$ draws & Agreement share $m/n$ & -- \\
+Self-consistency $+$ verbal & $k$ draws & $m/n$, ties by mean $c_i$ & -- \\
+Semantic entropy & $k-1$ draws, $1$ judge call & Negative entropy of the reason groups, ties by $m/n$ & -- \\
+BSDetector & $k-1$ draws, no separate reflection call & $0.7\, m/n + 0.3\, c_1/100$ & -- \\
+Avg-Conf, self-random & $k$ draws & $\sum_i \mathbb{1}\{\hat Y_i = \tilde Y\}\, c_i / \sum_i c_i$ & -- \\
+Avg-Conf, prompting & $1$ generator call, $k-1$ paraphrase draws & As above, ties by $m/n$ & -- \\
+CISC & $k$ draws & Winning answer's weight share & $T$ \\
+Black-box calibrator & $k$ draws; from $k = 5$, $1$ generator call and $k-1$ draws split between original wording and paraphrases & Predicted probability of correctness, ties by $m/n$ & Weights \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Reference points.} Random selection gives the chance level, with the
+exact hypergeometric null as reference. Verbalized confidence is the
+cheapest informative score: the answer and confidence of a single draw.
+
+\emph{Agreement.} Self-consistency \citep{wang2022} takes the majority of
+$k$ draws of one fixed phrasing and ranks by agreement, which isolates
+allocation at identical spend. Because confidence is free in our setting,
+we add a control that ranks by agreement and breaks ties by the draws' mean
+verbalized confidence. A gain over plain self-consistency alone could come
+from reading confidences, so only a gain over this control supports the
+allocation argument of Section~\ref{sec:method:budget}.
+
+\emph{Rationale diversity.} Semantic entropy \citep{kuhn2023} groups the
+draws' rationales by underlying reason and ranks by the negative
+Miller--Madow entropy of the groups. One judge call groups all the
+rationales of a case, and the method reads the labels of the draws it uses.
+It needs at least two draws, so it starts at $k = 3$.
+
+\emph{Combined and confidence-weighted scores.} BSDetector
+\citep{chen2024} is the closest prior combined score. We reconstruct it
+from the cache as a fixed blend of agreement and a self-reflection
+certainty, with the first draw's stated confidence $c_1$ standing in for
+their self-reflection prompt. The weight $0.7$ is our choice and is not fitted.
+Avg-Conf \citep{xiong2023} aggregates verbalized confidence over samples,
+taking $\tilde Y$ to be the majority answer, under both of their black-box
+sampling schemes: self-random and prompting. CISC \citep{taubenfeld2025}
+replaces the majority with a vote weighted by $\mathrm{softmax}(c_i/T)$,
+with $T$ chosen for vote accuracy over their $80$-point grid on
+$[10^{-4}, 10^{4}]$. CISC defines an answer, not a selection score, so we
+rank by the winning answer's weight share, scaled down for failed
+extractions. This score is our adaptation. It starts at $k = 2$.
+
+\emph{Learned calibrator.} In the manner of \citet{pedapati2024}, we compute
+two features per perturbation: the number of distinct answers and the mean
+pairwise ROUGE-L of the full responses. A logistic regression of correctness
+on the standardized features is fitted on the development slice. Below
+$k = 5$ the only perturbation is stochastic decoding. From $k = 5$ the
+method adds paraphrasing, with $\lceil (k-1)/2 \rceil$ draws of the original
+wording and $\lfloor (k-1)/2 \rfloor$ paraphrase draws. Its answer is the
+majority over all of them.
+
+\paragraph{Departures from the source papers.}
+Each follows from the yes/no format or the shared cache. On a yes/no answer
+the number of distinct answers is $1$ or $2$, and ROUGE over answers alone is
+a function of $m$, so we compute it over full responses to keep the
+explanation's wording in play. We call the result a black-box calibrator,
+not \citeauthor{pedapati2024}'s method, because it omits the perturbations
+that need new prompts or a local NLI model: sentence permutation,
+entity-frequency amplification, stop-word removal and split-response
+consistency. We also omit \citeauthor{xiong2023}'s misleading-hint sampling
+and Top-$K$ and Pair-Rank aggregation, of which Pair-Rank reduces to the
+top-$2$ probabilities on a binary question, and CISC's P(True) confidence,
+since all need new prompts. CISC with the answer token's probability in
+place of the length-normalized response probability is a gray-box variant,
+reported separately from the black-box comparisons.

@@ -34,8 +34,14 @@ def test_pav_monotone():
 
 
 def test_paired_compare_and_holm():
-    r = M.paired_compare([1, 1, 1, 0.9], [0.8, 0.8, 0.9, 0.9])
-    assert r["mean_diff"] == pytest.approx(0.125) and r["wins"] == 3
+    rng = np.random.default_rng(0)
+    s, z = rng.random(400), rng.random(400) < 0.7
+    good = M.prec_rep(s + 2 * z, z, 0.1)          # score that knows the answer
+    rand = M.prec_rep(s, z, 0.1)                  # score unrelated to correctness
+    r = M.paired_compare(good, rand)
+    assert good[0] == pytest.approx(1.0) and r["mean_diff"] > 0.2 and r["p_boot"] < 0.01
+    assert r["ci_lo"] < r["mean_diff"] < r["ci_hi"]
+    assert M.paired_compare(rand, rand)["p_boot"] == 1.0
     assert M.holm({"a": 0.01, "b": 0.04})["b"] == pytest.approx(0.04)
 
 
@@ -66,3 +72,33 @@ def test_horizontal_gap():
              "sc:3": {"calls": 3.0, "prec": 0.6}, "sc:9": {"calls": 9.0, "prec": 0.9}}
     assert M.horizontal_gap(curve) == pytest.approx((3 + 0.2 / 0.3 * 6) / 5)   # 7 calls / 5
     assert M.horizontal_gap({**curve, "cel:cel": {"calls": 5.0, "prec": 0.95}}) == float("inf")
+
+
+def test_calibration_metrics():
+    z = [1, 0, 1, 1, 0, 1, 0, 1]
+    assert M.ece([1, 0, 1, 1, 0, 1, 0, 1], z) == 0 and M.brier(z, z) == 0
+    # all p = 0.5 in one bin, accuracy 5/8 -> ECE = 1/8, Brier = 1/4
+    assert M.ece([0.5] * 8, z) == pytest.approx(1 / 8) and M.brier([0.5] * 8, z) == pytest.approx(0.25)
+    # AUARC: perfect ranking -> mean of retained accuracies; constant score -> base rate
+    s = [8, 7, 6, 5, 4, 3, 2, 1]
+    zz = [1, 1, 1, 1, 1, 0, 0, 0]
+    assert M.auarc(s, zz) == pytest.approx(np.mean([min(n, 5) / n for n in range(1, 9)]))
+    assert M.auarc([0] * 8, zz) == pytest.approx(5 / 8)
+    c = M.calibration(np.linspace(0.05, 0.95, 40), [i % 2 for i in range(40)], n_bins=4)
+    assert len(c["reliability"]) == 4 and sum(r["n"] for r in c["reliability"]) == 40
+
+
+def test_wqd():
+    # one question: correct confs 0.9, 0.6; incorrect 0.7 -> 1 win of 2 pairs
+    assert M.wqd([([0.9, 0.6, 0.7], [1, 1, 0]), ([0.5, 0.5], [1, 1])]) == pytest.approx(0.5)
+    assert np.isnan(M.wqd([([0.5], [1])]))
+
+
+def test_top_shares_reads_each_cut():
+    from types import SimpleNamespace
+    from confledger.evaluation_protocol import _top_shares
+    z = [True] * 10 + [False] + [True] * 89
+    run = {"_scores": np.arange(100, 0, -1, dtype=float), "_cases": [SimpleNamespace(correct=c) for c in z]}
+    t = _top_shares([run], [0.05, 0.2])
+    assert t["prec_0.05"] == 1.0 and t["prec_0.2"] == pytest.approx(0.95)
+    assert t["lo_0.2"] <= t["prec_0.2"] <= t["hi_0.2"]

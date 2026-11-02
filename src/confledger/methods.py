@@ -14,7 +14,8 @@ from typing import Callable, Optional, Sequence
 
 from .sprt_posterior import (SPRT, EvidenceLedger, certification_plan, evidence_llr, lower_bound, majority,
                     miller_madow_entropy)
-from .utility.records import CaseData, Draw, flip
+from .utility.answer_parsing import has_hedge, rationale_words
+from .utility.records import YES, CaseData, Draw, flip
 
 # One generator call per case produces the paraphrases every fresh (and reuse) draw is
 # asked on; it happens before the screen, so every paraphrase-based policy pays it
@@ -55,6 +56,26 @@ def _passes(cd: CaseData, ans: Optional[str], names) -> dict:
     return res
 
 
+def free_signals(cd: CaseData, used: Sequence[Draw], ans: Optional[str], sig: dict, passes: dict) -> None:
+    """Signals that cost no extra call, added to `sig` in place:
+    length    mean words of the draws' rationales
+    hedge     share of rationales with a hedge word ("might", "not sure", ...)
+    neg_drop  verbal confidence of the draws minus confidence under negation (needs the
+              negation probe bought and confidence on both; collect.verbal_per_draw)
+    p_first   mean P(answer) at the answer token (collect.logprobs; GRAY-BOX, used only
+              with scoring.gray_box)."""
+    expl = [d.explanation for d in used if d.answer is not None]
+    if expl:
+        sig["length"] = sum(rationale_words(e) for e in expl) / len(expl)
+        sig["hedge"] = sum(has_hedge(e) for e in expl) / len(expl)
+    ps = [d.p_yes for d in used if d.p_yes is not None]
+    if ps and ans is not None:
+        sig["p_first"] = sum(p if ans == YES else 1 - p for p in ps) / len(ps)
+    nc = cd.probe_conf.get("neg")
+    if passes.get("neg") is not None and nc is not None and "verb" in sig:
+        sig["neg_drop"] = sig["verb"] - nc
+
+
 # ---------------------------------------------------------------------------
 # The method (Sec. 3) and its ablations
 # ---------------------------------------------------------------------------
@@ -88,7 +109,7 @@ def cel(cd: CaseData, cfg: CELConfig = CELConfig(), seed: Optional[int] = None,
     unanimous1 = a1 is not None and m1 == n1
     if cfg.screen and not unanimous1:
         return CaseScore(cd.item_id, a1, a1 == cd.gold, calls, survived=False, s1_agree=m1,
-                         key=(0, m1, 0, 0, 0, 0, 0),
+                         signals={"m": m1, "k": n1}, key=(0, m1, 0, 0, 0, 0, 0),
                          heldout_pass=None if a1 is None else cd.probes.get("heldout") == a1)
     used = pool[:cfg.s1 + cfg.s2]
     calls += max(0, len(used) - cfg.s1)
@@ -223,6 +244,7 @@ def cel_alloc(cd: CaseData, a: Allocation, seed: Optional[int] = None) -> CaseSc
     if a.se and n >= 2:
         sig["se"] = miller_madow_entropy([d.cluster for d in used])
         calls += 1
+    free_signals(cd, used, ans, sig, passes)
     return CaseScore(cd.item_id, ans, ans == cd.gold, calls, True, m1, sig, probe_passes=passes)
 
 
@@ -245,12 +267,13 @@ def evidence_depth(a: Allocation, kappas: dict) -> tuple[int, float]:
 def allocation_space(max_screen: int = 4, max_extra: int = 6, verbal_per_draw: bool = True,
                      max_draws: int = 12) -> list[Allocation]:
     """Every allocation the collection can replay: screen size, draw type, extra draws,
-    any subset of the three flips, challenge, SE (only with >= 2 draws), verbal call."""
+    any subset of the three flips, challenge, SE (only with >= 2 draws), verbal call.
+    Odd total draws only, so a survivor's majority cannot be a tie (decisions.md #34)."""
     out = []
     for para in (False, True):
         for k1 in range(1, max_screen + 1):
             for extra in range(0, max_extra + 1):
-                if k1 + extra > max_draws:
+                if k1 + extra > max_draws or (k1 + extra) % 2 == 0:
                     continue
                 for r in range(len(FLIPS) + 1):
                     for flips in combinations(FLIPS, r):
@@ -285,60 +308,6 @@ def cel_from_settings(sprt_cfg: Optional[dict] = None) -> tuple[CELConfig, SPRT,
 
 
 # ---------------------------------------------------------------------------
-# Baselines (Sec. 4.4)
-# ---------------------------------------------------------------------------
-
-def self_consistency(cd: CaseData, b: int = 8, seed: Optional[int] = None) -> CaseScore:
-    used = _perm(cd.same, seed, cd.item_id)[:b]
-    ans, m, n = majority([d.answer for d in used])
-    return CaseScore(cd.item_id, ans, ans == cd.gold, len(used), signals={"agree": m / n},
-                     key=(m / n,))
-
-
-def self_consistency_verbal(cd: CaseData, b: int = 8, seed: Optional[int] = None) -> CaseScore:
-    """Self-consistency that also reads the confidence each draw carries (verbal_per_draw):
-    rank by agreement, ties by mean confidence. Same b calls; the fair control when
-    verbal confidence is free for every method."""
-    used = _perm(cd.same, seed, cd.item_id)[:b]
-    ans, m, n = majority([d.answer for d in used])
-    confs = [d.confidence for d in used if d.confidence is not None]
-    conf = sum(confs) / len(confs) if confs else 50.0
-    return CaseScore(cd.item_id, ans, ans == cd.gold, len(used), signals={"agree": m / n, "verb": conf},
-                     key=(m / n, conf))
-
-
-def semantic_entropy(cd: CaseData, b: int = 8, seed: Optional[int] = None) -> CaseScore:
-    used = _perm(cd.same, seed, cd.item_id)[:b]
-    ans, m, n = majority([d.answer for d in used])
-    se = miller_madow_entropy([d.cluster for d in used])
-    return CaseScore(cd.item_id, ans, ans == cd.gold, len(used) + 1, signals={"se": se},
-                     key=(-se, m / n))
-
-
-def verbalized(cd: CaseData, **_) -> CaseScore:
-    ans = cd.verbal_answer
-    conf = cd.verbal_conf if cd.verbal_conf is not None else 0.0
-    return CaseScore(cd.item_id, ans, ans == cd.gold, 1, signals={"verb": conf}, key=(conf,))
-
-
-def random_selection(cd: CaseData, **_) -> CaseScore:
-    ans = cd.verbal_answer
-    return CaseScore(cd.item_id, ans, ans == cd.gold, 1, key=(0,))
-
-
-def bsdetector_like(cd: CaseData, b: int = 7, w: float = 0.7, seed: Optional[int] = None) -> CaseScore:
-    """Approximation of BSDetector (Chen & Mueller): observed consistency blended
-    with self-reflection certainty. Their self-reflection prompt differs from our
-    verbal prompt; report as 'BSDetector-style' unless re-collected faithfully."""
-    used = _perm(cd.same, seed, cd.item_id)[:b]
-    ans, m, n = majority([d.answer for d in used])
-    refl = (cd.verbal_conf or 0.0) / 100
-    reflection_call = 0 if cd.meta.get("verbal_per_draw") else 1
-    return CaseScore(cd.item_id, ans, ans == cd.gold, len(used) + reflection_call,
-                     signals={"agree": m / n, "refl": refl}, key=(w * m / n + (1 - w) * refl,))
-
-
-# ---------------------------------------------------------------------------
 # Evidence-equivalence arms (Prop. 3)
 # ---------------------------------------------------------------------------
 
@@ -363,10 +332,13 @@ ARMS = {
 
 
 def registry(budget: int = 8, deploy_sc_draws: int = 3, base: CELConfig = CELConfig(),
-             sprt: SPRT = SPRT()) -> dict[str, Callable]:
+             sprt: SPRT = SPRT(), verbal_per_draw: bool = False) -> dict[str, Callable]:
     """Main comparison set at matched budget (Sec. 4.4), plus self-consistency at the
     cheap deployment setting (`deploy_sc_draws` draws; not budget-matched, reported with
-    its own call count)."""
+    its own call count). Baselines live in baselines/; the fitted ones (CISC, Pedapati)
+    are added by run_protocol once D_fit is known."""
+    from .baselines import (bsdetector_like, random_selection, self_consistency, semantic_entropy,
+                            verbalized, xiong)
     methods: dict[str, Callable] = {
         "random": random_selection,
         "verbalized": verbalized,
@@ -375,6 +347,9 @@ def registry(budget: int = 8, deploy_sc_draws: int = 3, base: CELConfig = CELCon
         "semantic_entropy": lambda cd, seed=None: semantic_entropy(cd, budget - 1, seed),
         "bsdetector_like": lambda cd, seed=None: bsdetector_like(cd, budget - 1, seed=seed),
     }
+    if verbal_per_draw:                            # Avg-Conf needs a confidence on every draw
+        methods["xiong_avgconf"] = lambda cd, seed=None: xiong(cd, budget, "self_random", seed)
+        methods["xiong_avgconf_para"] = lambda cd, seed=None: xiong(cd, budget, "prompting", seed)
     for name, cfg in ablations(base).items():
         methods[name] = (lambda c: (lambda cd, seed=None: cel(cd, c, seed, sprt)))(cfg)
     return methods

@@ -28,6 +28,7 @@ class Draw:
     explanation: str = ""
     cluster: Optional[int] = None  # rationale-equivalence class, filled by the judge
     confidence: Optional[float] = None  # verbal confidence 0-100 (collect.verbal_per_draw)
+    p_yes: Optional[float] = None       # P(Yes) at the answer token, from logprobs (collect.logprobs; gray-box)
 
 
 @dataclass
@@ -53,6 +54,7 @@ class CaseData:
     verbal_answer: Optional[str] = None
     verbal_conf: Optional[float] = None
     alt_clusters: Optional[dict] = None    # judge-swap sensitivity (optional)
+    probe_conf: dict = field(default_factory=dict)  # verbal confidence on a probe, e.g. {"neg": 70.0}
     meta: dict = field(default_factory=dict)
 
     def to_json(self) -> dict:

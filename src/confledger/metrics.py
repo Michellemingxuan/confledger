@@ -70,12 +70,25 @@ def _expected_cumcorrect(s: np.ndarray, z: np.ndarray) -> np.ndarray:
     return np.asarray(out)
 
 
+def auarc(scores: Sequence[float], z: Sequence[bool]) -> float:
+    """Area under the accuracy-rejection curve: mean accuracy of the retained set over
+    all coverage levels, most confident retained first; ties exact. (Pedapati et al. 2024
+    report it next to AUROC and ECE.)"""
+    s, z = np.asarray(scores, float), np.asarray(z, float)
+    return float((_expected_cumcorrect(s, z) / np.arange(1, len(s) + 1)).mean())
+
+
+def rank_metrics(scores: Sequence[float], z: Sequence[bool]) -> dict:
+    """Pooled whole-ranking metrics reported beside every prec@k: AUROC and AUARC."""
+    return {"auroc": auroc(scores, z), "auarc": auarc(scores, z)}
+
+
 def prr(scores: Sequence[float], z: Sequence[bool]) -> float:
     """Prediction Rejection Ratio: (AUC_s - AUC_rand) / (AUC_oracle - AUC_rand),
     AUC = mean accuracy of the retained set over all coverage levels; ties exact."""
     s, z = np.asarray(scores, float), np.asarray(z, float)
     n = np.arange(1, len(s) + 1)
-    auc_s = float((_expected_cumcorrect(s, z) / n).mean())
+    auc_s = auarc(s, z)
     auc_o = float((np.cumsum(np.sort(z)[::-1]) / n).mean())
     auc_r = float(z.mean())
     return (auc_s - auc_r) / (auc_o - auc_r) if auc_o > auc_r else float("nan")
@@ -88,22 +101,125 @@ def risk_coverage(scores: Sequence[float], z: Sequence[bool], seed: int = 0) -> 
     return n / len(s), 1 - np.cumsum(z[order]) / n
 
 
+# -- calibration (only for scores that claim to be P(Z = 1)) --------------------------
+
+def ece(p: Sequence[float], z: Sequence[bool], n_bins: int = 10) -> float:
+    """Expected calibration error, 10 equal-width bins on [0, 1]:
+    sum_b (n_b / N) |acc_b - mean p_b|."""
+    p, z = np.clip(np.asarray(p, float), 0, 1), np.asarray(z, float)
+    b = np.minimum((p * n_bins).astype(int), n_bins - 1)
+    return float(sum(abs(z[b == i].mean() - p[b == i].mean()) * (b == i).sum()
+                     for i in range(n_bins) if (b == i).any()) / len(p))
+
+
+def brier(p: Sequence[float], z: Sequence[bool]) -> float:
+    """Mean (p - Z)^2; proper scoring rule, mixes calibration and discrimination."""
+    p, z = np.asarray(p, float), np.asarray(z, float)
+    return float(np.mean((p - z) ** 2))
+
+
+def reliability(p: Sequence[float], z: Sequence[bool], n_bins: int = 10) -> list[dict]:
+    """Equal-count bins in p (low to high): mean p vs accuracy with a Jeffreys interval."""
+    p, z = np.asarray(p, float), np.asarray(z, bool)
+    out = []
+    for chunk in np.array_split(np.argsort(p, kind="stable"), n_bins):
+        if len(chunk) == 0:
+            continue
+        x, n = int(z[chunk].sum()), len(chunk)
+        lo, hi = jeffreys_interval(x, n)
+        out.append({"n": n, "conf": float(p[chunk].mean()), "acc": x / n, "lo": lo, "hi": hi})
+    return out
+
+
+def calibration(p: Sequence[float], z: Sequence[bool], n_bins: int = 10) -> dict:
+    """ECE, Brier, mean confidence vs accuracy, reliability bins; AUROC and AUARC for
+    the same score, so a calibrator is judged on both halves."""
+    p, z = np.asarray(p, float), np.asarray(z, bool)
+    return {"ece": ece(p, z, n_bins), "brier": brier(p, z), "mean_conf": float(p.mean()),
+            "acc": float(z.mean()), "auroc": auroc(p, z), "auarc": auarc(p, z),
+            "reliability": reliability(p, z, n_bins), "n": int(len(p))}
+
+
+def wqd(groups: Sequence[tuple[Sequence[float], Sequence[bool]]]) -> float:
+    """Within-question discrimination (Taubenfeld et al. 2025): over every question's
+    (correct, incorrect) response pairs, the share where the correct one has the higher
+    confidence (ties count 1/2 here; the paper's strict > counts them 0)."""
+    win = tot = 0.0
+    for conf, z in groups:
+        c, z = np.asarray(conf, float), np.asarray(z, bool)
+        pos, neg = c[z], c[~z]
+        if len(pos) and len(neg):
+            d = pos[:, None] - neg[None, :]
+            win += (d > 0).sum() + 0.5 * (d == 0).sum()
+            tot += d.size
+    return float(win / tot) if tot else float("nan")
+
+
 # -- paired comparisons across batches -----------------------------------------------
 
-def paired_compare(a: Sequence[float], b: Sequence[float], n_boot: int = 10000,
-                   seed: int = 0) -> dict:
-    """Estimation first: mean difference + bootstrap CI over batches; Wilcoxon as
-    corroboration."""
-    d = np.asarray(a, float) - np.asarray(b, float)
-    rng = np.random.default_rng(seed)
-    boots = rng.choice(d, (n_boot, len(d)), replace=True).mean(axis=1)
-    if np.allclose(d, 0):
-        p = 1.0
-    else:
-        p = float(st.wilcoxon(d, zero_method="zsplit", alternative="two-sided").pvalue)
-    return {"mean_diff": float(d.mean()), "ci_lo": float(np.quantile(boots, 0.025)),
-            "ci_hi": float(np.quantile(boots, 0.975)), "wilcoxon_p": p,
-            "wins": int((d > 0).sum()), "ties": int((d == 0).sum()), "n": len(d)}
+N_BOOT = 10000          # item-bootstrap replicates (decisions.md #29)
+_COUNTS: dict = {}
+
+
+def boot_counts(n: int, n_boot: int = N_BOOT, seed: int = 0) -> np.ndarray:
+    """Multiplicities of the n evaluated items in each bootstrap resample, (n_boot, n).
+    Cached and shared by every method scored on the same n items, so their replicates
+    are paired: replicate r of every method sees the same resampled items."""
+    key = (n, n_boot, seed)
+    if key not in _COUNTS:
+        idx = np.random.default_rng(seed).integers(0, n, (n_boot, n))
+        _COUNTS[key] = np.stack([np.bincount(row, minlength=n) for row in idx]).astype(np.int32)
+    return _COUNTS[key]
+
+
+def prec_rep(scores: Sequence[float], z: Sequence[bool], frac: float, n_ties: int = 20,
+             n_boot: int = N_BOOT) -> np.ndarray:
+    """Precision of the top `frac` share of a population, as [point, rep_1..rep_B].
+    Ties are scored exactly: the tied group the cut falls in contributes its mean
+    correctness per slot taken, i.e. the expectation over random tie-breaks. point: on the
+    items as drawn. rep_r: on bootstrap resample r (items drawn with replacement; a copied
+    item counts once per copy). Same rule in both, so the replicates centre on the point.
+    `n_ties` is unused (kept for callers). Pass the result to paired_compare."""
+    s, z = np.asarray(scores, float), np.asarray(z, float)
+    n = len(s)
+    k = max(1, int(np.ceil(frac * n - 1e-9)))
+    order = np.argsort(-s, kind="stable")
+    ends = np.flatnonzero(np.r_[s[order][1:] != s[order][:-1], True])     # last index of each tied group
+    C = np.vstack([np.ones(n, np.int32), boot_counts(n, n_boot)])[:, order]
+    GC = np.cumsum(C, axis=1)[:, ends]                    # items up to the end of each group
+    GZ = np.cumsum(C * z[order], axis=1)[:, ends]         # correct items up to the same point
+    g = np.argmax(GC >= k, axis=1)                        # group the cut falls in
+    rows = np.arange(len(C))
+    c0 = np.where(g > 0, GC[rows, g - 1], 0)
+    z0 = np.where(g > 0, GZ[rows, g - 1], 0.0)
+    gc, gz = GC[rows, g] - c0, GZ[rows, g] - z0
+    return (z0 + (k - c0) * gz / gc) / k
+
+
+def mean_rep(values: Sequence[float], n_boot: int = N_BOOT) -> np.ndarray:
+    """[mean, rep_1..rep_B] of a per-item quantity under the same paired resamples."""
+    v = np.asarray(values, float)
+    C = boot_counts(len(v), n_boot)
+    return np.concatenate([[v.mean()], C @ v / len(v)])
+
+
+def rep_band(rep: Sequence[float]) -> dict:
+    """95% percentile interval of a replicate vector from prec_rep / mean_rep."""
+    r = np.asarray(rep, float)[1:]
+    return {"lo": float(np.quantile(r, .025)), "hi": float(np.quantile(r, .975))}
+
+
+def paired_compare(a: Sequence[float], b: Sequence[float]) -> dict:
+    """Paired bootstrap over items (decisions.md #29). a, b: [point, rep_1..rep_B] of two
+    methods scored on the same items (prec_rep / mean_rep). Difference = a - b at the point
+    estimate; 95% percentile interval and two-sided p from the paired replicates."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    d = a - b
+    r = d[1:]
+    p = 1.0 if np.allclose(r, 0) else float(min(1.0, 2 * min(np.mean(r <= 0), np.mean(r >= 0))))
+    return {"mean_diff": float(d[0]), "ci_lo": float(np.quantile(r, 0.025)),
+            "ci_hi": float(np.quantile(r, 0.975)), "p_boot": p,
+            "share_positive": float(np.mean(r > 0)), "n_boot": len(r)}
 
 
 def holm(pvals: dict[str, float]) -> dict[str, float]:
@@ -212,13 +328,15 @@ def heldout_audit(selected: Sequence[bool], controls: Sequence[bool]) -> dict:
 
 # -- empirical exchange rate (Prop. 3) --------------------------------------------------
 
-def logistic_fit(X: np.ndarray, y: np.ndarray, l2: float = 1e-2, iters: int = 100) -> np.ndarray:
-    """Ridge-regularised logistic regression by Newton-Raphson; X includes intercept."""
+def logistic_fit(X: np.ndarray, y: np.ndarray, l2=1e-2, iters: int = 100) -> np.ndarray:
+    """Ridge-regularised logistic regression by Newton-Raphson; X includes intercept.
+    `l2` is one penalty for every coefficient or one per coefficient (0 = unpenalised)."""
     w = np.zeros(X.shape[1])
+    pen = np.broadcast_to(np.asarray(l2, float), w.shape)
     for _ in range(iters):
         p = 1 / (1 + np.exp(-np.clip(X @ w, -30, 30)))
-        g = X.T @ (p - y) + l2 * w
-        H = X.T @ (X * (p * (1 - p))[:, None]) + l2 * np.eye(len(w))
+        g = X.T @ (p - y) + pen * w
+        H = X.T @ (X * (p * (1 - p))[:, None]) + np.diag(pen)
         step = np.linalg.solve(H, g)
         w -= step
         if np.abs(step).max() < 1e-8:

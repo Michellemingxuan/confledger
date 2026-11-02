@@ -18,7 +18,7 @@ certification threshold (Cor. 1). `stats.EvidenceLedger` implements exactly this
 
 ```bash
 pip install -e ".[dev]"            # add ,openai / ,data (and ,anthropic) for real runs
-pytest -q                          # 32 tests: paper constants, metrics, backends, end-to-end
+pytest -q                          # 72 tests: paper constants, metrics, backends, score model, certified selection, frontier, priors, end-to-end
 experiments/scripts/run_all.sh configs/simulation.yaml   # full dry run, no API keys (~1 min)
 ```
 

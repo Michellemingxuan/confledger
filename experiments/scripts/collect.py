@@ -11,7 +11,7 @@ from confledger.collection import collect_config
 from confledger.utility.config import arg_parser, from_args
 
 ap = arg_parser(__doc__)
-ap.add_argument("--reseed-batches", type=int, default=2, help="re-drawn batches (Jaccard check)")
+ap.add_argument("--reseed-batches", type=int, default=0, help="re-collected batches; 0: stability is re-drawn from cached draws (decisions.md #29)")
 ap.add_argument("-v", "--verbose", action="store_true")
 a = ap.parse_args()
 logging.basicConfig(level=logging.INFO if a.verbose else logging.WARNING,

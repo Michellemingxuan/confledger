@@ -34,8 +34,10 @@ class CachedClient:
         return self.backend.name
 
     def _key(self, req: Request) -> str:
-        payload = json.dumps([self.backend.name, req.prompt, round(req.temperature, 4),
-                              req.sample, req.max_tokens], ensure_ascii=False)
+        key = [self.backend.name, req.prompt, round(req.temperature, 4), req.sample, req.max_tokens]
+        if req.logprobs:                         # only then, so existing keys stay valid
+            key.append("logprobs")
+        payload = json.dumps(key, ensure_ascii=False)
         return hashlib.sha256(payload.encode()).hexdigest()
 
     def generate(self, req: Request) -> str:

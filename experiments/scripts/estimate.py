@@ -6,7 +6,7 @@ from confledger.collection import estimate_calls
 from confledger.utility.config import arg_parser, from_args
 
 ap = arg_parser(__doc__)
-ap.add_argument("--reseed-batches", type=int, default=2, help="re-drawn batches (Jaccard check)")
+ap.add_argument("--reseed-batches", type=int, default=0, help="re-collected batches; 0: stability is re-drawn from cached draws (decisions.md #29)")
 a = ap.parse_args()
 rows = estimate_calls(from_args(a), a.reseed_batches)
 print(f"{'dataset':12s} {'model':8s} {'items':>6s} {'target':>9s} {'judge':>7s} {'generator':>10s} {'total':>9s}")

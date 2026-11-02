@@ -1,0 +1,64 @@
+# Full run for gpt-4.1: three datasets, 800 items each (100 dev, 500 eval, 200 calibration), run with
+# LLM_BACKEND=safechain in the private env. Steps: docs/private_run.md. Derived from default.yaml.
+# confledger experiment configuration. Freeze on the dev slice before evaluation.
+seed: 0
+top_frac: 0.10             # select the top 10% of the whole eval set: k = ceil(0.10 * n_eval) = 50
+budget: null              # null = match baselines to the pipeline's realised calls/case
+budget_matched_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 15]   # CEL-k (expected calls in (k - band, k]) vs every baseline at k calls; up to 15 = a certified survivor's cost, so CEL-k reaches certified CEL's spend (needs n_same >= max k)
+linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
+deployment_sc_draws: 3    # self-consistency at this many draws = the cheap deployment baseline
+# SPRT certification (Sec. 3.2, Cor. 1); these are the paper's values. The stage-2 depth is
+# derived: unanimous draws to certify = max(SPRT boundary, Cor. 1: eps <= eps0 at p0_star).
+# Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
+# p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
+sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
+split: {n_dev: 100, n_eval: 500, n_cal: 200}   # n_cal: calibration set D_cal (docs/reference.md)
+# Score model on D_fit (= dev slice) and certified selection on D_cal (decisions.md #17).
+# Pessimistic score s = mu - lambda*sigma, lambda by cv_folds-fold CV on D_fit over `lambdas`.
+scoring: {ridge: 1.0, prior: [0.5, 0.5], lambdas: [0, 0.5, 1, 1.5, 2, 3], cv_folds: 5,
+          alphas: [0.05, 0.1, 0.2], q0_level: 0.95,
+          gray_box: false,   # true: also use the first-token probability (needs collect.logprobs)
+          budget_band: 1.0,  # CEL-k: budget k is a target; plan spends in (k - band, k] on dev (decisions.md #26)
+          extra_fracs: [0.05, 0.01]}   # further top shares on the budget curve, reported only
+# Frontier allocation (decisions.md #18): k1 first draws per case, then LUCB on the top-k cut
+# with half-width z*sigma; the score model sees `reps` random partial states per D_fit case.
+frontier: {k1: 1, z: 1.0, reps: 8}
+# Signal values (SHAP closed form) and the Prop. K knapsack allocation (decisions.md #19).
+knapsack: {max_extra: 6, prune_tol: 0.01, n_boot: 200}
+# Fitted stability prior for the certified mode: Beta(a, b) on `draws` fresh draws per holdout
+# case (no labels), depth = bootstrap `quantile` (decisions.md #19). Jeffreys stays the reference.
+prior: {draws: 5, n_boot: 1000, quantile: 0.95}
+
+datasets: [triviaqa, strategyqa, mmlu]
+
+# Models under test (black-box targets), identified by model id (file names, `-m <id>`).
+# OpenAI models: transport by env var, LLM_BACKEND=safechain (private env) or unset
+# (direct API, OPENAI_API_KEY). Other providers go through their OpenAI-compatible
+# endpoint (an explicit base_url never routes through SafeChain; decisions.md #31).
+# Every model under test must accept temperature; thinking/reasoning is switched off.
+models:
+  - {provider: openai_compat, model: "gpt-4.1"}
+
+# Paraphrase / distractor generator (fixed across runs). Must differ from every
+# model under test: it sees the gold answer when writing distractors.
+# The fixed `name` keeps cached distractors valid on either transport: evaluate.py rebuilds the
+# TriviaQA items through this cache, so collections can be analysed outside the private env.
+generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal, name: "full-generator-gpt-5"}   # reasoning model: no temperature
+
+# Rationale judge for semantic entropy: gpt-5 for now, an interim choice until the direction
+# is confirmed (decisions.md #33). One judge serves every model. To change it, edit this line
+# and run experiments/scripts/recluster.py: no new calls to the models under test.
+judge: {provider: openai_compat, model: "gpt-5.4", reasoning_effort: low}   # as in the pilots
+
+collect:
+  n_paraphrases: 12
+  n_same: 16               # >= CEL's max cost per case (16), so the matched budget always fits
+  n_reuse_paras: 3
+  n_reuse_samples: 3
+  temperature: 0.7
+  verbal_per_draw: true    # true: confidence line on every draw and the negation probe, no separate verbal call (-1 call/question)
+  logprobs: false          # gray-box: P(Yes) at the answer token on every draw (no extra call; not with reasoning models)
+  workers: 8
+
+# Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset).
+paths: {cache: experiments/results/cache_full, results: experiments/results}   # own cache: it travels with the collections

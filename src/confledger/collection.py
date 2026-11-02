@@ -24,7 +24,7 @@ from typing import Optional
 from data import load_split
 
 from . import prompts as P
-from .utility.answer_parsing import parse_answer, parse_confidence, parse_explanation, parse_json_list
+from .utility.answer_parsing import parse_answer, parse_confidence, parse_explanation, parse_json_list, split_p_yes
 from .methods import cel_from_settings, max_cel_calls
 from .utility.config import check_config, model_spec, record_run, results_dir
 from .utility.llm import CachedClient, Request, cached_client
@@ -42,7 +42,8 @@ class CollectConfig:
     n_reuse_samples: int = 3
     temperature: float = 0.7
     sample_offset: int = 0          # >0 re-draws everything (Jaccard stability run)
-    verbal_per_draw: bool = False   # confidence line on every draw; no separate verbal call
+    verbal_per_draw: bool = False   # confidence line on every draw (and the negation probe); no verbal call
+    logprobs: bool = False          # gray-box: P(Yes) at the answer token on every draw (no extra call)
     workers: int = 8
 
 
@@ -59,13 +60,15 @@ class Collector:
 
     def _draw(self, item: Item, prompt: str, variant: str, sample: int,
               temperature: float, fmt: str = "yn", kind: str = "answer", **kw) -> Draw:
-        txt = self.t.generate(Request(prompt, temperature, kind, sample,
+        lp = bool(kw.pop("logprobs", False))
+        txt = self.t.generate(Request(prompt, temperature, kind, sample, logprobs=lp,
                                       meta=self._meta(item, variant, **kw)))
+        txt, p_yes = split_p_yes(txt)
         ans = parse_answer(txt, fmt)
         if ans is None:
             self.failures["answer_parse"] += 1
         conf = parse_confidence(txt) if kw.get("with_conf") else None
-        return Draw(ans, parse_explanation(txt), confidence=conf)
+        return Draw(ans, parse_explanation(txt), confidence=conf, p_yes=p_yes)
 
     def paraphrases(self, item: Item) -> list[str]:
         n = self.cfg.n_paraphrases
@@ -82,11 +85,11 @@ class Collector:
         out = out + [f"Please answer the following. {item.question}"] * n
         return out[:n]
 
-    def _cluster(self, client: CachedClient, item: Item, expls: list[str]) -> list[Optional[int]]:
-        txt = client.generate(Request(P.judge_prompt(item.question, expls), 0.0, "judge", 0,
-                                      max_tokens=600, meta=self._meta(item, "judge")))
-        labels = parse_json_list(txt)
-        if not labels or len(labels) != len(expls) or not all(isinstance(x, int) for x in labels):
+    def _cluster(self, client, item: Item, expls: list[str]) -> list[Optional[int]]:
+        if hasattr(client, "cluster_many"):         # local NLI judge (decisions.md #30): filled in by
+            return [None] * len(expls)              # one batched pass after collection (nli_cluster_file)
+        labels = api_labels(client, item.question, expls, self._meta(item, "judge"))
+        if labels is None:
             self.failures["judge"] += 1
             return [None] * len(expls)          # conservative: every draw its own cluster
         return labels
@@ -97,15 +100,18 @@ class Collector:
         paras = self.paraphrases(item)
         vpd = c.verbal_per_draw
         ask = lambda q: P.answer_prompt(q, with_confidence=vpd)
-        fresh = [self._draw(item, ask(paras[j]), f"para:{j}", off, T, with_conf=vpd)
+        lp = c.logprobs
+        fresh = [self._draw(item, ask(paras[j]), f"para:{j}", off, T, with_conf=vpd, logprobs=lp)
                  for j in range(c.n_paraphrases)]
-        same = [self._draw(item, ask(item.question), "original", off + s, T, with_conf=vpd)
+        same = [self._draw(item, ask(item.question), "original", off + s, T, with_conf=vpd, logprobs=lp)
                 for s in range(c.n_same)]
-        reuse = [[fresh[p]] + [self._draw(item, ask(paras[p]), f"para:{p}", off + s, T, with_conf=vpd)
+        reuse = [[fresh[p]] + [self._draw(item, ask(paras[p]), f"para:{p}", off + s, T, with_conf=vpd,
+                                          logprobs=lp)
                                for s in range(1, c.n_reuse_samples)]
                  for p in range(c.n_reuse_paras)]
+        neg = self._draw(item, P.negation_prompt(item.question, vpd), "neg", off, 0.0, with_conf=vpd)
         probes = {
-            "neg": self._draw(item, P.negation_prompt(item.question), "neg", off, 0.0).answer,
+            "neg": neg.answer,
             "relabel": self._draw(item, P.relabel_prompt(item.question), "relabel", off, 0.0,
                                   fmt="ab").answer,
             "distractor": self._draw(item, P.distractor_prompt(item.question, item.item_id),
@@ -133,7 +139,8 @@ class Collector:
         return CaseData(item.item_id, item.dataset, item.gold, fresh, same, reuse, probes,
                         challenge_answer=ch.answer, challenge_base=base,
                         verbal_answer=v_ans, verbal_conf=v_conf,
-                        alt_clusters=alt, meta={"sample_offset": off, "verbal_per_draw": vpd})
+                        alt_clusters=alt, meta={"sample_offset": off, "verbal_per_draw": vpd, "logprobs": lp},
+                        probe_conf={"neg": neg.confidence} if vpd else {})
 
     # -- many items, resumable JSONL -----------------------------------------------
     def collect_all(self, items: list[Item], out_path: str | Path) -> list[CaseData]:
@@ -166,30 +173,93 @@ def target_calls_per_item(collect_cfg: dict) -> int:
             + 4 + 1 + (0 if c.get("verbal_per_draw") else 1))
 
 
+def api_labels(client, question: str, expls: list[str], meta: Optional[dict] = None) -> Optional[list[int]]:
+    """Group ids from one API judge call, or None if the reply is malformed."""
+    txt = client.generate(Request(P.judge_prompt(question, expls), 0.0, "judge", 0, max_tokens=600, meta=meta or {}))
+    labels = parse_json_list(txt)
+    if not labels or len(labels) != len(expls) or not all(isinstance(x, int) for x in labels):
+        return None
+    return labels
+
+
+def api_cluster_file(path: str | Path, client, question: dict[str, str], workers: int = 8) -> tuple[int, int]:
+    """Re-cluster every rationale of a collection file with an API judge; records already
+    clustered by this judge are skipped, so a re-run costs nothing. Returns (records
+    clustered, failed judge calls). A failed call leaves None: every draw its own group."""
+    path = Path(path)
+    if not path.exists():
+        return 0, 0
+    recs = [CaseData.from_json(json.loads(l)) for l in path.read_text().splitlines()]
+    todo = [cd for cd in recs if cd.meta.get("judge") != client.name]
+    pools = [cd.fresh + cd.same + [d for row in cd.reuse for d in row[1:]] for cd in todo]
+    with ThreadPoolExecutor(workers) as ex:
+        labels = list(ex.map(lambda cp: api_labels(client, question[cp[0].item_id], [d.explanation for d in cp[1]]),
+                             zip(todo, pools)))
+    for cd, pool, lab in zip(todo, pools, labels):
+        for d, g in zip(pool, lab or [None] * len(pool)):
+            d.cluster = g
+        cd.alt_clusters = None
+        cd.meta["judge"] = client.name
+    path.write_text("".join(json.dumps(cd.to_json()) + "\n" for cd in recs))
+    return len(todo), sum(lab is None for lab in labels)
+
+
+def nli_cluster_file(path: str | Path, nli, question: dict[str, str]) -> int:
+    """Cluster every rationale of a collection file with the local NLI judge, in one
+    batched pass; records already clustered by this judge are skipped. Returns the number
+    of records clustered."""
+    path = Path(path)
+    if not path.exists():
+        return 0
+    recs = [CaseData.from_json(json.loads(l)) for l in path.read_text().splitlines()]
+    todo = [cd for cd in recs if cd.meta.get("judge") != nli.name]
+    if not todo:
+        return 0
+    pools = [cd.fresh + cd.same + [d for row in cd.reuse for d in row[1:]] for cd in todo]
+    labels = nli.cluster_many([question[cd.item_id] for cd in todo], [[d.explanation for d in p] for p in pools])
+    for cd, pool, lab in zip(todo, pools, labels):
+        for d, g in zip(pool, lab):
+            d.cluster = g
+        cd.alt_clusters = None
+        cd.meta["judge"] = nli.name
+    path.write_text("".join(json.dumps(cd.to_json()) + "\n" for cd in recs))
+    return len(todo)
+
+
+def make_judge(spec: dict, cache, tag: str):
+    """The rationale-clustering judge: a local NLI model (provider local_nli, no API calls)
+    or an API model behind its response cache."""
+    if spec["provider"] == "local_nli":
+        from .utility.nli import NLIClusterer  # noqa: PLC0415
+        return NLIClusterer(**{k: v for k, v in spec.items() if k != "provider"})
+    return cached_client(spec, cache, tag)
+
+
 def estimate_calls(cfg: dict, reseed_batches: int = 0) -> list[dict]:
     """Expected API calls of `collect_config`, by model role. Per (dataset, model):
-    target draws/probes and 1 judge call per item (dev + eval + re-drawn batches), plus
+    target draws/probes and 1 judge call per item (dev + eval + calibration + re-drawn batches), plus
     the alt judge on the judge-sensitivity dataset. Per dataset (shared by all models,
     since the cache key ignores the target): 1 paraphrase-generation call per question
     and, for TriviaQA, a distractor-generation call for ~half the items. Excludes
     retries after malformed paraphrase output."""
     sp = cfg["split"]
-    n = sp["n_dev"] + sp["n_eval"]
-    r = reseed_batches * sp["batch_size"]
+    n = sp["n_dev"] + sp["n_eval"] + sp.get("n_cal", 0)
+    r = reseed_batches * (sp.get("batch_size") or sp["n_eval"])
     per = target_calls_per_item(cfg["collect"])
     rows = []
     for ds in cfg["_datasets"]:
         gen = n + (n // 2 if ds == "triviaqa" and not cfg.get("synthetic") else 0)
         for mk in cfg["_models"]:
-            alt = n if ds == cfg.get("judge_sensitivity_dataset") and cfg.get("alt_judge") else 0
+            api = lambda spec: bool(spec) and spec.get("provider") != "local_nli"   # local NLI: no calls
+            alt = n if ds == cfg.get("judge_sensitivity_dataset") and api(cfg.get("alt_judge")) else 0
             rows.append({"dataset": ds, "model": mk, "items": n + r, "target": per * (n + r),
-                         "judge": n + r + alt, "generator": gen})
+                         "judge": (n + r) * api(cfg["judge"]) + alt, "generator": gen})
             gen = 0                             # paraphrases/distractors are cached across models
     return rows
 
 
 def collection_path(cfg: dict, ds: str, mk: str, suffix: str = "") -> Path:
-    """<results>/<ds>/<config>/collections/<ds>__<mk><suffix>.jsonl; suffix '' (eval), '__dev', '__reseed'."""
+    """<results>/<ds>/<config>/collections/<ds>__<mk><suffix>.jsonl; suffix '' (eval), '__dev', '__cal', '__reseed'."""
     return results_dir(cfg, ds) / "collections" / f"{ds}__{mk}{suffix}.jsonl"
 
 
@@ -200,7 +270,7 @@ def load_collection(path: str | Path) -> dict[str, CaseData]:
 
 def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
     """Collect every selected (dataset, model) cell of a config: eval items, the dev
-    slice, and optionally the first `reseed_batches` batches re-drawn (Jaccard check).
+    slice, the calibration set (split.n_cal), and optionally the first `reseed_batches` batches re-drawn (Jaccard check).
     The only function that spends API calls; refuses placeholder model ids."""
     check_config(cfg)
     c = cfg["collect"]
@@ -215,7 +285,7 @@ def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
     record_run(cfg, f"collect --reseed-batches {reseed_batches}")
     cache = cfg["paths"]["cache"]
     gen = cached_client(cfg["generator"], cache, "generator")
-    judge = cached_client(cfg["judge"], cache, "judge")
+    judge = make_judge(cfg["judge"], cache, "judge")
     for ds in cfg["_datasets"]:
         items, split = load_split(cfg, ds, gen)
         by_id = {it.item_id: it for it in items}
@@ -223,10 +293,18 @@ def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
             target = cached_client(model_spec(cfg, mk), cache, f"target-{mk}")
             alt = None
             if ds == cfg.get("judge_sensitivity_dataset") and cfg.get("alt_judge"):
-                alt = cached_client(cfg["alt_judge"], cache, "judge-alt")
+                alt = make_judge(cfg["alt_judge"], cache, "judge-alt")
             col = Collector(target, gen, judge, CollectConfig(**cfg["collect"]), alt)
             col.collect_all(split.eval, collection_path(cfg, ds, mk))
             col.collect_all(split.dev, collection_path(cfg, ds, mk, "__dev"))
+            if split.cal:
+                col.collect_all(split.cal, collection_path(cfg, ds, mk, "__cal"))
+            if hasattr(judge, "cluster_many"):      # local NLI judge: one batched pass per file
+                q = {it.item_id: it.question for it in items}
+                for suffix in ("", "__dev", "__cal"):
+                    n = nli_cluster_file(collection_path(cfg, ds, mk, suffix), judge, q)
+                    if n:
+                        log.info("%s/%s%s: %d records clustered by %s", ds, mk, suffix, n, judge.name)
             if reseed_batches:
                 ids = [i for b in split.batches[:reseed_batches] for i in b]
                 cc2 = CollectConfig(**{**cfg["collect"], "sample_offset": 1000})

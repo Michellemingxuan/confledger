@@ -15,6 +15,10 @@ _ANS = re.compile(r"answer\s*[:\-]\s*[*_`\"']*\s*(yes|no|a|b)\b", re.I)
 _EXPL = re.compile(r"explanation\s*[:\-]\s*(.+)", re.I | re.S)
 _CONF = re.compile(r"confidence\s*[:\-]\s*[*_`]*\s*(\d{1,3}(?:\.\d+)?)\s*%?", re.I)
 _BARE = re.compile(r"^\s*[*_`\"']*\s*(yes|no)\b", re.I)
+_PYES = re.compile(r"\n?\[\[p_yes: ([0-9.]+)\]\]\s*$")
+_HEDGES = re.compile(r"\b(might|may|maybe|perhaps|possibly|probably|likely|unlikely|not sure|"
+                     r"unsure|uncertain|unclear|i think|i believe|it depends|could be|seems?|"
+                     r"appears?|approximately|roughly|arguably)\b", re.I)
 
 
 def parse_answer(text: str, fmt: str = "yn") -> Optional[str]:
@@ -59,3 +63,55 @@ def parse_json_list(text: str) -> Optional[list]:
         return out if isinstance(out, list) else None
     except json.JSONDecodeError:
         return None
+
+
+# -- gray-box: answer-token probability ----------------------------------------------
+
+def _get(o, k):
+    return o.get(k) if isinstance(o, dict) else getattr(o, k, None)
+
+
+def answer_token_prob(tokens) -> Optional[float]:
+    """P(Yes) at the answer token, normalised over Yes/No among its top logprobs.
+    `tokens` is the OpenAI `logprobs.content` list (objects or dicts with token, logprob,
+    top_logprobs). The answer token is the first yes/no token after 'Answer'."""
+    import math
+    seen, text = False, ""
+    for t in tokens or []:
+        tok = (_get(t, "token") or "")
+        text += tok
+        if not seen:
+            seen = "answer" in text.lower()
+            continue
+        if tok.strip(" :*_`\"'").lower() not in ("yes", "no"):
+            continue
+        p = {"yes": 0.0, "no": 0.0}
+        for alt in (_get(t, "top_logprobs") or [{"token": tok, "logprob": _get(t, "logprob")}]):
+            w = (_get(alt, "token") or "").strip(" :*_`\"'").lower()
+            if w in p:
+                p[w] += math.exp(_get(alt, "logprob"))
+        tot = p["yes"] + p["no"]
+        return p["yes"] / tot if tot > 0 else None
+    return None
+
+
+def p_yes_trailer(p: Optional[float]) -> str:
+    return "" if p is None else f"\n[[p_yes: {p:.6f}]]"
+
+
+def split_p_yes(text: str) -> tuple[str, Optional[float]]:
+    """Remove the logprob trailer a backend appended; return (text, P(Yes) or None)."""
+    m = _PYES.search(text or "")
+    if not m:
+        return text, None
+    return text[:m.start()], float(m.group(1))
+
+
+# -- free text signals of a rationale -------------------------------------------------
+
+def rationale_words(expl: str) -> int:
+    return len(re.findall(r"\w+", expl or ""))
+
+
+def has_hedge(expl: str) -> bool:
+    return bool(_HEDGES.search(expl or ""))

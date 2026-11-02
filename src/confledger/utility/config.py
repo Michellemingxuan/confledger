@@ -12,6 +12,7 @@ collections and per-cell reports; <results>/all/<config name>/ holds what spans 
 from __future__ import annotations
 
 import argparse
+import math
 import datetime as dt
 import json
 import os
@@ -52,6 +53,9 @@ def load_config(path: str | Path, datasets=None, models=None) -> dict:
     unknown = [m for m in cfg["_models"] if m not in ids]
     if unknown:
         raise SystemExit(f"{path}: unknown model id(s) {unknown}; `models` has {ids}")
+    if "top_frac" in cfg:                         # select the top share of each batch
+        pop = cfg["split"].get("batch_size") or cfg["split"]["n_eval"]   # default: the whole eval set
+        cfg["k"] = max(1, math.ceil(cfg["top_frac"] * pop - 1e-9))
     return cfg
 
 

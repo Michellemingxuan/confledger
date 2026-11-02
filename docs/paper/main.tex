@@ -19,6 +19,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{pifont}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{microtype}
@@ -59,6 +61,33 @@ Label-Free Top-$k$ Selection with Sequential Sampling Guarantees\\
 \label{sec:method}
 % =========================================================================
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig1_overview.pdf}
+  \caption{\textbf{Overview of CEL.}
+  (a)~Each case is screened with $k_1$ draws on fresh paraphrases; one
+  disagreement with the majority answer ends it at $1 + k_1$ calls. Only
+  unanimous cases buy more evidence: draws up to depth $d^\ast$, the probes,
+  the challenge and the entropy call.
+  (b)~\ding{182}~At the same mean budget $\bar k$,
+  self-consistency spends every call on draws, which cannot see a
+  stable-but-wrong answer. CEL spends little on rejected cases and uses
+  the saved calls for probes on the survivors.
+  (c)~\ding{183}~Fixing the budget gives a
+  ranking by the fitted score $s$ (model-based), with an exact FDR bound on
+  correctness from conformal BH on a labelled calibration split. Fixing an
+  evidence standard $(\varepsilon_0, p_0^\ast)$, chosen by the user, gives
+  an exact, label-free certificate of stability for each accepted answer.
+  \ding{184}~Both modes replay the same calls. Below the
+  certification budget $B^\ast$ (Cor.~\ref{cor:certbudget}) CEL-$k$ can rank
+  but not certify, and certified CEL is one plan in CEL-$k$'s plan space
+  (Prop.~\ref{prop:nesting}). The depth $d^\ast$ and $B^\ast$ follow from
+  the standard. Our experiments use $k_1 = 3$ and
+  $(\varepsilon_0, p_0^\ast) = (0.05, 0.8)$, giving $d^\ast = 9$ and $4$ or
+  $15$ calls per case; the bars in (b) are illustrative.}
+  \label{fig:overview}
+\end{figure}
+
 \subsection{Problem Formulation and Selection Optimality}
 \label{sec:method:setup}
 
@@ -76,7 +105,7 @@ not be an artifact of one phrasing, the target of inference is the
 \end{equation}
 where $Q$ is a distribution over semantics-preserving paraphrases of
 $x_i$. The task is to select a subset $T \subset \{1,\dots,N\}$ with
-$|T| = k$ (here $k = 10$) maximizing the expected number of correct
+$|T| = k$ (here the top $10\%$ of the batch, $k = 5$ of $N = 50$) maximizing the expected number of correct
 answers $\E\!\left[\#\text{correct in } T\right]$, subject to total spend
 at most $B$, \emph{without labels}.
 
@@ -446,7 +475,7 @@ union bound over the same events.
 This is a Bayesian FDR-style control on the expected number of
 sub-standard cases \emph{in the delivered set}: if every selected case
 is $12/12$ unanimous, the expected number with true stability below
-$0.8$ is at most $10 \times 0.019 \approx 0.2$. The guarantee inverts
+$0.8$ is at most $5 \times 0.019 \approx 0.1$. The guarantee inverts
 into a design equation:
 
 \begin{corollary}[Certification depth]
@@ -576,7 +605,7 @@ The cascade ordering and the stage-2 probe allocation are design
 choices; on labeled benchmarks (where labels are legitimate at design
 time) we replace judgment with measurement. Define a cooperative game
 whose players are the five signals $\sigsetX$, and for $C \subseteq
-\sigsetX$ let $V(C)$ be the batch-averaged $\precat{10}$ of the
+\sigsetX$ let $V(C)$ be the batch-averaged $\precat{10\%}$ of the
 pipeline restricted to the signals in $C$ (Borda-combined), with
 $V(\emptyset)$ the random-selection reference. The Shapley value of
 signal $j$ is
@@ -714,20 +743,25 @@ saving from probes is only as large as the exchange rate is honest.
 \paragraph{Chosen allocation (empirical).} The allocation CEL-$k$
 deploys is chosen on the development slice:
 \begin{equation}
-  \hat a(k) \;=\; \arg\max_{a \in \mathcal{A}:\ \hat C(a) \le k}\;
-  \widehat{\precat{10}}_{\mathrm{dev}}(a),
+  \hat a(k) \;=\; \arg\max_{a \in \mathcal{A}:\ k - \delta < \hat C(a) \le k}\;
+  \widehat{\mathrm{AUARC}}_{\mathrm{dev}}(a),
   \label{eq:devalloc}
 \end{equation}
 where $\mathcal{A}$ enumerates every allocation the collection can
 replay --- $1$ to $4$ screen draws on fresh paraphrases or the original
-wording, $0$ to $6$ further draws (so that adaptive CEL's own
-allocation is in $\mathcal{A}$, Proposition~\ref{prop:nesting}), any
-subset $G$ of the battery, the challenge, and the entropy call
-($|\mathcal{A}| = 1{,}760$);
-$\widehat{\precat{10}}_{\mathrm{dev}}$ is the Borda ranking's precision
-averaged over development batches and random tie-breaks (AUROC when no
-development batch exceeds $10$ items); and ties go to the lower
-$\hat C(a)$. The search is exhaustive, so it captures interactions that
+wording, $0$ to $6$ further draws with an odd total, so that a
+survivor's majority cannot be a tie (adaptive CEL's own allocation is
+in $\mathcal{A}$, Proposition~\ref{prop:nesting}), any subset $G$ of
+the battery, the challenge, and the entropy call
+($|\mathcal{A}| = 864$);
+$\widehat{\mathrm{AUARC}}_{\mathrm{dev}}$ is the area under the Borda
+ranking's accuracy-rejection curve on the development slice, used
+because precision at the top share saturates at $1$ across many
+allocations; and ties go to the higher $\hat C(a)$. The budget is a target, not only a cap: the chosen
+allocation spends within $\delta$ calls of $k$ ($\delta = 1$), and if no
+allocation does, the best of those that spend the most without
+exceeding $k$ is used. Otherwise, when the development score cannot
+separate allocations, the cheapest would win and CEL-$k$ would leave its budget unspent. The search is exhaustive, so it captures interactions that
 per-signal valuations miss --- two redundant probes, or an entropy call
 that pays only above some number of draws. $\hat a(k)$ uses development
 items only and is frozen before any evaluation item is scored. Taking
@@ -833,14 +867,14 @@ to published yardsticks.
 \end{itemize}
 
 The verification construction engineers base accuracy into a middle
-band: at base accuracy near $1$, $\precat{10}$ is uninformative for
+band: at base accuracy near $1$, $\precat{10\%}$ is uninformative for
 any selector (the hypergeometric null under random selection makes
 this precise), and at low base accuracy high-confidence cases barely
 exist; selection lift is measurable only between. Per dataset:
 $500$ evaluation items (fixed seed) partitioned into $10$ disjoint
-batches of $50$ with top-$10$ selected per batch --- matching the
+batches of $50$ with the top $10\%$ ($5$ cases) selected per batch --- matching the
 selection objective of Section~\ref{sec:method:setup}, supplying $10$
-paired observations of $\precat{10}$ per configuration, and mirroring
+paired observations of $\precat{10\%}$ per configuration, and mirroring
 the recurring-batch deployment shape of
 Section~\ref{sec:method:loop} --- plus $100$ development items on
 which every hyperparameter (temperature, SPRT thresholds, paraphrase
@@ -911,7 +945,10 @@ pipeline's per-case spend is adaptive, so budgets are matched in
 expectation at the batch level): baselines receive the full method's
 realized mean calls per case, counting every call it makes ---
 paraphrase generation, draws, probes, judge, challenge, and verbalized
-confidence --- about $12$--$13$ at the survival rates we expect. Baselines:
+confidence --- about $12$--$13$ at the survival rates we expect. Every
+method is scored on the correctness of \emph{its own} answer, and its
+accuracy is reported next to its ranking metrics, since a weighted vote
+can return a different answer than the majority. Baselines:
 (i)~random selection, with the exact hypergeometric null as reference;
 (ii)~verbalized confidence only, reported both at matched budget and at
 its native one-call cost; (iii)~naive self-consistency
@@ -921,7 +958,43 @@ since it isolates allocation (C3) at identical spend; (iv)~semantic
 entropy alone \citep{kuhn2023}: same-prompt draws plus one clustering
 call, together at the matched budget;
 (v)~BSDetector \citep{chen2024}, the closest prior combined score,
-reconstructed from cached samples where its components permit.
+reconstructed from cached samples where its components permit;
+(vi)~sampling with verbalized confidence aggregated by Avg-Conf
+\citep{xiong2023}, $C = \sum_i \mathbb{1}\{\hat Y_i = \tilde Y\}\,c_i /
+\sum_i c_i$ over the draws' verbalized confidences $c_i$, with
+$\tilde Y$ the majority answer, under both of their black-box sampling
+schemes: self-random (one phrasing) and prompting (one paraphrase per
+draw, plus the generation call);
+(vii)~confidence-informed self-consistency, CISC
+\citep{taubenfeld2025}: a vote weighted by
+$\mathrm{softmax}(c_i/T)$, with $T$ chosen on the development slice
+for vote accuracy over their $80$-point grid on $[10^{-4}, 10^{4}]$;
+CISC defines an answer, not a selection score, so we rank by the
+winning answer's weight share (our adaptation);
+(viii)~a learned black-box calibrator in the manner of
+\citet{pedapati2024}: for each perturbation, the number of distinct
+answers and the mean pairwise ROUGE-L of the full responses, under
+stochastic decoding and paraphrasing, with a logistic regression of
+correctness fitted on the development slice. Every fitted quantity ---
+CISC's $T$, the calibrator's weights --- is frozen on the development
+slice, as for CEL.
+
+All baselines replay the shared cache, so they see the same draws as
+CEL. Three departures from the source papers follow from the binary
+verification format and the cache, and are stated as such.
+On a yes/no answer, \citeauthor{pedapati2024}'s similarity features
+largely reduce to the agreement count (the number of semantic sets is
+$1$ or $2$, and ROUGE over answers alone is a function of $m$); computing
+ROUGE over the full response keeps the explanation's wording in play.
+We call this baseline the black-box calibrator, not Pedapati et al.'s method, because it omits the
+perturbations that need new prompts or a local NLI model (sentence
+permutation, entity-frequency amplification, stop-word removal,
+split-response consistency). Xiong et al.'s misleading-hint sampling and
+Top-$K$/Pair-Rank aggregation (which reduces to the top-$2$
+probabilities on a binary question) and CISC's P(True) confidence
+also need new prompts, and are omitted. CISC with the answer token's
+probability in place of the length-normalized response probability is
+a gray-box variant, reported separately from the black-box comparisons.
 Ablations of the full method: \emph{no-spread} ($9$ draws over $3$
 phrasings --- deliberately reintroducing the design effect, the
 empirical measurement of the bracket in Eq.~\eqref{eq:deff});
@@ -953,8 +1026,8 @@ paraphrase-generation call: (A)~$12$ draws only ($13$ calls,
 $\keff = 12$); (B)~$6$ draws $+$ the probe battery ($10$ calls,
 $\keff \approx 10.8$ at the derived rates); (C)~$9$ draws only
 ($10$ calls, $\keff = 9$). The prediction is
-$\precat{10}(\mathrm{B}) \approx \precat{10}(\mathrm{A}) >
-\precat{10}(\mathrm{C})$: arm B buys approximately arm A's quality at
+$\precat{10\%}(\mathrm{B}) \approx \precat{10\%}(\mathrm{A}) >
+\precat{10\%}(\mathrm{C})$: arm B buys approximately arm A's quality at
 arm C's price. If B falls between A and C, the gap measures the
 evidence double-counting flagged in
 Section~\ref{sec:method:exchange}, and the empirically fitted
@@ -964,21 +1037,32 @@ informative.
 \subsection{Evaluation Protocol}
 \label{sec:exp:eval}
 
-\textbf{Primary:} the distribution of $\precat{10}$ over the $10$
+\textbf{Primary:} the distribution of $\precat{10\%}$ over the $10$
 batches, paired per batch against every baseline (Wilcoxon signed-rank
 across batches; batch pairing absorbs batch-difficulty variance), plus
 a pooled Jeffreys interval over the $100$ selected cases per
 configuration; lift over the exact per-batch hypergeometric null is
 reported both absolutely and as relative error reduction.
-\textbf{Standard:} AUROC and PRR \citep{vashurin2025} over all $500$
-items, and risk--coverage curves --- the numbers directly comparable
-to published black-box UQ results. Both require a total order over
+\textbf{Standard:} AUROC, PRR \citep{vashurin2025} and AUARC (the
+area under the accuracy--rejection curve) over all $500$ items, and
+risk--coverage curves --- the numbers directly comparable to published
+black-box UQ results \citep{xiong2023,pedapati2024}.
+\textbf{Calibration} (secondary, nothing tuned on it): for scores that
+claim to be $P(Z = 1)$ --- the fitted score $\hat\mu$, the agreement
+share, verbalized confidence, Avg-Conf, CISC's weight share and the
+learned calibrator --- expected calibration error (ten equal-width
+bins), Brier score, and an equal-count reliability table with Jeffreys
+intervals, each against the method's own correctness. For per-draw
+confidence sources we also report within-question discrimination
+\citep{taubenfeld2025}, the share of same-question
+(correct, incorrect) response pairs ranked correctly, which predicts
+whether confidence-weighting the vote can help. Both require a total order over
 all $500$ cases: stage-1-eliminated cases rank below all survivors,
 ordered among themselves by stage-1 agreement pattern with random tie
 breaking, and cascade strata are handled by mid-rank ties (a tied
 correct--incorrect pair contributes $\tfrac12$ to AUROC).
-\textbf{Headline figure:} $\precat{10}$ and AUROC as a function of
-calls per case ($3, 6, 9, 12$, subsampled from cache; each subsample
+\textbf{Headline figure:} $\precat{10\%}$ and AUROC as a function of
+calls per case ($1, 2, 3, 6, 9, 12$, subsampled from cache; each subsample
 repeated $20$ times with distinct seeds and averaged, with error bands
 bootstrapped over batches, the real unit of uncertainty) for the full
 method, CEL-$k$ at its chosen allocations (plotted at expected calls per
@@ -992,9 +1076,9 @@ needs to match the designed pipeline.
 Section~\ref{sec:method:budget} as a picture. One curve traces CEL-$k$
 under the derived allocation $a^{\ast}(k)$ of
 Eq.~\eqref{eq:derivedalloc} as the budget $k$ grows; one point marks
-adaptive CEL. The top row plots $\precat{10}$ with a $95\%$ bootstrap
+adaptive CEL. The top row plots $\precat{10\%}$ with a $95\%$ bootstrap
 band over batches. The bottom row plots the share of the delivered
-top-$10$ that carries a certificate at $(0.05, 0.8)$, exactly from the
+top $10\%$ that carries a certificate at $(0.05, 0.8)$, exactly from the
 draws (Proposition~\ref{prop:guarantee}, solid) and model-based
 (Proposition~\ref{prop:exchange}, dotted). Shading splits the calls
 axis at the two certification budgets of
@@ -1012,7 +1096,7 @@ isotonic-versus-unconstrained fit comparison (global Monotonicity);
 accuracy of per-batch ranks $1$--$10$ vs.\ $11$--$30$ vs.\ $31$--$50$,
 pooled over the $10$ batches, by Mann--Whitney (local Monotonicity,
 where Proposition~\ref{prop:topk} consumes it).
-\textbf{Robustness:} Jaccard overlap of the top-$10$ under fully
+\textbf{Robustness:} Jaccard overlap of the top $10\%$ under fully
 re-drawn stage-2 sampling on two batches per dataset, reported against
 the chance floor $J \approx 0.11$ for two random $10$-of-$50$
 selections (selection must be a property of cases, not sampling
@@ -1021,7 +1105,7 @@ noise); survival on the held-out entity-renaming family, selected
 one-sided --- the label-free surrogate of
 Section~\ref{sec:method:loop}, on probes the selector never saw;
 judge-swap sensitivity as (a)~Spearman correlation of
-$\widehat{\SE}$ and (b)~Jaccard of the resulting top-$10$s, the
+$\widehat{\SE}$ and (b)~Jaccard of the resulting top-$10\%$ sets, the
 decision-level quantity; three model families throughout.
 \textbf{Design analysis:} the exact Shapley table of
 Eq.~\eqref{eq:shapley} per dataset and model, with the efficiency
@@ -1062,8 +1146,8 @@ MMLU (adversarial) & \S\ref{sec:method:agg}, Ass.~\ref{ass:mono} &
 Pre-registered hard case: cascade ordering under stress; candidate Monotonicity boundary. \\
 Verification format, 50/50 hard distractors & \S\ref{sec:exp:data} &
 Base accuracy in the band where selection lift is measurable (hypergeometric null). \\
-10 batches $\times$ 50, top-10 & \S\ref{sec:method:setup}, \S\ref{sec:method:loop} &
-Evaluated object $=$ the selection rule; inferential power for a 10-Bernoulli statistic; deployment shape. \\
+10 batches $\times$ 50, top 10\% ($k = 5$) & \S\ref{sec:method:setup}, \S\ref{sec:method:loop} &
+Evaluated object $=$ the selection rule; inferential power for a 5-Bernoulli statistic; deployment shape. \\
 Fresh paraphrase per draw & Lemma~\ref{lem:iid} &
 Exact i.i.d.; posterior of Eq.~\eqref{eq:posterior} exact. \\
 3-then-6 draws, eliminate on disagreement & \S\ref{sec:method:design}, Lemma~\ref{lem:triage} &
@@ -1078,6 +1162,8 @@ Random baseline & C1 &
 Value of measuring at all, against the exact hypergeometric null. \\
 Verbalized-only baseline & C2, \S\ref{sec:method:signals}~(5) &
 Behavioral beats self-report; RLHF-miscalibration rationale. \\
+Avg-Conf, CISC, black-box calibrator & \S\ref{sec:exp:baselines} &
+Strongest published black-box confidence recipes on the same cache and spend: aggregation of verbalized confidence, confidence-weighted voting, a learned calibrator. \\
 Self-consistency at the matched budget & C3, \S\ref{sec:method:design} &
 \emph{Core claim}: identical spend, different allocation --- design carries the budget-constrained value. \\
 No-spread / no-SPRT / no-flip ablations & Eq.~\eqref{eq:deff}, Lemma~\ref{lem:triage}, Lemma~\ref{lem:power} &

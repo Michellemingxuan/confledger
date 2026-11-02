@@ -10,7 +10,7 @@ S=experiments/scripts
 python $S/estimate.py -c "$CFG"
 python $S/collect.py -c "$CFG" -v
 python $S/evaluate.py -c "$CFG" > /dev/null      # per-cell protocol + reports + summary.json
-for exp in sprt_characteristics main_ladder budget_curves mode_linkage evidence_exchange monotonicity signal_effects robustness; do
+for exp in sprt_characteristics main_ladder budget_curves calibration mode_linkage evidence_exchange monotonicity signal_effects signal_importance robustness; do
   python "$S/$exp.py" -c "$CFG"
 done
 echo "Paper tables and figures: see experiments/results/all/<config name>/paper/."
