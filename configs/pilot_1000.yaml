@@ -19,6 +19,8 @@ split: {frac: {dev: 0.2, cal: 0.2, eval: 0.6}, n_dev: 200, n_cal: 200, n_eval: 6
 scoring: {ridge: 1.0, prior: [0.5, 0.5], lambdas: [0, 0.5, 1, 1.5, 2, 3], cv_folds: 5,
           alphas: [0.05, 0.1, 0.2], q0_level: 0.95,
           gray_box: false,   # true: also use the first-token probability (needs collect.logprobs)
+          drop: [],          # features held at zero weight in every fit (decisions.md #36); [] = all features
+          standardize: [length], # scale these features by their D_fit sd before the ridge (decisions.md #36); true = all, false = none
           budget_band: 1.0,  # CEL-k: budget k is a target; plan spends in (k - band, k] on dev (decisions.md #26)
           extra_fracs: [0.05, 0.01]}   # further top shares on the budget curve, reported only
 # Frontier allocation (decisions.md #18): k1 first draws per case, then LUCB on the top-k cut

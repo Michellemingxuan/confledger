@@ -30,7 +30,7 @@ from .baselines import (bsdetector_like, cisc, fit_cisc, fit_pedapati, pedapati,
 from .baselines.cisc import draw_conf
 from .certified_selection import bh, conformal_pvalues, ebh, evalue, pass_rates, selection_outcome
 from .frontier import fit_frontier, run_frontier
-from .score_model import GRAY_BOX, choose_lambda, fit_score_model, top_precision
+from .score_model import FEATURES, GRAY_BOX, choose_lambda, fit_score_model, top_precision
 from .signal_shapley import exact_shapley
 from .signal_value import full_cases, importance, item_values, knapsack_allocation, prune
 from .stability_prior import fitted_prior, glr_depth, posterior_tail
@@ -230,14 +230,19 @@ def check_collection(coll: dict[str, CaseData], budget: Optional[int] = None,
 
 
 SCORING = {"ridge": 1.0, "prior": [0.5, 0.5], "lambdas": [0, 0.5, 1, 1.5, 2, 3], "cv_folds": 5,
-           "alphas": [0.05, 0.1, 0.2], "q0_level": 0.95, "gray_box": False,
+           "alphas": [0.05, 0.1, 0.2], "q0_level": 0.95, "gray_box": False, "drop": [], "standardize": False,
            "budget_band": 1.0,   # CEL-k spends within (k - band, k] calls per case on dev (#26)
            "extra_fracs": [0.05, 0.01]}   # further top shares reported on the budget curve (nothing is tuned on them)
 
 
-def _gray(o: dict) -> tuple:
-    """Features held out of every fit: the gray-box first-token probability unless enabled."""
-    return () if o.get("gray_box") else GRAY_BOX
+def _dropped(o: dict) -> tuple:
+    """Features held out of every fit: the gray-box first-token probability unless enabled,
+    plus the features named in scoring.drop (decisions.md #36), held at zero weight."""
+    extra = tuple(o.get("drop") or ())
+    bad = [f for f in extra if f not in FEATURES or f == "intercept"]
+    if bad:
+        raise ValueError(f"scoring.drop: unknown or undroppable feature(s) {bad}; choose from {FEATURES[1:]}")
+    return tuple(dict.fromkeys(((() if o.get("gray_box") else GRAY_BOX) + extra)))
 
 
 def fit_scorer(fit_cases: Sequence[CaseScore], k_frac: float, o: dict):
@@ -248,8 +253,8 @@ def fit_scorer(fit_cases: Sequence[CaseScore], k_frac: float, o: dict):
     if z.all() or not z.any():
         return None
     prior = tuple(o["prior"])
-    lam, cv = choose_lambda(fit_cases, z, o["lambdas"], k_frac, o["cv_folds"], o["ridge"], prior, drop=_gray(o))
-    return fit_score_model(fit_cases, z, o["ridge"], prior, _gray(o)), lam, cv
+    lam, cv = choose_lambda(fit_cases, z, o["lambdas"], k_frac, o["cv_folds"], o["ridge"], prior, drop=_dropped(o), standardize=o["standardize"])
+    return fit_score_model(fit_cases, z, o["ridge"], prior, _dropped(o), o["standardize"]), lam, cv
 
 
 def scored(policy: Callable, model, lam: float) -> Callable:
@@ -463,8 +468,8 @@ def score_model_section(coll: dict[str, CaseData], batches: list[list[str]], cho
             pess["by_k"][B] = cert["by_k"][B] = {"note": "D_fit has one class only; no score model"}
             continue
         lam, cv = choose_lambda(fit_cases, z_fit, o["lambdas"], k / len(batches[0]), o["cv_folds"],
-                                o["ridge"], prior, drop=_gray(o))
-        model = fit_score_model(fit_cases, z_fit, o["ridge"], prior, _gray(o))
+                                o["ridge"], prior, drop=_dropped(o), standardize=o["standardize"])
+        model = fit_score_model(fit_cases, z_fit, o["ridge"], prior, _dropped(o), o["standardize"])
         test = [[pol(coll[i]) for i in b] for b in batches]
         sc = [[self_consistency(coll[i], int(B)) for i in b] for b in batches]
         per = {"mean": [], "pessimistic": [], "borda": [], "self_consistency": []}
@@ -561,7 +566,7 @@ def frontier_section(coll: dict[str, CaseData], batches: list[list[str]], chosen
     o, f = {**SCORING, **(scoring or {})}, {**FRONTIER, **(frontier or {})}
     fit = list(fit_coll.values())
     fits = {para: fit_frontier(fit, para, k / len(batches[0]), f["reps"], o["ridge"], tuple(o["prior"]),
-                               o["lambdas"], o["cv_folds"], drop=_gray(o)) for para in (False, True)}
+                               o["lambdas"], o["cv_folds"], drop=_dropped(o), standardize=o["standardize"]) for para in (False, True)}
     out = {"n_fit": len(fit), "settings": f, "by_k": {}}
     for B in budget_ks:
         feasible = [p for p in (False, True) if B >= int(p) + f["k1"]]
@@ -615,10 +620,10 @@ def knapsack_section(coll: dict[str, CaseData], batches: list[list[str]], chosen
     z_full = np.array([c.correct for c in full])
     if z_full.all() or not z_full.any():
         return {"note": "D_fit has one class only"}
-    imp = importance(full, z_full, o["ridge"], prior, kc["n_boot"], drop=_gray(o))
-    dropped = prune(imp, kc["prune_tol"], _gray(o))
-    if set(dropped) - set(_gray(o)):
-        imp = importance(full, z_full, o["ridge"], prior, kc["n_boot"], drop=dropped)
+    imp = importance(full, z_full, o["ridge"], prior, kc["n_boot"], drop=_dropped(o), standardize=o["standardize"])
+    dropped = prune(imp, kc["prune_tol"], _dropped(o))
+    if set(dropped) - set(_dropped(o)):
+        imp = importance(full, z_full, o["ridge"], prior, kc["n_boot"], drop=dropped, standardize=o["standardize"])
     values = item_values(imp, float(np.mean([c.signals["k"] for c in full])))
     out = {"n_fit": len(fit), "importance": imp, "pruned": dropped, "values": values,
            "value_order": sorted(values, key=values.get, reverse=True), "by_k": {}}
@@ -633,8 +638,8 @@ def knapsack_section(coll: dict[str, CaseData], batches: list[list[str]], chosen
         if zf.all() or not zf.any():
             continue
         lam, _ = choose_lambda(fc, zf, o["lambdas"], k / len(batches[0]), o["cv_folds"], o["ridge"], prior,
-                               drop=dropped)
-        model = fit_score_model(fc, zf, o["ridge"], prior, dropped)
+                               drop=dropped, standardize=o["standardize"])
+        model = fit_score_model(fc, zf, o["ridge"], prior, dropped, o["standardize"])
         per, sc, calls = [], [], []
         pooled = {"knapsack": ([], []), "self_consistency": ([], [])}
         for b in batches:

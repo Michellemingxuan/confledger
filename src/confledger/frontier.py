@@ -150,7 +150,8 @@ class FrontierFit:
 
 def fit_frontier(fit: Sequence[CaseData], para: bool, k_frac: float, reps: int = 8,
                  ridge: float = 1.0, prior: Sequence[float] = (0.5, 0.5), lambdas=(0, 1, 2),
-                 folds: int = 5, seed: int = 0, drop: Sequence[str] = ()) -> FrontierFit:
+                 folds: int = 5, seed: int = 0, drop: Sequence[str] = (),
+                 standardize: bool | Sequence[str] = False) -> FrontierFit:
     """Score model for partial evidence: each fitting case contributes `reps` random
     states (draws 1..all, each probe and the challenge bought with probability 1/2), so the
     model has seen the uneven states the frontier produces. Pass rates come from each
@@ -167,9 +168,9 @@ def fit_frontier(fit: Sequence[CaseData], para: bool, k_frac: float, reps: int =
     z = [c.correct for c in rows]
     full = [state_case(cd, _State(len(cd.fresh if para else cd.same), list(FLIPS), True), para)
             for cd in fit]
-    model = fit_score_model(rows, z, ridge, prior, drop)
+    model = fit_score_model(rows, z, ridge, prior, drop, standardize)
     model.cov = model.cov * reps                    # `reps` rows per case are not independent
-    lam, cv = choose_lambda(rows, z, lambdas, k_frac, folds, ridge, prior, seed, groups, drop)
+    lam, cv = choose_lambda(rows, z, lambdas, k_frac, folds, ridge, prior, seed, groups, drop, standardize)
     return FrontierFit(model, pass_rates(full, [c.correct for c in full]), lam, cv, para, len(rows))
 
 

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -32,6 +33,11 @@ from .utility.llm import CachedClient, Request, cached_client
 from .sprt_posterior import majority
 from .utility.records import CaseData, Draw, Item
 
+try:
+    from tqdm import tqdm
+except ImportError:                                 # progress display is optional
+    tqdm = None
+
 log = logging.getLogger(__name__)
 
 
@@ -46,6 +52,7 @@ class CollectConfig:
     verbal_per_draw: bool = False   # confidence line on every draw (and the negation probe); no verbal call
     logprobs: bool = False          # gray-box: P(Yes) at the answer token on every draw (no extra call)
     workers: int = 8
+    max_errors: int = 20            # stop a file after this many failed items (a systematic fault, not one bad prompt)
 
 
 class Collector:
@@ -144,7 +151,17 @@ class Collector:
                         probe_conf={"neg": neg.confidence} if vpd else {})
 
     # -- many items, resumable JSONL -----------------------------------------------
-    def collect_all(self, items: list[Item], out_path: str | Path) -> list[CaseData]:
+    def _api_calls(self) -> int:
+        """Uncached requests sent so far, over the target, generator and judge clients."""
+        return sum(getattr(c, "misses", 0) for c in {id(c): c for c in (self.t, self.g, self.j, self.alt) if c}.values())
+
+    def collect_all(self, items: list[Item], out_path: str | Path, desc: str = "",
+                    progress: bool = True) -> list[CaseData]:
+        """Collect `items` into the JSONL at `out_path`, resumable. A failed item (provider
+        refusal, retries exhausted) is recorded and skipped so one bad prompt cannot block
+        the run; at the end, or after `max_errors` failures, the failures are written to
+        `<out_path>.errors.json` and raised. Finished items are kept, so a re-run retries
+        only the failed ones. `progress` shows a tqdm bar (items, calls sent, failures)."""
         out_path = Path(out_path)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         done: dict[str, CaseData] = {}
@@ -153,14 +170,42 @@ class Collector:
                 cd = CaseData.from_json(json.loads(line))
                 done[cd.item_id] = cd
         todo = [it for it in items if it.item_id not in done]
+        errors: dict[str, str] = {}
+        bar = None
+        if progress and tqdm is not None and todo:
+            bar = tqdm(total=len(items), initial=len(done), desc=desc or out_path.stem, unit="item",
+                       dynamic_ncols=True, mininterval=2.0, file=sys.stderr)
+        calls0 = self._api_calls()
         with out_path.open("a") as fh, ThreadPoolExecutor(self.cfg.workers) as ex:
             futs = {ex.submit(self.collect, it): it for it in todo}
             for f in as_completed(futs):
-                cd = f.result()
-                fh.write(json.dumps(cd.to_json()) + "\n")
-                fh.flush()
-                done[cd.item_id] = cd
+                it = futs[f]
+                try:
+                    cd = f.result()
+                except Exception as e:                  # noqa: BLE001 -- recorded, reported below
+                    errors[it.item_id] = f"{type(e).__name__}: {str(e)[:300]}"
+                    log.warning("item %s failed: %s", it.item_id, errors[it.item_id])
+                else:
+                    fh.write(json.dumps(cd.to_json()) + "\n")
+                    fh.flush()
+                    done[cd.item_id] = cd
+                if bar is not None:
+                    bar.update(1)
+                    bar.set_postfix(calls=self._api_calls() - calls0, parse_fail=self.failures["answer_parse"],
+                                    item_fail=len(errors), refresh=False)
+                if len(errors) >= self.cfg.max_errors:
+                    for g in futs:
+                        g.cancel()                       # queued items only; running ones finish
+                    break
+        if bar is not None:
+            bar.close()
         log.info("collection %s: %d items, failures=%s", out_path.name, len(done), self.failures)
+        if errors:
+            err_path = out_path.with_suffix(".errors.json")
+            err_path.write_text(json.dumps(errors, indent=1))
+            first = "; ".join(f"{k}: {v}" for k, v in list(errors.items())[:3])
+            raise RuntimeError(f"{len(errors)} of {len(todo)} items failed in {out_path.name} (all in {err_path}); "
+                               f"finished items are kept, re-run to retry the failed ones. First: {first}")
         return [done[it.item_id] for it in items]
 
 
@@ -270,7 +315,7 @@ def load_collection(path: str | Path) -> dict[str, CaseData]:
             (CaseData.from_json(json.loads(l)) for l in Path(path).read_text().splitlines())}
 
 
-def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
+def collect_config(cfg: dict, reseed_batches: int = 0, progress: bool = True) -> None:
     """Collect every selected (dataset, model) cell of a config: eval items, the dev
     slice, the calibration set (split.n_cal), and optionally the first `reseed_batches` batches re-drawn (Jaccard check).
     The only function that spends API calls; refuses placeholder model ids."""
@@ -297,10 +342,10 @@ def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
             if ds == cfg.get("judge_sensitivity_dataset") and cfg.get("alt_judge"):
                 alt = make_judge(cfg["alt_judge"], cache, "judge-alt")
             col = Collector(target, gen, judge, CollectConfig(**cfg["collect"]), alt)
-            col.collect_all(split.eval, collection_path(cfg, ds, mk))
-            col.collect_all(split.dev, collection_path(cfg, ds, mk, "__dev"))
+            col.collect_all(split.eval, collection_path(cfg, ds, mk), f"{ds}/{mk} eval", progress)
+            col.collect_all(split.dev, collection_path(cfg, ds, mk, "__dev"), f"{ds}/{mk} dev", progress)
             if split.cal:
-                col.collect_all(split.cal, collection_path(cfg, ds, mk, "__cal"))
+                col.collect_all(split.cal, collection_path(cfg, ds, mk, "__cal"), f"{ds}/{mk} cal", progress)
             if hasattr(judge, "cluster_many"):      # local NLI judge: one batched pass per file
                 q = {it.item_id: it.question for it in items}
                 for suffix in ("", "__dev", "__cal"):
@@ -311,5 +356,5 @@ def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
                 ids = [i for b in split.batches[:reseed_batches] for i in b]
                 cc2 = CollectConfig(**{**cfg["collect"], "sample_offset": 1000})
                 Collector(target, gen, judge, cc2).collect_all(
-                    [by_id[i] for i in ids], collection_path(cfg, ds, mk, "__reseed"))
+                    [by_id[i] for i in ids], collection_path(cfg, ds, mk, "__reseed"), f"{ds}/{mk} reseed", progress)
             log.info("%s/%s: target cache hits=%d misses=%d", ds, mk, target.hits, target.misses)

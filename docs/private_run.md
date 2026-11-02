@@ -15,6 +15,11 @@ and the file committed. The earlier pilot ran about 7 calls per second on 8 work
 5 hours for the pilot and about 42 hours for the paper run. SafeChain's speed is untested at
 this scale.
 
+Before the paper run, `data/generated/generator.sqlite` must hold the paraphrases and distractors of
+every item (about 30,000 generator calls; the file in git covers the pilot only, 3,498 responses).
+Run `experiments/scripts/pregenerate.py` once, on one machine, and commit the file. If the private
+environment generates them instead, copy the file back, or the other models will see different items.
+
 Below, `CONFIG` is one of the two, for example:
 
 ```bash
@@ -33,7 +38,9 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
 
    SafeChain and LangChain must already be installed in that environment.
 
-2. Turn on the transport, and keep this environment's cache in its own folder:
+2. Turn on the transport, and keep this environment's cache in its own folder. Do not set
+   `SAFECHAIN_MODEL` (AgenticSys_v2 uses it to override its one model id): confledger builds one
+   SafeChain client per model id in the config, and the variable is not read here.
 
    ```bash
    export LLM_BACKEND=safechain
@@ -61,6 +68,20 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
    If it stops, run the same command again. Finished items are skipped and cached calls are free.
    Each finished file logs `failures={...}`. In the earlier gpt-4.1 pilot, 16 answers failed to
    parse across 300 items, so a much higher rate means something is wrong.
+
+   A progress bar per file (`triviaqa/gpt-4.1 eval`, then `dev`, `cal`) shows items done, items per
+   second, the time left, and in brackets `calls` (requests sent, not cache hits), `parse_fail` and
+   `item_fail`. Multiply items per second by about 40 to get calls per second. Through `tee` the
+   bar still shows on screen, but `collect.log` gets carriage returns; read it with
+   `tr '\r' '\n' < collect.log | tail`, or add `--no-progress` for a plain log.
+
+   Failures. SafeChain's HTTP 400 and 403 (redactor or firewall) are not retried, as in
+   AgenticSys_v2, so a refused prompt costs one call and not 30 seconds of back-off. A failed item
+   is skipped; the other items finish. At the end of the file, or after 20 failed items (the
+   `collect.max_errors` setting, which catches a dead token or a wrong model id early), the run stops
+   with the failures listed in `<collection>.errors.json`. Finished items are kept, so fix the cause
+   and run the same command again; only the failed items are redone. Many 400s on trivia questions
+   would mean the redactor is rewriting names: stop and look at `dev_audit.py` before going on.
 
 5. Check the item counts. The pilot has 200 dev, 600 eval and 200 calibration items per dataset:
 

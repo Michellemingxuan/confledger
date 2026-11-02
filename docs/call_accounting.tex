@@ -1,0 +1,68 @@
+\documentclass[10pt]{article}
+\usepackage[landscape,margin=0.7in]{geometry}
+\usepackage{booktabs,array,tabularx,caption}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.25}
+\captionsetup{font=small,labelfont=bf,width=\linewidth}
+\begin{document}
+\pagestyle{empty}
+
+\noindent\textbf{Call accounting.} One \emph{call} is one request to a generation API,
+whatever its length. It can go to the model under test, the paraphrase generator, or the judge.
+Calls are counted per case at evaluation time; the budget $k$ is the batch mean.
+Everything replayed from the cache is free.
+
+\bigskip
+\begin{table}[h]
+\centering
+\small
+\caption{A. What is and is not a call.}
+\begin{tabularx}{\linewidth}{@{}p{0.19\linewidth}p{0.13\linewidth}C{0.09\linewidth}p{0.10\linewidth}Y@{}}
+\toprule
+Item & Sent to & Calls & Charged to & Note \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Counted}} \\
+Paraphrase generation & generator & 1 per case & paraphrase-based policies & Once, before the screen. Same-prompt baselines do not pay it. \\
+Draw & model under test & 1 each & all methods & One response: answer, rationale and verbalized confidence. Original wording and paraphrase draws cost the same. \\
+Probe (negation, relabel, distractor) & model under test & 1 each & CEL & Fixed templates, so no generation call. Survivors of the screen only. \\
+Challenge & model under test & 1 & CEL & Survivors only. \\
+Rationale-entropy grouping & judge & 1 per case & CEL, semantic entropy & One call groups all rationales of a case. Needs at least 2 draws. \\
+Separate verbal call & model under test & 1 & CEL & Only if \texttt{verbal\_per\_draw} is off. \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Not counted}} \\
+Verbalized confidence on a draw & -- & 0 & -- & Rides on the draw's response (main configuration). \\
+Text signals, first-token probability & -- & 0 & -- & Read from the same responses. \\
+Local NLI judge & -- & 0 & -- & No API call. An API judge would count as 1. \\
+Held-out probe & -- & 0 & -- & Audit only; never used in selection. \\
+Cache replay and subsampling & -- & 0 & -- & Baselines, ablations and budget curves re-score the cache. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+\begin{table}[h]
+\centering
+\small
+\caption{B. Calls per case by method at budget $k$. A dash means the method does not use that item.}
+\begin{tabularx}{\linewidth}{@{}p{0.22\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.09\linewidth}C{0.10\linewidth}C{0.09\linewidth}Y@{}}
+\toprule
+Method & Generator call & Draws & Judge call & Probes, challenge & \textbf{Total} & Note \\
+\midrule
+Random & -- & 1 & -- & -- & \textbf{1} & Order is random; the draw only supplies an answer. \\
+Verbalized confidence & -- & 1 & -- & -- & \textbf{1} & \\
+Self-consistency (+ verbal) & -- & $k$ & -- & -- & $\boldsymbol{k}$ & \\
+Semantic entropy & -- & $k-1$ & 1 & -- & $\boldsymbol{k}$ & \\
+BSDetector & -- & $k-1$ & -- & -- & $\boldsymbol{k-1}$ & $c_1$ replaces the reflection call. \\
+Avg-Conf, self-random & -- & $k$ & -- & -- & $\boldsymbol{k}$ & \\
+Avg-Conf, prompting & 1 & $k-1$ & -- & -- & $\boldsymbol{k}$ & \\
+CISC & -- & $k$ & -- & -- & $\boldsymbol{k}$ & \\
+Black-box calibrator & 1 if $k\ge5$ & $k$ or $k-1$ & -- & -- & $\boldsymbol{k}$ & $k$ draws below 5; from 5, $k-1$ draws split between original wording and paraphrases. \\
+\midrule
+CEL-$k$ (allocation $a$) & 1 & $k_1$ + extra & 1 if SE & flips + challenge & $\boldsymbol{\bar C(a)\le k}$ & Every case pays generator + $k_1$ draws; only survivors pay the rest. \\
+Certified CEL & 1 & 3 + more & 1 & probes + challenge & \textbf{4 or 15--16} & 4 for eliminated cases; the rest depends on the signals used. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}

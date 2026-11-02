@@ -375,6 +375,114 @@ Condensed from the design conversations. Each entry: decision — why.
     (paths.generator_cache = data/generated/generator.sqlite); every machine and every model
     then answers identical items.
     Cost of the paper run: about 1.05M calls per model (TriviaQA 0.41M, MMLU 0.57M).
+36. `scoring.drop` switch IMPLEMENTED; dropping `length` is PROVISIONAL, evidence mixed (2026-11-02).
+    - Switch: `scoring.drop: [feature, ...]` holds the named score-model features at zero weight
+      in every fit (CEL-k, frontier, knapsack); `evaluation_protocol._dropped(o)` = gray-box
+      feature unless enabled + `drop`, unknown names raise. `length` is dropped in default.yaml,
+      pilot_1000.yaml, full_gpt41.yaml and pilot_gpt41.yaml; simulation.yaml is unchanged (a
+      pipeline check). Test: tests/test_score_model.py (dropped feature has weight 0).
+    - Correction of the first draft of this entry: the "length importance 0.000 [0, 0]" in the
+      pilot report is the SECOND fit of knapsack_section, run after pruning, where pruned
+      features are held at zero. It is not evidence. Importance before pruning (all signals
+      bought, 200 bootstraps, 90% interval), recomputed on the dev slices that exist:
+      gpt-4.1 (pilot_gpt41, 100 dev, 10 errors): length I = 0.032 [0.003, 0.087], pruned only
+      because the lower bound is under the 0.01 tolerance; gemini-2.5-flash (pilot, 74 dev, 16
+      errors): length I = 0.103 [0.032, 0.170], the largest free signal, NOT pruned. The
+      pilot_1000 cells are not collected yet and the smoke cells (5 dev items) are too small,
+      so no other cell could be checked.
+    - Diagnostic (fit on dev, score on eval, lambda = 0, plan = the one stored for that k;
+      eval metrics were seen, so this is not a selection). Dropping `length`, gpt-4.1:
+      AUROC / AUARC 0.724 / 0.969 -> 0.838 / 0.984 (k = 2), 0.770 / 0.971 -> 0.867 / 0.984
+      (k = 3), 0.831 / 0.976 -> 0.871 / 0.984 (k = 6), but at k = 8 prec@10 1.000 -> 0.950 and
+      0.915 / 0.981 -> 0.897 / 0.969; neutral at k = 12. gemini-2.5-flash: dropping it lowers
+      AUROC by 0.005-0.018 and AUARC by 0.002-0.014 at every k tried (2, 3, 6, 8, 12).
+    - Budget curve re-run for pilot_gpt41 with the drop (evaluate.py + budget_curves.py; plans
+      and lambda unchanged except lambda 1.0 -> 0.0 at k = 8; plan choice reads Borda, which the
+      drop does not touch). CEL-k AUROC at k = 2, 3, 5, 6: 0.838, 0.867, 0.857, 0.872 (was 0.724,
+      0.770, 0.792, 0.831), now at or above self-consistency + verbal and BSDetector except
+      k = 4 (0.795 vs 0.844 / 0.856, plan with SE) and k = 8 (prec@10 0.950, AUARC 0.969, below
+      both baselines). prec@10 is 1.000 elsewhere, so it cannot separate variants. The previous
+      pilot_gpt41 results were replaced in place (this re-run was started before the instruction
+      "don't rerun pilot for now" arrived); the old outputs were copied to the session scratchpad only.
+    - `length` is informative on its own (diagnostic, same cached pilot): wrong answers have longer
+      rationales, in the same direction on dev and eval and for both models (eval mean words,
+      correct vs wrong: gpt-4.1 22.8 vs 29.5, gemini 26.4 vs 37.5). AUROC of -length alone
+      (90% bootstrap), among survivors: gpt-4.1 plan k = 3 dev 0.622 [0.464, 0.777], eval 0.682
+      [0.517, 0.835]; plan k = 8, cases whose 5 draws all agree: dev 0.796, eval 0.868 [0.798,
+      0.929]; gemini plan k = 3 dev 0.785, eval 0.737 [0.647, 0.815]. So the small-k gain from
+      dropping it (above) is not "length carries no signal": its fitted weight in the joint
+      model (about -0.6 on unstandardised log1p words, from 9-10 dev errors) does not transfer.
+      The k = 8 miss was demoted by it only by chance of that one item (see the k = 8 analysis).
+      Untested ways to keep it: standardise the features before the ridge, a stronger penalty
+      on `length`, or use it only as a tie-break inside the top group.
+    - `scoring.standardize` IMPLEMENTED (default false; configs carry the switch, off): each
+      feature except the intercept is scaled by its D_fit sd (over the cases that bought it)
+      before the ridge, and coefficients and covariance are mapped back to the raw scale. Tests:
+      tests/test_score_model.py. Diagnostic on the pilot (fit on dev, eval, lambda = 0; 2 models
+      x k in {2, 3, 6, 8, 12} = 10 cells on the same items, so not independent), mean prec@10 /
+      AUROC / AUARC: raw+all 0.990 / 0.824 / 0.953; raw, no length 0.985 / 0.844 / 0.953;
+      standardised+all 0.985 / 0.853 / 0.957; standardised, no length 0.980 / 0.847 / 0.953.
+      Standardising recovers most of the gpt-4.1 small-k loss without dropping `length`
+      (AUROC at k = 2: 0.724 -> 0.825; k = 8: 0.915 -> 0.936) and keeps the Gemini gain from
+      `length` (k = 2: 0.733 with it, 0.689 without). It is not uniformly better: gpt-4.1 k = 3
+      and 6 stay below raw+no length (0.825 vs 0.867; 0.876 vs 0.871 at k = 6 with prec@10 0.950),
+      and prec@10 moves by single cases (0.950 at gpt-4.1 k = 6, gemini k = 12). Caution: gpt-4.1's
+      stated confidence is nearly constant (mostly 95-100), so `verb` has a tiny sd and its raw-
+      scale weight becomes large (26 at k = 3, vs 0.6 unstandardised).
+      Adopted in the configs on request (default, pilot_1000, full_gpt41, pilot_gpt41: standardize
+      true, drop []). Full pilot_gpt41 re-run (CV-chosen lambda, all ten budgets), CEL-k mean over
+      k in {2,...,15} of prec@10 / AUROC / AUARC: original (raw, all) 1.000 / 0.839 / 0.978;
+      raw, no length 0.995 / 0.875 / 0.982; standardised, all 0.975 / 0.868 / 0.976; self-
+      consistency + verbal 0.984 / 0.857 / 0.980. The offline diagnostic above (lambda = 0, five k)
+      overstated the gain: standardised beats the original on AUROC but not raw-no-length, and
+      loses prec@10 (0.950, one case) at k = 4, 5, 6, 14, 15. At k = 14 and 15 (lambda = 1.0)
+      AUARC falls to 0.962 (raw: 0.986) and prec@1% to 0.50 at k = 14. It wins at k = 8 and 10
+      (AUROC 0.936 / 0.962) and ties at k = 2. AUROC above self-consistency + verbal at 5 of 10
+      budgets. So neither variant dominates; the choice between standardise and drop-length is
+      open again, and the k = 14-15 fall is unexplained (checked: tests pass, mu matches the raw
+      fit at ridge ~ 0; sigma under a real penalty is not independently verified).
+    - Status: the evidence is one model, helps at small k, hurts at k = 8, and has the opposite
+      sign on Gemini. Not frozen. Open choice: (a) a uniform drop (what the configs say again, see the rewind note below), or
+      (b) the #19 dev-only rule applied to the CEL-k fit (prune a free signal when its interval
+      lower bound is under the tolerance; keeps `length` for Gemini, drops it for gpt-4.1), which
+      also prunes `verb` and so needs an exception, since `verb` carries the ranking at small k.
+      Decide before the paper run; report the all-features variant as an appendix ablation.
+    - REWOUND at the user's request (2026-11-02): the configs (default, pilot_1000, full_gpt41,
+      pilot_gpt41) are back to `drop: [length]` with `standardize: false`, i.e. the drop-length
+      state. The standardise code stays in the tree, off by default, with its test; the "adopted
+      in the configs" and standardised re-run results above describe a state that is no longer
+      current. The pilot_gpt41 results and budget curve were regenerated offline (evaluate.py +
+      budget_curves.py, seed 0, no API calls) and match the earlier drop-length run exactly (CEL-k
+      AUROC at k = 2, 3, 6: 0.838, 0.867, 0.872; k = 8 prec@10 0.950). Copies of the standardised
+      state (code, configs, 17:17 results) and of the original raw run are in the session
+      scratchpad only.
+    - SUPERSEDES the rewind above (2026-11-02, on request): `scoring.standardize` now takes a list
+      of feature names (true = all, false = none) and the configs (default, pilot_1000,
+      full_gpt41, pilot_gpt41) say `standardize: [length]`, `drop: []`: `length` is kept and
+      standardised, every other feature stays on the raw scale. Test: tests/test_score_model.py.
+      The pilot_gpt41 results on disk were NOT re-run (instructed): they are still the drop-length
+      run, so config and results differ until it is re-run.
+      Offline diagnostic (fit on dev, eval, lambda = 0, 2 models x 4-7 budgets, same items, so not
+      independent; eval seen, not a selection). Mean prec@10 / AUROC / AUARC over k in {2, 3, 6, 8}:
+      raw 0.988 / 0.802 / 0.950; std length 1.000 / 0.807 / 0.952; std verb 0.988 / 0.836 / 0.956;
+      std length + verb 0.992 / 0.841 / 0.957; std all 0.988 / 0.837 / 0.956. Standardising
+      `length` alone does NOT repair gpt-4.1 at small k (AUROC k = 2: 0.717, raw 0.724, drop length
+      0.838) but helps Gemini (k = 2: 0.738 vs 0.707; k = 8 prec@10 1.00 vs 0.90). What repairs
+      gpt-4.1 is standardising `verb` (k = 2: 0.820; k = 3: 0.826): stated confidence is nearly
+      constant (dev draw sd 2.5 points of 100, 98% at 95 or above for gpt-4.1; 3.9 and 99% for
+      gemini), so on the raw scale the ridge all but removes it. Caution: standardised `verb` gets a
+      large raw-scale weight (26 at k = 3 in the earlier all-features run), which makes the score
+      sensitive to small shifts in confidence. Open: add `verb` to the list (best mean in this
+      diagnostic) or keep `[length]` as requested; decide before the paper run.
+    - Consequence to state in the paper: at small k the score reduces to agreement, verbal
+      confidence and (at k = 2) the negation probe, a learned counterpart of BSDetector's fixed
+      0.7 / 0.3 blend; gains over BSDetector there come from the allocation, not a richer score.
+    - Separate, open: BSDetector spends k - 1 calls when verbal_per_draw is on (bsdetector_like
+      adds no reflection call, baseline_policies passes B - 1 draws), one below every other
+      baseline. Fix (pass B draws) or state it; needs its own entry.
+    - Housekeeping: tests/test_pipeline.py fails at import (it imports `self_consistency` from
+      confledger.methods; it now lives in baselines/), before and after this change; the other
+      67 tests pass.
 
 Observed in dry run: the screen trades global AUROC/PRR for top-k precision (address in
 paper); plain Jaccard understates stability under top ties (add tie-aware variant).

@@ -6,6 +6,12 @@ from dataclasses import dataclass, field
 from typing import Protocol
 
 
+class Rejected(Exception):
+    """The provider refused this request for good (HTTP 400 / 403, e.g. SafeChain's input
+    redactor or firewall; AgenticSys_v2's FirewallRejection). Retrying the same prompt
+    cannot help, so CachedClient raises it at once instead of backing off."""
+
+
 @dataclass
 class Request:
     prompt: str

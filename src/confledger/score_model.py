@@ -98,13 +98,19 @@ class ScoreModel:
 
 
 def fit_score_model(cases: Sequence[CaseScore], z: Sequence[bool], ridge: float = 1.0,
-                    prior: Sequence[float] = (0.5, 0.5), drop: Sequence[str] = ()) -> ScoreModel:
+                    prior: Sequence[float] = (0.5, 0.5), drop: Sequence[str] = (),
+                    standardize: bool | Sequence[str] = False) -> ScoreModel:
     """Logistic fit of Z on the fitting cases' features: ridge on every signal but the
     intercept and the stability term; covariance = inverse penalised Hessian. Unbought
     signals are filled with their D_fit mean (0, variance 0, if never bought). Features in
     `drop` (pruned, signal_value.py) are held at zero weight. More agreement may not lower
     confidence: a negative stability coefficient is refitted at its bound, 0, which is the
-    constrained optimum because the objective is convex (decisions.md #34)."""
+    constrained optimum because the objective is convex (decisions.md #34).
+    `standardize`: True scales every feature (not the intercept), a list of names scales only
+    those, by its D_fit standard deviation over the cases that bought it, before the ridge, so one
+    penalty means the same on each; the coefficients and covariance are mapped back to the raw
+    scale, so mu_sigma is unchanged in form. A feature with no spread keeps scale 1
+    (decisions.md #36)."""
     X, _ = _design(cases, prior)
     seen = ~np.isnan(X)
     n = seen.sum(axis=0)
@@ -113,13 +119,24 @@ def fit_score_model(cases: Sequence[CaseScore], z: Sequence[bool], ridge: float 
     X, _ = _fill(X, mean)
     y = np.asarray(z, float)
     pen = np.array([1e8 if f in drop else 1e-6 if f in UNPENALISED else ridge for f in FEATURES])
-    w = logistic_fit(X, y, pen)
+    scale = np.ones(len(FEATURES))
+    names = () if not standardize else FEATURES[1:] if standardize is True else tuple(standardize)
+    bad = [f for f in names if f not in FEATURES or f == "intercept"]
+    if bad:
+        raise ValueError(f"standardize: unknown or unscalable feature(s) {bad}; choose from {FEATURES[1:]}")
+    sd = np.sqrt(var)
+    for f in names:                                      # the intercept is never scaled
+        i = FEATURES.index(f)
+        scale[i] = sd[i] if sd[i] > 1e-8 else 1.0
+    Xs = X / scale
+    w = logistic_fit(Xs, y, pen)
     if w[ETA] < 0:
         pen[ETA] = 1e8
-        w = logistic_fit(X, y, pen)
-    p = 1 / (1 + np.exp(-np.clip(X @ w, -30, 30)))
-    H = X.T @ (X * (p * (1 - p))[:, None]) + np.diag(pen)
-    return ScoreModel(w, np.linalg.pinv(H), tuple(prior), mean, var)
+        w = logistic_fit(Xs, y, pen)
+    p = 1 / (1 + np.exp(-np.clip(Xs @ w, -30, 30)))
+    H = Xs.T @ (Xs * (p * (1 - p))[:, None]) + np.diag(pen)
+    cov = np.linalg.pinv(H) / np.outer(scale, scale)     # back to the raw feature scale
+    return ScoreModel(w / scale, cov, tuple(prior), mean, var)
 
 
 def top_precision(s: np.ndarray, z: np.ndarray, k: int, n_ties: int = 20) -> float:
@@ -131,7 +148,8 @@ def top_precision(s: np.ndarray, z: np.ndarray, k: int, n_ties: int = 20) -> flo
 def choose_lambda(cases: Sequence[CaseScore], z: Sequence[bool], grid: Sequence[float],
                   top_frac: float, folds: int = 5, ridge: float = 1.0,
                   prior: Sequence[float] = (0.5, 0.5), seed: int = 0,
-                  groups: Sequence | None = None, drop: Sequence[str] = ()) -> tuple[float, dict]:
+                  groups: Sequence | None = None, drop: Sequence[str] = (),
+                  standardize: bool | Sequence[str] = False) -> tuple[float, dict]:
     """lambda by K-fold CV on D_fit: held-out (mu, sigma) from the other folds' model,
     pooled; criterion = precision of the top `top_frac` share (the budget-mode target).
     Ties go to the smaller lambda, so lambda = 0 unless pessimism helps on D_fit.
@@ -145,7 +163,7 @@ def choose_lambda(cases: Sequence[CaseScore], z: Sequence[bool], grid: Sequence[
     for f in range(folds):
         test = np.nonzero(fold_of == f)[0]
         train = np.nonzero(fold_of != f)[0]
-        m = fit_score_model([cases[i] for i in train], z[train], ridge, prior, drop)
+        m = fit_score_model([cases[i] for i in train], z[train], ridge, prior, drop, standardize)
         mu[test], sd[test] = m.mu_sigma([cases[i] for i in test])
     k = max(1, math.ceil(top_frac * len(cases)))
     table = {float(l): top_precision(mu - l * sd, z, k) for l in grid}

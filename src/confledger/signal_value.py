@@ -45,10 +45,11 @@ def shap_importance(model, cases: Sequence[CaseScore]) -> dict[str, float]:
 
 
 def importance(cases: Sequence[CaseScore], z: Sequence[bool], ridge: float = 1.0,
-               prior=(0.5, 0.5), n_boot: int = 200, seed: int = 0, drop=()) -> dict:
+               prior=(0.5, 0.5), n_boot: int = 200, seed: int = 0, drop=(),
+               standardize: bool | Sequence[str] = False) -> dict:
     """I_g on D_fit with a bootstrap 90% interval, and the importance ranking."""
     z = np.asarray(z, bool)
-    model = fit_score_model(cases, z, ridge, prior, drop)
+    model = fit_score_model(cases, z, ridge, prior, drop, standardize)
     est = shap_importance(model, cases)
     rng = np.random.default_rng(seed)
     boots = []
@@ -57,7 +58,7 @@ def importance(cases: Sequence[CaseScore], z: Sequence[bool], ridge: float = 1.0
         if z[idx].all() or not z[idx].any():
             continue
         sub = [cases[i] for i in idx]
-        boots.append(shap_importance(fit_score_model(sub, z[idx], ridge, prior, drop), sub))
+        boots.append(shap_importance(fit_score_model(sub, z[idx], ridge, prior, drop, standardize), sub))
     ci = {f: [float(np.quantile([b[f] for b in boots], q)) for q in (0.05, 0.95)] for f in est}
     return {"I": est, "ci": ci, "rank": sorted(est, key=est.get, reverse=True)}
 

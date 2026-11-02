@@ -13,7 +13,7 @@ import threading
 import time
 from pathlib import Path
 
-from .request import Backend, Request
+from .request import Backend, Rejected, Request
 
 
 class CachedClient:
@@ -53,6 +53,8 @@ class CachedClient:
             try:
                 text = self.backend.generate(req)
                 break
+            except Rejected:                   # refused for good: a retry cannot help
+                raise
             except Exception:  # provider errors, rate limits
                 if attempt == self.max_retries - 1:
                     raise

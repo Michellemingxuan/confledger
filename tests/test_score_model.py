@@ -135,3 +135,69 @@ def test_allocation_space_has_odd_draws_and_keeps_adaptive_cel():
     space = allocation_space(verbal_per_draw=True)
     assert len(space) == 864 and all((a.k1 + a.extra) % 2 == 1 for a in space)
     assert cel_as_allocation() in space
+
+
+def test_dropped_feature_has_zero_weight_and_scoring_drop_is_validated():
+    """scoring.drop (decisions.md #36): a dropped feature is held at zero weight and adds no
+    variance; unknown names are refused."""
+    from confledger.evaluation_protocol import _dropped
+    from confledger.score_model import FEATURES
+    rng = np.random.default_rng(0)
+    fit = _world(rng, 200, [6])
+    for c in fit:                                       # a text signal that tracks correctness in the fit
+        c.signals["length"] = 3.0 - 2.0 * c.correct + rng.normal(scale=0.3)
+    z = [c.correct for c in fit]
+    free = fit_score_model(fit, z)
+    cut = fit_score_model(fit, z, drop=("length",))
+    assert abs(free.coef[FEATURES.index("length")]) > 0.1
+    assert cut.coef[FEATURES.index("length")] == pytest.approx(0.0, abs=1e-6)
+    assert _dropped({"drop": ["length"]}) == ("p_first", "length")
+    assert _dropped({"drop": ["length"], "gray_box": True}) == ("length",)
+    assert _dropped({}) == ("p_first",)
+    with pytest.raises(ValueError):
+        _dropped({"drop": ["lenght"]})
+
+
+def test_standardize_maps_back_and_matches_unpenalised_fit():
+    """scoring.standardize (decisions.md #36): with a negligible penalty the standardised and
+    raw fits agree (same MLE, coefficients mapped back); with the usual penalty the model
+    still returns finite mu, sigma and a symmetric covariance on the raw scale."""
+    rng = np.random.default_rng(0)
+    fit = _world(rng, 300, [6])
+    for c in fit:
+        c.signals["length"] = 20.0 + 15.0 * (1 - c.correct) + rng.normal(scale=6.0)
+        c.signals["verb"] = 80.0 + 15.0 * c.correct + rng.normal(scale=8.0)
+    z = [c.correct for c in fit]
+    raw = fit_score_model(fit, z, ridge=1e-9)
+    std = fit_score_model(fit, z, ridge=1e-9, standardize=True)
+    probe = fit[:20]
+    assert std.mu_sigma(probe)[0] == pytest.approx(raw.mu_sigma(probe)[0], abs=1e-4)
+    pen = fit_score_model(fit, z, ridge=1.0, standardize=True)
+    mu, sd = pen.mu_sigma(probe)
+    assert np.all(np.isfinite(mu)) and np.all(np.isfinite(sd)) and np.allclose(pen.cov, pen.cov.T, atol=1e-8)
+
+
+def test_standardize_named_features_only():
+    """scoring.standardize as a list scales only those features: at a negligible penalty it
+    matches the raw fit; with the usual penalty it differs from raw and from scale-all; unknown
+    names raise."""
+    from confledger.score_model import FEATURES
+    rng = np.random.default_rng(0)
+    fit = _world(rng, 300, [6])
+    for c in fit:
+        c.signals["length"] = 20.0 + 15.0 * (1 - c.correct) + rng.normal(scale=6.0)
+        c.signals["verb"] = 80.0 + 15.0 * c.correct + rng.normal(scale=8.0)
+    z = [c.correct for c in fit]
+    probe = fit[:20]
+    raw0 = fit_score_model(fit, z, ridge=1e-9)
+    one0 = fit_score_model(fit, z, ridge=1e-9, standardize=["length"])
+    assert one0.mu_sigma(probe)[0] == pytest.approx(raw0.mu_sigma(probe)[0], abs=1e-4)
+    raw, one, every = (fit_score_model(fit, z, ridge=1.0, standardize=s) for s in (False, ["length"], True))
+    i = FEATURES.index("length")
+    assert one.coef[i] != pytest.approx(raw.coef[i], rel=1e-3)
+    assert one.coef[FEATURES.index("verb")] != pytest.approx(every.coef[FEATURES.index("verb")], rel=1e-3)
+    assert np.allclose(one.cov, one.cov.T, atol=1e-8)
+    with pytest.raises(ValueError):
+        fit_score_model(fit, z, standardize=["lenght"])
+    with pytest.raises(ValueError):
+        fit_score_model(fit, z, standardize=["intercept"])

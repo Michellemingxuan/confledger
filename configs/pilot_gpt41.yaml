@@ -17,6 +17,8 @@ deployment_sc_draws: 3   # self-consistency at this many draws = the cheap deplo
 # p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
 sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
 split: {n_dev: 100, n_eval: 200, n_cal: 0}   # top 10% of 200 = 20 selected items per model; no D_cal, so no certified-mode result
+# Score model: `length` standardised before the ridge, all features kept (decisions.md #36).
+scoring: {standardize: [length], drop: []}
 
 datasets: [triviaqa]
 

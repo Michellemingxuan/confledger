@@ -23,7 +23,7 @@ import os
 import threading
 
 from ..answer_parsing import answer_token_prob, p_yes_trailer
-from .request import Request
+from .request import Rejected, Request
 
 
 class AnthropicBackend:
@@ -89,8 +89,8 @@ class SafeChainBackend:
     submitted to it. Timeouts follow AgenticSys_v2's measurements: stalled calls
     hang rather than run slow, so a first attempt still running at 40s is
     abandoned and re-issued with the full 180s budget. HTTP 401 = token expiry:
-    rebuild the model once and retry. Other errors propagate to CachedClient's
-    retry loop.
+    rebuild the model once and retry. HTTP 400 / 403 raise `Rejected` (no retry, as
+    AgenticSys_v2's FirewallRejection). Other errors propagate to CachedClient's retry loop.
     """
 
     CALL_TIMEOUT_S = float(os.environ.get("SAFECHAIN_CALL_TIMEOUT_S", "180"))
@@ -135,7 +135,12 @@ class SafeChainBackend:
         try:
             reply = await self._call(req)
         except Exception as e:
-            if "401" not in str(e):
+            es = str(e)
+            if "401" not in es:
+                if "403" in es:                 # AgenticSys_v2: FirewallRejection("403")
+                    raise Rejected(f"safechain blocked: {es[:300]}") from e
+                if "400" in es:
+                    raise Rejected(f"safechain bad request: {es[:300]}") from e
                 raise
             await self._build()
             reply = await self._call(req)
