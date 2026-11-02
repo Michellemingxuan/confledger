@@ -82,3 +82,31 @@ def test_progress_bar_runs_with_tqdm(tmp_path, capsys):
     col.collect_all(_items(3), tmp_path / "c.jsonl", desc="demo", progress=True)
     err = capsys.readouterr().err
     assert "demo" in err and "3/3" in err
+
+
+class _ParaCol(Collector):
+    def __init__(self, bad, **kw):
+        super().__init__(_Dummy(), _Dummy(), _Dummy(), CollectConfig(workers=1, **kw))
+        self.bad, self.tried = set(bad), []
+
+    def paraphrases(self, item):
+        self.tried.append(item.item_id)
+        time.sleep(0.05)
+        if item.item_id in self.bad:
+            raise Rejected("blocked")
+        return ["p"]
+
+
+def test_paraphrase_all_skips_failed_items_and_stops_on_systematic_failure(tmp_path):
+    col = _ParaCol(bad={"i1"})
+    errs = col.paraphrase_all(_items(4), progress=False)
+    assert list(errs) == ["i1"] and sorted(col.tried) == ["i0", "i1", "i2", "i3"]
+    allbad = _ParaCol(bad={f"i{k}" for k in range(50)}, max_errors=3)
+    assert len(allbad.paraphrase_all(_items(50), progress=False)) >= 3 and len(allbad.tried) <= 5
+
+
+def test_paraphrase_all_progress_bar(capsys):
+    pytest.importorskip("tqdm")
+    _ParaCol(bad=set()).paraphrase_all(_items(3), desc="paras", progress=True)
+    err = capsys.readouterr().err
+    assert "paras" in err and "3/3" in err

@@ -55,6 +55,14 @@ class CollectConfig:
     max_errors: int = 20            # stop a file after this many failed items (a systematic fault, not one bad prompt)
 
 
+def _bar(total: int, initial: int, desc: str, enabled: bool):
+    """A tqdm bar on stderr, or None when disabled or tqdm is not installed."""
+    if not enabled or tqdm is None:
+        return None
+    return tqdm(total=total, initial=initial, desc=desc, unit="item", dynamic_ncols=True,
+                mininterval=2.0, file=sys.stderr)
+
+
 class Collector:
     def __init__(self, target: CachedClient, generator: CachedClient, judge: CachedClient,
                  cfg: CollectConfig, alt_judge: Optional[CachedClient] = None):
@@ -150,6 +158,32 @@ class Collector:
                         alt_clusters=alt, meta={"sample_offset": off, "verbal_per_draw": vpd, "logprobs": lp},
                         probe_conf={"neg": neg.confidence} if vpd else {})
 
+    def paraphrase_all(self, items: list[Item], desc: str = "paraphrases", progress: bool = True) -> dict[str, str]:
+        """Make (or read from the generator cache) the paraphrases of every item: the
+        pregenerate step. A failed item is recorded and skipped; after `max_errors`
+        failures the rest is cancelled. Returns {item_id: error}, empty when all succeeded."""
+        errors: dict[str, str] = {}
+        bar = _bar(len(items), 0, desc, progress)
+        with ThreadPoolExecutor(self.cfg.workers) as ex:
+            futs = {ex.submit(self.paraphrases, it): it for it in items}
+            for f in as_completed(futs):
+                try:
+                    f.result()
+                except Exception as e:                  # noqa: BLE001 -- recorded, reported by the caller
+                    errors[futs[f].item_id] = f"{type(e).__name__}: {str(e)[:300]}"
+                    log.warning("item %s failed: %s", futs[f].item_id, errors[futs[f].item_id])
+                if bar is not None:
+                    bar.update(1)
+                    bar.set_postfix(calls=getattr(self.g, "misses", 0), short=self.failures["paraphrase"],
+                                    item_fail=len(errors), refresh=False)
+                if len(errors) >= self.cfg.max_errors:
+                    for g in futs:
+                        g.cancel()
+                    break
+        if bar is not None:
+            bar.close()
+        return errors
+
     # -- many items, resumable JSONL -----------------------------------------------
     def _api_calls(self) -> int:
         """Uncached requests sent so far, over the target, generator and judge clients."""
@@ -171,10 +205,7 @@ class Collector:
                 done[cd.item_id] = cd
         todo = [it for it in items if it.item_id not in done]
         errors: dict[str, str] = {}
-        bar = None
-        if progress and tqdm is not None and todo:
-            bar = tqdm(total=len(items), initial=len(done), desc=desc or out_path.stem, unit="item",
-                       dynamic_ncols=True, mininterval=2.0, file=sys.stderr)
+        bar = _bar(len(items), len(done), desc or out_path.stem, progress and bool(todo))
         calls0 = self._api_calls()
         with out_path.open("a") as fh, ThreadPoolExecutor(self.cfg.workers) as ex:
             futs = {ex.submit(self.collect, it): it for it in todo}

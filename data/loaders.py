@@ -85,7 +85,14 @@ def _triviaqa_items(ds, rows, seed, distractor_fn, workers) -> list[Item]:
     asks = [(r["question"], r["answer"]["value"]) for r, w in zip(recs, wrong) if w]
     if distractor_fn and asks:                               # generator calls in parallel, order kept
         with ThreadPoolExecutor(workers) as ex:
-            got = iter(list(ex.map(lambda a: distractor_fn(*a), asks)))
+            results = ex.map(lambda a: distractor_fn(*a), asks)
+            try:                                              # progress bar if tqdm is installed
+                from tqdm import tqdm  # noqa: PLC0415
+                results = tqdm(results, total=len(asks), desc="triviaqa distractors", unit="call",
+                               dynamic_ncols=True, mininterval=2.0, leave=False)
+            except ImportError:
+                pass
+            got = iter(list(results))
     else:
         got = iter([None] * len(asks))
     golds = None

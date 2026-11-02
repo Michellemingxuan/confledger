@@ -17,8 +17,8 @@ this scale.
 
 Before the paper run, `data/generated/generator.sqlite` must hold the paraphrases and distractors of
 every item (about 30,000 generator calls; the file in git covers the pilot only, 3,498 responses).
-Run `experiments/scripts/pregenerate.py` once, on one machine, and commit the file. If the private
-environment generates them instead, copy the file back, or the other models will see different items.
+These calls are part of the run's cost either way. Run `experiments/scripts/pregenerate.py` once
+(step 4 below, in the private environment) and copy the file back so every other model sees the same items.
 
 Below, `CONFIG` is one of the two, for example:
 
@@ -59,7 +59,22 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
      and rerun. The judge can be replaced later with `recluster.py`.
    - gpt-4.1 or the generator fails: stop. The run cannot start.
 
-4. Start collection in a session that survives a disconnect, such as `tmux`:
+4. Paper run only: make the paraphrases and TriviaQA distractors first. Skip this for the pilot.
+
+   ```bash
+   python experiments/scripts/pregenerate.py -c $CONFIG 2>&1 | tee pregenerate.log
+   ```
+
+   Two bars show the TriviaQA distractors, then the paraphrases of each dataset (`calls` counts
+   requests sent; `short` counts paraphrase sets that came back short; `item_fail` counts failed
+   items). It is resumable: cached outputs cost nothing, so run the same command again after any
+   stop. Failed items are skipped and listed at the end, with exit status 1; it stops after 20
+   failures. When it finishes with no failed items, copy `data/generated/generator.sqlite` out
+   of the private environment (it holds generated questions, not model answers) and commit it on
+   your Mac; it must be committed before any other model is collected. Use `--no-progress` for a
+   plain log.
+
+5. Start collection in a session that survives a disconnect, such as `tmux`:
 
    ```bash
    python experiments/scripts/collect.py -c $CONFIG -v 2>&1 | tee collect.log
@@ -83,7 +98,7 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
    and run the same command again; only the failed items are redone. Many 400s on trivia questions
    would mean the redactor is rewriting names: stop and look at `dev_audit.py` before going on.
 
-5. Check the item counts. The pilot has 200 dev, 600 eval and 200 calibration items per dataset:
+6. Check the item counts. The pilot has 200 dev, 600 eval and 200 calibration items per dataset:
 
    ```bash
    wc -l experiments/results/*/*/collections/*.jsonl
