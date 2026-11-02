@@ -14,8 +14,9 @@ import json
 from collections import Counter
 
 from confledger.utility.config import arg_parser, from_args, results_dir
-from data import load_items, make_split
-from data.loaders import HF_SOURCES
+from data import load_split
+from data.loaders import HF_SOURCES, load_source, usable_rows
+from data.splits import set_sizes
 
 
 def check(name: str, ds) -> dict:
@@ -34,23 +35,19 @@ def check(name: str, ds) -> dict:
 
 a = arg_parser(__doc__).parse_args()
 cfg = from_args(a)
-sp = cfg["split"]
-need = sp["n_dev"] + sp["n_eval"] + sp.get("n_cal", 0)
-
-from datasets import load_dataset  # noqa: E402
 
 for name in cfg["_datasets"]:
     out = results_dir(cfg, name) / "data"
     out.mkdir(parents=True, exist_ok=True)
+    ds = load_source(name)
     hf, conf, split = HF_SOURCES[name]
-    ds = load_dataset(hf, conf, split=split)
     info = {"hf_id": hf, "config": conf, "split": split, "fingerprint": ds._fingerprint,
-            **check(name, ds)}
-    usable = info.get("unique_question_ids", info["rows"])
-    assert usable >= need, f"{name}: {usable} usable rows < {need} needed"
-    if name != "triviaqa":
-        items = load_items(name, need, cfg["seed"])
-        s = make_split(items, sp["n_dev"], sp["n_eval"], sp.get("batch_size"), cfg["seed"], sp.get("n_cal", 0))
+            **check(name, ds), "distinct_questions": len(usable_rows(name, ds))}
+    full, used = set_sizes(cfg["split"], info["distinct_questions"])
+    assert sum(full.values()) <= info["distinct_questions"], f"{name}: split {full} exceeds the source"
+    info |= {"full_sets": full, "used_sets": used}
+    if name != "triviaqa":                      # TriviaQA items need the generator (collect time)
+        _, s = load_split(cfg, name)
         for part, its in (("dev", s.dev), ("eval", s.eval), ("cal", s.cal)):
             if not its:
                 continue
@@ -59,7 +56,6 @@ for name in cfg["_datasets"]:
                     fh.write(json.dumps({"item_id": it.item_id, "question": it.question,
                                          "gold": it.gold}) + "\n")
             info[f"{part}_labels"] = dict(Counter(it.gold for it in its))
-        assert len({it.item_id for it in items}) == len(items), "duplicate item ids"
     print(f"{name}: {json.dumps(info)}")
     (out / "manifest.json").write_text(json.dumps({name: info}, indent=2))
     print(f"wrote {out / 'manifest.json'}")

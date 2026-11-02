@@ -47,16 +47,24 @@ def load_config(path: str | Path, datasets=None, models=None) -> dict:
     load_env()                                    # API keys from ./.env (repo root)
     cfg = yaml.safe_load(Path(path).read_text())
     cfg["_path"] = str(path)
+    if os.environ.get("CONFLEDGER_CACHE"):          # e.g. a private-env cache kept apart for transfer
+        cfg["paths"]["cache"] = os.environ["CONFLEDGER_CACHE"]
     cfg["_datasets"] = list(datasets or cfg["datasets"])
     ids = [m["model"] for m in cfg["models"]]
     cfg["_models"] = list(models or ids)
     unknown = [m for m in cfg["_models"] if m not in ids]
     if unknown:
         raise SystemExit(f"{path}: unknown model id(s) {unknown}; `models` has {ids}")
-    if "top_frac" in cfg:                         # select the top share of each batch
-        pop = cfg["split"].get("batch_size") or cfg["split"]["n_eval"]   # default: the whole eval set
-        cfg["k"] = max(1, math.ceil(cfg["top_frac"] * pop - 1e-9))
+    if "top_frac" in cfg:                         # select the top share of each batch (None: set per
+        sp = cfg["split"]                         # dataset from its eval set, split.frac without n_eval)
+        pop = sp.get("batch_size") or (sp.get("n_eval") if "frac" in sp else sp.get("n_eval", 0))
+        cfg["k"] = top_k(cfg, pop) if pop else None
     return cfg
+
+
+def top_k(cfg: dict, n_eval: int) -> int:
+    """Selection size: the top `top_frac` share of an eval population of n_eval."""
+    return max(1, math.ceil(cfg["top_frac"] * n_eval - 1e-9))
 
 
 def results_dir(cfg: dict, ds: str | None = None) -> Path:

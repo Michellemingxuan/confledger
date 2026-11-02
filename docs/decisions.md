@@ -360,6 +360,22 @@ Condensed from the design conversations. Each entry: decision — why.
     - Plans are chosen by dev AUARC of the Borda ranking, not dev prec@top share, which sat
       at 1.00 across budgets 5-12 and could not separate plans. Ties still go to more calls.
       The elbow k* now reads the same dev AUARC curve (amends #25). lambda stays on CV prec.
+35. Split 2:2:6 of the whole source, nested pilots (2026-11-02). The paper run uses every
+    distinct question of each source split (TriviaQA validation 9,960, StrategyQA train 1,603,
+    MMLU test 13,937 after removing repeated question + choices) as 20% dev, 20% calibration,
+    60% eval (split.frac), one fixed split with the item bootstrap. The pilot is the first 200 /
+    200 / 600 items of those sets (configs/pilot_1000.yaml), so every pilot item is a paper-run
+    item. All sets come from one labelled source split, as in Quach et al. (2024: TriviaQA
+    validation; its test answers are hidden). Items are built per question from their own
+    seeded randomness, only for the questions in use, and evaluation reads item ids only (no
+    generator calls), so collections can be scored on any machine. The top 10% is set per
+    dataset from its eval size. Earlier smoke and pilot configs keep their items and results.
+    Generator outputs (paraphrases, TriviaQA distractors) are sampled at temperature 0.7, so
+    they are made once (experiments/scripts/pregenerate.py) into one cache file kept in git
+    (paths.generator_cache = data/generated/generator.sqlite); every machine and every model
+    then answers identical items.
+    Cost of the paper run: about 1.05M calls per model (TriviaQA 0.41M, MMLU 0.57M).
+
 Observed in dry run: the screen trades global AUROC/PRR for top-k precision (address in
 paper); plain Jaccard understates stability under top ties (add tie-aware variant).
 

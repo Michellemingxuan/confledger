@@ -1,6 +1,6 @@
 # confledger experiment configuration. Freeze on the dev slice before evaluation.
 seed: 0
-top_frac: 0.10             # select the top 10% of the whole eval set: k = ceil(0.10 * n_eval) = 50
+top_frac: 0.10             # select the top 10% of the whole eval set: k = ceil(0.10 * eval items), per dataset
 budget: null              # null = match baselines to the pipeline's realised calls/case
 budget_matched_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 15]   # CEL-k (expected calls in (k - band, k]) vs every baseline at k calls; up to 15 = a certified survivor's cost, so CEL-k reaches certified CEL's spend (needs n_same >= max k)
 linkage_k: [2, 3, 4, 5, 6, 8, 10, 12, 14, 16]   # mode-linkage figure (Sec. 3.9): CEL-k and derived allocation up to adaptive CEL's spend
@@ -10,7 +10,7 @@ deployment_sc_draws: 3    # self-consistency at this many draws = the cheap depl
 # Fewer draws need BOTH a wider H0/H1 gap and a larger eps0 (see sprt_settings.tex), e.g.
 # p0: 0.6 + eps0: 0.13 certifies at 5/5 instead of 9/9 (weaker guarantee).
 sprt: {p0: 0.7, p1: 0.95, alpha: 0.1, beta: 0.1, eps0: 0.05, p0_star: 0.8}
-split: {n_dev: 100, n_eval: 500, n_cal: 200}   # n_cal: calibration set D_cal (docs/reference.md)
+split: {frac: {dev: 0.2, cal: 0.2, eval: 0.6}}   # the whole source split, 2:2:6 (decisions.md #35)
 # Score model on D_fit (= dev slice) and certified selection on D_cal (decisions.md #17).
 # Pessimistic score s = mu - lambda*sigma, lambda by cv_folds-fold CV on D_fit over `lambdas`.
 scoring: {ridge: 1.0, prior: [0.5, 0.5], lambdas: [0, 0.5, 1, 1.5, 2, 3], cv_folds: 5,
@@ -50,7 +50,9 @@ models:
 
 # Paraphrase / distractor generator (fixed across runs). Must differ from every
 # model under test: it sees the gold answer when writing distractors.
-generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal}   # reasoning model: no temperature
+# `name` fixes the cache key on either transport (direct API or SafeChain), so cached
+# paraphrases and distractors carry over between machines.
+generator: {provider: openai_compat, model: "gpt-5", reasoning_effort: minimal, name: "openai_compat:gpt-5"}   # reasoning model: no temperature
 
 # Rationale judge for semantic entropy: gpt-5 for now, an interim choice until the direction
 # is confirmed (decisions.md #33). One judge serves every model. To change it, edit this line
@@ -68,4 +70,6 @@ collect:
   workers: 8
 
 # Outputs go to experiments/results/<dataset>/<config name>/ (+ all/<config name>/ for cross-dataset).
-paths: {cache: experiments/results/cache, results: experiments/results}
+# generator_cache: one shared file in git, so every machine and model gets the same paraphrases
+# and distractors (decisions.md #35). Fill it with experiments/scripts/pregenerate.py.
+paths: {cache: experiments/results/cache, results: experiments/results, generator_cache: data/generated/generator.sqlite}

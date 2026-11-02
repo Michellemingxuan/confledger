@@ -16,12 +16,12 @@ from typing import Callable, Optional, Sequence
 import numpy as np
 from scipy.stats import spearmanr
 
-from data import load_split
+from data.splits import split_ids
 
 from . import metrics as M
 from .utility.cell_report import write_report
 from .collection import collection_path, load_collection
-from .utility.config import cells, record_run, results_dir
+from .utility.config import cells, record_run, results_dir, top_k
 from .ranking import borda_scores, key_scores, ranks_within, select_top_k
 from .methods import (ARMS, SIGNAL_ABLATIONS, CELConfig, CaseScore, allocation_space, budget_configs,
                       cel, cel_alloc, cel_as_allocation, cel_from_settings, evidence_depth, registry)
@@ -1010,14 +1010,14 @@ def cell_results(cfg: dict, ds: str, mk: str, force: bool = False) -> dict:
     if not coll_path.exists():
         raise SystemExit(f"missing collection {coll_path} -- run experiments/scripts/collect.py first")
     record_run({**cfg, "_datasets": [ds], "_models": [mk]}, "evaluate")
-    _, split = load_split(cfg, ds)
+    dev_ids, eval_batches, _ = split_ids(cfg, ds)              # ids only: no generator calls
     rs = collection_path(cfg, ds, mk, "__reseed")
     dev_path = collection_path(cfg, ds, mk, "__dev")
     cal_path = collection_path(cfg, ds, mk, "__cal")
-    bs = cfg["split"].get("batch_size") or max(1, len(split.dev))   # default: one dev population
-    dev_ids = [it.item_id for it in split.dev]
+    bs = cfg["split"].get("batch_size") or max(1, len(dev_ids))   # default: one dev population
+    k = cfg["k"] or top_k(cfg, sum(map(len, eval_batches)))
     try:
-        res = run_protocol(load_collection(coll_path), split.batches, cfg["k"], cfg.get("budget"),
+        res = run_protocol(load_collection(coll_path), eval_batches, k, cfg.get("budget"),
                            reseed_coll=load_collection(rs) if rs.exists() else None,
                            deploy_sc_draws=cfg.get("deployment_sc_draws", 3),
                            budget_ks=tuple(cfg.get("budget_matched_k", (2, 3, 4, 5))),

@@ -1,6 +1,7 @@
 # Data splits: why not 7:1:2, and references
 
-Status: notes, 2026-10-11. References are from memory: check titles, venues and details
+Status: notes, 2026-10-11. Sizes since revised: the whole source split at 2:2:6, pilots 200 : 200 : 600
+(decisions.md #35); the batch-based reasons below predate the item bootstrap (#29). References are from memory: check titles, venues and details
 before citing them in the paper. Implemented: `split.n_cal` in the configs
 (`data/splits.py`) and the conformal step in `certified_selection.py` (decisions.md #17).
 

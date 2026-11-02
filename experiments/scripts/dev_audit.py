@@ -36,7 +36,8 @@ if a.action == "export":
         for r, resp in rng.sample(ans, min(a.n, len(ans))):
             fmt = "ab" if "option A if the answer is No" in r["prompt"] else "yn"
             w.writerow([resp, parse_answer(resp, fmt) or "NONE", ""])
-    paras = list(read_responses(cache_path(cfg["paths"]["cache"], "generator"), "paraphrase_gen"))
+    paras = list(read_responses(cfg["paths"].get("generator_cache") or cache_path(cfg["paths"]["cache"], "generator"),
+                                "paraphrase_gen"))
     with open(out / "paraphrase_audit.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["original_prompt_excerpt", "paraphrase", "meaning_ok"])

@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Optional
 
 from data import load_split
+from data.splits import generator_client, set_sizes, source_size
 
 from . import prompts as P
 from .utility.answer_parsing import parse_answer, parse_confidence, parse_explanation, parse_json_list, split_p_yes
@@ -241,13 +242,14 @@ def estimate_calls(cfg: dict, reseed_batches: int = 0) -> list[dict]:
     the alt judge on the judge-sensitivity dataset. Per dataset (shared by all models,
     since the cache key ignores the target): 1 paraphrase-generation call per question
     and, for TriviaQA, a distractor-generation call for ~half the items. Excludes
-    retries after malformed paraphrase output."""
+    retries after malformed paraphrase output. With split.frac, reads the source size."""
     sp = cfg["split"]
-    n = sp["n_dev"] + sp["n_eval"] + sp.get("n_cal", 0)
-    r = reseed_batches * (sp.get("batch_size") or sp["n_eval"])
     per = target_calls_per_item(cfg["collect"])
     rows = []
     for ds in cfg["_datasets"]:
+        used = set_sizes(sp, source_size(cfg, ds))[1]
+        n = sum(used.values())
+        r = reseed_batches * (sp.get("batch_size") or used["eval"])
         gen = n + (n // 2 if ds == "triviaqa" and not cfg.get("synthetic") else 0)
         for mk in cfg["_models"]:
             api = lambda spec: bool(spec) and spec.get("provider") != "local_nli"   # local NLI: no calls
@@ -284,7 +286,7 @@ def collect_config(cfg: dict, reseed_batches: int = 0) -> None:
                     c["n_paraphrases"], c["n_same"], need_fresh, bound)
     record_run(cfg, f"collect --reseed-batches {reseed_batches}")
     cache = cfg["paths"]["cache"]
-    gen = cached_client(cfg["generator"], cache, "generator")
+    gen = generator_client(cfg)
     judge = make_judge(cfg["judge"], cache, "judge")
     for ds in cfg["_datasets"]:
         items, split = load_split(cfg, ds, gen)
