@@ -2,6 +2,8 @@
 import sys
 import types
 
+import pytest
+
 from data.loaders import load_triviaqa
 
 
@@ -52,3 +54,26 @@ def test_items_do_not_depend_on_which_others_are_built():
     every = {it.item_id: it for it in build_items("triviaqa", ds, range(20), seed=0)}
     some = build_items("triviaqa", ds, [3, 11, 17], seed=0)
     assert all(it.question == every[it.item_id].question and it.gold == every[it.item_id].gold for it in some)
+
+
+def test_local_source_roundtrip_and_preference(tmp_path, monkeypatch):
+    """decisions.md #38: a local gzipped-JSONL export is read without Hugging Face, gives the same
+    rows back (unused columns dropped), and is preferred by load_source; a damaged file is caught."""
+    import json
+    from data import loaders
+    rows = [{"question": f"q{i}", "answer": bool(i % 2), "term": "t", "entity_pages": {"big": [1] * 50}}
+            for i in range(5)]
+    sha = loaders.write_rows(rows, tmp_path / "strategyqa.jsonl.gz")
+    assert loaders.write_rows(rows, tmp_path / "again.jsonl.gz") == sha          # reproducible bytes
+    (tmp_path / "manifest.json").write_text(json.dumps({"strategyqa": {"rows": 5, "sha256": sha}}))
+    monkeypatch.setattr(loaders, "SOURCES_DIR", tmp_path)
+    ds = loaders.load_source("strategyqa")
+    assert isinstance(ds, loaders.LocalRows) and len(ds) == 5
+    assert ds[2] == {"question": "q2", "answer": False, "term": "t"} and ds["question"][4] == "q4"
+    assert loaders.usable_rows("strategyqa", ds) == list(range(5))
+    items = loaders.build_items("strategyqa", ds, [0, 1], 0, None)
+    assert [i.item_id for i in items] == ["strategyqa-0", "strategyqa-1"] and items[1].gold == "yes"
+    assert loaders.verify_sources(["strategyqa"], tmp_path) == {"strategyqa": 5}
+    (tmp_path / "strategyqa.jsonl.gz").write_bytes(b"damaged")
+    with pytest.raises(ValueError, match="sha256"):
+        loaders.verify_sources(["strategyqa"], tmp_path)

@@ -1,0 +1,29 @@
+{
+ "triviaqa": {
+  "rows": 17944,
+  "sha256": "9adb4ffa6a04b629a5a80fffcdd093a57d6a025a485c6e415154f768fb2e8063",
+  "source": [
+   "mandarjoshi/trivia_qa",
+   "rc.nocontext",
+   "validation"
+  ]
+ },
+ "strategyqa": {
+  "rows": 1603,
+  "sha256": "15f5e323346a961c977c0242308ea6ec56c41bb9e3077e92915fe533a871f61a",
+  "source": [
+   "ChilleD/StrategyQA",
+   null,
+   "train"
+  ]
+ },
+ "mmlu": {
+  "rows": 14042,
+  "sha256": "2ef0165d508ec91f29f77c54d174a1d25b6734e4e338eb7873a8ce40762c35d7",
+  "source": [
+   "cais/mmlu",
+   "all",
+   "test"
+  ]
+ }
+}

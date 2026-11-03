@@ -7,7 +7,7 @@ import os
 
 from confledger.utility.config import arg_parser, check_config, from_args, model_spec
 from confledger.utility.llm import Request, make_backend
-from data.loaders import HF_SOURCES
+from data.loaders import SOURCES_DIR, load_source, verify_sources
 
 cfg = from_args(arg_parser(__doc__).parse_args())
 check_config(cfg)
@@ -24,9 +24,10 @@ def check(label, fn):
 
 
 def dataset(ds):
-    from datasets import load_dataset  # noqa: PLC0415
-    hf_id, config, split = HF_SOURCES[ds]
-    return f"{len(load_dataset(hf_id, config, split=split)):,} rows"
+    local = (SOURCES_DIR / f"{ds}.jsonl.gz").exists()
+    if local and (SOURCES_DIR / "manifest.json").exists():
+        verify_sources([ds])                                  # sha256 and row count against manifest.json
+    return f"{len(load_source(ds)):,} rows from " + (f"local export {SOURCES_DIR}" if local else "Hugging Face")
 
 
 def reply(spec):

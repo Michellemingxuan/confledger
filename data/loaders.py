@@ -13,10 +13,15 @@ the model's behaviour.
 """
 from __future__ import annotations
 
+import gzip
+import hashlib
+import json
+import os
 import random
 import re
 import string
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import Callable, Optional, Sequence
 
 from confledger.utility.records import NO, YES, Item
@@ -44,7 +49,81 @@ def _item_rng(seed: int, dataset: str, row) -> random.Random:
     return random.Random(f"{seed}:{dataset}:{row}")
 
 
-def load_source(dataset: str):
+# Local copy of the three source splits (python -m data.export_sources), for machines without
+# Hugging Face access (the private environment). One gzipped JSONL per dataset, read with the
+# standard library only. When a file exists, load_source reads it instead of Hugging Face.
+SOURCES_DIR = Path(os.environ.get("CONFLEDGER_SOURCES") or Path(__file__).parent / "sources")
+_UNUSED_COLUMNS = {"entity_pages", "search_results"}      # TriviaQA contexts: large, never read
+
+
+class LocalRows:
+    """The part of the `datasets` API the loaders use: len(ds), ds[i] -> row dict, ds["col"] -> list."""
+
+    def __init__(self, rows: list[dict]):
+        self._rows = rows
+
+    def __len__(self) -> int:
+        return len(self._rows)
+
+    def __getitem__(self, k):
+        return self._rows[k] if isinstance(k, int) else [r[k] for r in self._rows]
+
+    @property
+    def column_names(self) -> list[str]:
+        return list(self._rows[0]) if self._rows else []
+
+
+def write_rows(rows, path: Path) -> str:
+    """Write rows as gzipped JSONL, reproducibly (no timestamp, so the same rows give the same
+    bytes); returns the sha256 of the file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", filename="", mtime=0) as gz:
+        for r in rows:
+            gz.write((json.dumps({k: v for k, v in r.items() if k not in _UNUSED_COLUMNS},
+                                 ensure_ascii=False) + "\n").encode("utf-8"))
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read_rows(path: Path) -> LocalRows:
+    with gzip.open(path, "rt", encoding="utf-8") as f:
+        return LocalRows([json.loads(line) for line in f])
+
+
+def export_sources(datasets=None, out_dir: Optional[Path] = None) -> dict:
+    """Export each source split from Hugging Face to `out_dir` (default data/sources) and write
+    manifest.json (rows and sha256 per file). Needs the `datasets` extra and the Hugging Face cache."""
+    out = Path(out_dir or SOURCES_DIR)
+    manifest = {}
+    for name in datasets or HF_SOURCES:
+        ds = load_source(name, local=False)
+        sha = write_rows(ds, out / f"{name}.jsonl.gz")
+        manifest[name] = {"rows": len(ds), "sha256": sha, "source": list(HF_SOURCES[name])}
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
+    return manifest
+
+
+def verify_sources(datasets=None, out_dir: Optional[Path] = None) -> dict:
+    """Per dataset: row count and whether the local file matches manifest.json. Raises if a file
+    is missing or its hash differs, so a damaged copy is caught before a run."""
+    out = Path(out_dir or SOURCES_DIR)
+    manifest = json.loads((out / "manifest.json").read_text())
+    got = {}
+    for name in datasets or HF_SOURCES:
+        path = out / f"{name}.jsonl.gz"
+        if hashlib.sha256(path.read_bytes()).hexdigest() != manifest[name]["sha256"]:
+            raise ValueError(f"{path}: sha256 differs from manifest.json")
+        n = len(read_rows(path))
+        if n != manifest[name]["rows"]:
+            raise ValueError(f"{path}: {n} rows, manifest says {manifest[name]['rows']}")
+        got[name] = n
+    return got
+
+
+def load_source(dataset: str, local: bool = True):
+    """The dataset's source split: the local export when present (and `local`), else Hugging Face."""
+    path = SOURCES_DIR / f"{dataset}.jsonl.gz"
+    if local and path.exists():
+        return read_rows(path)
     from datasets import load_dataset  # noqa: PLC0415
     hf_id, config, split = HF_SOURCES[dataset]
     return load_dataset(hf_id, config, split=split) if config else load_dataset(hf_id, split=split)

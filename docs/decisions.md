@@ -494,6 +494,20 @@ Condensed from the design conversations. Each entry: decision — why.
     smoke, simulation) still has the old count until its evaluate.py is re-run; no result was
     re-run for this entry. At k = 2 with verbal_per_draw on, BSDetector now has 2 draws (before: 1,
     where it equalled verbalized confidence).
+38. Source datasets travel with the repo (2026-11-03). The private environment has no Hugging Face
+    access, and copying the Hugging Face cache is fragile. `python -m data.export_sources` writes the
+    three source splits (TriviaQA rc.nocontext validation 17,944 rows, StrategyQA train 1,603, MMLU
+    test 14,042) to data/sources/<dataset>.jsonl.gz with a manifest.json (rows, sha256); about 6 MB,
+    reproducible bytes. `load_source` reads them when present (standard library only: no `datasets`
+    package, no network) and falls back to Hugging Face otherwise; data/prepare.py still reads
+    Hugging Face (`local=False`). TriviaQA's unused contexts (entity_pages, search_results) are
+    dropped. Checked on the Mac against Hugging Face: identical usable rows, identical items for all
+    three datasets (built without a distractor function), identical columns; and estimate.py gives
+    the same 1,050,480 calls with the `datasets` package made unimportable. preflight.py now says
+    where each dataset came from and verifies the hash. TriviaQA, StrategyQA and MMLU are public
+    benchmarks under permissive licences (Apache-2.0, MIT, MIT), but check the repository's
+    visibility before committing them. The local NLI judge (decisions.md #30) is the only other
+    Hugging Face use and is not part of the gpt-4.1 run (its judge is an API model).
 
 Observed in dry run: the screen trades global AUROC/PRR for top-k precision (address in
 paper); plain Jaccard understates stability under top ties (add tie-aware variant).

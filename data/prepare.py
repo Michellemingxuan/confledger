@@ -39,7 +39,7 @@ cfg = from_args(a)
 for name in cfg["_datasets"]:
     out = results_dir(cfg, name) / "data"
     out.mkdir(parents=True, exist_ok=True)
-    ds = load_source(name)
+    ds = load_source(name, local=False)
     hf, conf, split = HF_SOURCES[name]
     info = {"hf_id": hf, "config": conf, "split": split, "fingerprint": ds._fingerprint,
             **check(name, ds), "distinct_questions": len(usable_rows(name, ds))}

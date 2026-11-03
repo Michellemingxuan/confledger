@@ -36,7 +36,11 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
    pip install -e ".[data]"
    ```
 
-   SafeChain and LangChain must already be installed in that environment.
+   SafeChain and LangChain must already be installed in that environment. No Hugging Face access
+   is needed: the three source splits are in `data/sources/` (about 6 MB, gzipped JSONL with a
+   `manifest.json` of hashes), read with the standard library. The `datasets` package installs
+   from PyPI but is not used for them, because the data themselves come from the Hub. If `data/sources/` is missing from the clone, copy it in from the Mac (it is made by
+   `python -m data.export_sources`, decisions.md #38).
 
 2. Turn on the transport, and keep this environment's cache in its own folder. Do not set
    `SAFECHAIN_MODEL` (AgenticSys_v2 uses it to override its one model id): confledger builds one
@@ -53,8 +57,9 @@ CONFIG="configs/pilot_1000.yaml -m gpt-4.1"
    python experiments/scripts/preflight.py -c $CONFIG
    ```
 
-   - Dataset fails: the environment cannot reach Hugging Face. Copy in the dataset cache
-     (`~/.cache/huggingface/datasets`) or point `HF_HOME` to one.
+   - Dataset check: each line should say `from local export`, which also verifies the file hash against
+     `manifest.json`. `from Hugging Face` means `data/sources/` is missing; a hash error means a
+     damaged copy. Run `python -m data.export_sources --verify` to check the files.
    - Judge fails: gpt-5.4 may not be served. Change the `judge:` line in the config to `gpt-5`
      and rerun. The judge can be replaced later with `recluster.py`.
    - gpt-4.1 or the generator fails: stop. The run cannot start.
